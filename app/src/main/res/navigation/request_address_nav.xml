@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/request_address_nav"
+    app:startDestination="@id/requestAddressHome">
+
+    <fragment
+        android:id="@+id/requestAddressHome"
+        android:name="com.example.uidaiaddressupdate.requestaddress.RequestAddressHome"
+        android:label="fragment_request_address_home"
+        tools:layout="@layout/fragment_request_address_home" >
+        <action
+            android:id="@+id/action_requestAddressHome_to_requestDetails"
+            app:destination="@id/requestDetails" />
+        <action
+            android:id="@+id/action_requestAddressHome_to_enterShareCode"
+            app:destination="@id/enterShareCode" />
+    </fragment>
+    <fragment
+        android:id="@+id/requestDetails"
+        android:name="com.example.uidaiaddressupdate.requestaddress.RequestDetails"
+        android:label="fragment_request_details"
+        tools:layout="@layout/fragment_request_details" >
+        <action
+            android:id="@+id/action_requestDetails_to_editAddress"
+            app:destination="@id/editAddress" />
+    </fragment>
+    <fragment
+        android:id="@+id/editAddress"
+        android:name="com.example.uidaiaddressupdate.requestaddress.EditAddress"
+        android:label="fragment_edit_address"
+        tools:layout="@layout/fragment_edit_address" />
+    <fragment
+        android:id="@+id/enterShareCode"
+        android:name="com.example.uidaiaddressupdate.requestaddress.EnterShareCode"
+        android:label="fragment_enter_share_code"
+        tools:layout="@layout/fragment_enter_share_code" >
+        <action
+            android:id="@+id/action_enterShareCode_to_requestSentPage"
+            app:destination="@id/requestSentPage"
+            app:popUpTo="@id/requestAddressHome" />
+    </fragment>
+    <fragment
+        android:id="@+id/requestSentPage"
+        android:name="com.example.uidaiaddressupdate.requestaddress.RequestSentPage"
+        android:label="fragment_request_sent_page"
+        tools:layout="@layout/fragment_request_sent_page" >
+        <action
+            android:id="@+id/action_requestSentPage_to_requestAddressHome"
+            app:destination="@id/requestAddressHome"
+            app:popUpTo="@id/requestAddressHome" />
+    </fragment>
+</navigation>
