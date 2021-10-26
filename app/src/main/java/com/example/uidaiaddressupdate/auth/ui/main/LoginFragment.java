@@ -12,12 +12,19 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import com.example.uidaiaddressupdate.R;
+import com.example.uidaiaddressupdate.service.otpservice.OtpAPIService;
+import com.example.uidaiaddressupdate.service.otpservice.model.OtpRes;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.util.Scanner;
+import java.util.UUID;
 
 
 public class LoginFragment extends Fragment {
@@ -43,7 +50,13 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 String aadharNumber = aadhar.getText().toString();
                 if(verifyAadhar(aadharNumber)){
+
                     //send OTP to user
+//                    try {
+//                        callSendOTPService("asasd");
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
                     //move to OTP page
 //                    Navigation.createNavigateOnClickListener(R.id.action_loginFragment_to_otpFragment,null);
 //                    Navigation.findNavController().navigate();
@@ -87,5 +100,15 @@ public class LoginFragment extends Fragment {
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
+
+//    private void callSendOTPService(String uid) throws Exception {
+//        OtpAPIService otpAPIService = new OtpAPIService();
+//        otpAPIService.readProperties();
+//        String txnId = UUID.randomUUID().toString();
+//        Log.d("OTP Service:","Printing txnId: " + txnId);
+//        OtpRes otpRes = otpAPIService.getOtpRes(uid,txnId);
+//        Log.d("OTP Service:","Result : " + otpRes.getRet().value() + ", err: " + otpRes.getErr());
+
+//    }
 
 }
