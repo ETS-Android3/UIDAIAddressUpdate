@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
     android:layout_height="match_parent"
-    tools:context=".LandlordAddressApprovedAck">
+    tools:context=".landlord.LandlordAddressApprovedAck">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24dp"
+        android:textAlignment="center"
+        android:padding="16dp"
+        android:text="You have successfully approved the address" />
 
-</FrameLayout>
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_button"
+        android:text="continue"
+        android:textAllCaps="false"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"
+        android:paddingHorizontal="16dp"
+        />
+
+</LinearLayout>
