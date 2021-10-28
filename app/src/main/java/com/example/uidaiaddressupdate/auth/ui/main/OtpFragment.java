@@ -23,6 +23,7 @@ import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.service.auth.AuthApiEndpointInterface;
 import com.example.uidaiaddressupdate.service.auth.model.Authotprequest;
 import com.example.uidaiaddressupdate.service.auth.model.Authotpresponse;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -79,7 +80,7 @@ public class OtpFragment extends Fragment {
                     return;
                 }
 
-                Authotprequest authotprequest = new Authotprequest(transactionId,otp.getText().toString(),"",pubkeyString);
+                Authotprequest authotprequest = new Authotprequest(transactionId,otp.getText().toString(),getFCMRegistrationToken(),pubkeyString);
                 apiServie.authenticate(authotprequest).enqueue(new Callback<Authotpresponse>() {
                     @Override
                     public void onResponse(Call<Authotpresponse> call, Response<Authotpresponse> response) {
@@ -119,5 +120,9 @@ public class OtpFragment extends Fragment {
         Log.d("KeyTest",publicKeyString);
 
         return publicKeyString;
+    }
+
+    private String getFCMRegistrationToken(){
+        return FirebaseMessaging.getInstance().getToken().getResult();
     }
 }
