@@ -20,7 +20,7 @@
         android:drawableEnd="@drawable/ic_right_24"
         android:drawableTint="@color/white"
         android:paddingHorizontal="16dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
