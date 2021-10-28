@@ -56,6 +56,9 @@ public class OtpFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        String transactionId = getArguments().getString("transactionId");
+
         View view = inflater.inflate(R.layout.fragment_otp, container, false);
         otp = (EditText) view.findViewById(R.id.otp_et_enter_otp);
         resendOtp = (TextView) view.findViewById(R.id.otp_resend_otp);
@@ -76,7 +79,7 @@ public class OtpFragment extends Fragment {
                     return;
                 }
 
-                Authotprequest authotprequest = new Authotprequest("",otp.getText().toString(),"",pubkeyString);
+                Authotprequest authotprequest = new Authotprequest(transactionId,otp.getText().toString(),"",pubkeyString);
                 apiServie.authenticate(authotprequest).enqueue(new Callback<Authotpresponse>() {
                     @Override
                     public void onResponse(Call<Authotpresponse> call, Response<Authotpresponse> response) {

@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/view_address_requests_nav">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_address_requests_nav"
+    app:startDestination="@id/landlordRequestsList">
 
+    <fragment
+        android:id="@+id/landlordRequestsList"
+        android:name="com.example.uidaiaddressupdate.landlord.LandlordRequestsList"
+        android:label="fragment_landlord_requests_list"
+        tools:layout="@layout/fragment_landlord_requests_list" >
+        <action
+            android:id="@+id/action_landlordRequestsList_to_landlordSingleRequests"
+            app:destination="@id/landlordSingleRequests" />
+    </fragment>
+    <fragment
+        android:id="@+id/landlordSingleRequests"
+        android:name="com.example.uidaiaddressupdate.landlord.LandlordSingleRequests"
+        android:label="fragment_landlord_single_requests"
+        tools:layout="@layout/fragment_landlord_single_requests" />
 </navigation>

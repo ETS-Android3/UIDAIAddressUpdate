@@ -91,8 +91,8 @@ public class LoginFragment extends Fragment {
                     apiServie.sendOtp(authuidrequest).enqueue(new Callback<Authuidresponse>() {
                         @Override
                         public void onResponse(Call<Authuidresponse> call, Response<Authuidresponse> response) {
-                            response.body().getTransactionNo();
-                            GoToOTPPage();
+                            String transactionId = response.body().getTransactionNo();
+                            GoToOTPPage(transactionId);
                         }
 
                         @Override
@@ -132,8 +132,11 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    private void GoToOTPPage(){
+    private void GoToOTPPage(String transactionID){
+        Bundle bundle = new Bundle();
+        bundle.putString("transactionId",transactionID);
         Fragment fragment = new OtpFragment();
+        fragment.setArguments(bundle);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.container, fragment);
