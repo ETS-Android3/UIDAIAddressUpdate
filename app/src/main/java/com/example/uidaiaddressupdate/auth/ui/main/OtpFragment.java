@@ -1,11 +1,14 @@
 package com.example.uidaiaddressupdate.auth.ui.main;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
@@ -25,10 +28,10 @@ import com.example.uidaiaddressupdate.service.auth.model.Authotprequest;
 import com.example.uidaiaddressupdate.service.auth.model.Authotpresponse;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -80,10 +83,36 @@ public class OtpFragment extends Fragment {
                     return;
                 }
 
-                Authotprequest authotprequest = new Authotprequest(transactionId,otp.getText().toString(),getFCMRegistrationToken(),pubkeyString);
+                String FCMtoken = getFCMRegistrationToken();
+                Log.d("FCM Token:",FCMtoken);
+                Authotprequest authotprequest = new Authotprequest(transactionId,otp.getText().toString(),FCMtoken,pubkeyString);
                 apiServie.authenticate(authotprequest).enqueue(new Callback<Authotpresponse>() {
                     @Override
                     public void onResponse(Call<Authotpresponse> call, Response<Authotpresponse> response) {
+                        try {
+                            KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
+                            String mainKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
+                            SharedPreferences sharedPreferences = EncryptedSharedPreferences.create(
+                                    "aadharsharedPreferences",
+                                    mainKeyAlias,
+                                    getContext(),
+                                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                            );
+                            SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
+
+                            sharedPrefsEditor.putString("AuthToken",response.body().getAuthToken());
+                            sharedPrefsEditor.putString("UidToken",response.body().getUidToken());
+                            sharedPrefsEditor.putString("ShareableCode",response.body().getShareableCode());
+
+                            sharedPrefsEditor.commit();
+                        } catch (GeneralSecurityException e) {
+                            e.printStackTrace();
+                            //App band karo
+                        } catch (IOException e) {
+                            //App band karo
+                            e.printStackTrace();
+                        }
 
                         SendToHome();
                     }
