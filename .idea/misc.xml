@@ -9,7 +9,10 @@
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/activity_request_home.xml" value="0.24010416666666667" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/fragment_edit_address.xml" value="0.24592391304347827" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/fragment_enter_share_code.xml" value="0.24592391304347827" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/fragment_landlord_address_approved_ack.xml" value="0.24909420289855072" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/fragment_landlord_otp_page.xml" value="0.24909420289855072" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/fragment_landlord_requests_list.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/fragment_landlord_single_requests.xml" value="0.16" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/fragment_otp.xml" value="0.25" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/fragment_request_address_home.xml" value="0.24592391304347827" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/fragment_request_details.xml" value="0.24592391304347827" />

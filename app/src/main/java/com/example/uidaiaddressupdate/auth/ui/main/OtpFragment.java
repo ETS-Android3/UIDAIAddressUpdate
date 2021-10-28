@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
@@ -17,12 +18,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.uidaiaddressupdate.MainActivity;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.service.auth.AuthApiEndpointInterface;
 import com.example.uidaiaddressupdate.service.auth.model.Authotprequest;
 import com.example.uidaiaddressupdate.service.auth.model.Authotpresponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.security.KeyPair;
@@ -40,6 +45,7 @@ public class OtpFragment extends Fragment {
     private EditText otp;
     private TextView resendOtp;
     private Button submit;
+    private String firebaseToken;
 
     public OtpFragment() {
         // Required empty public constructor
@@ -65,6 +71,8 @@ public class OtpFragment extends Fragment {
         resendOtp = (TextView) view.findViewById(R.id.otp_resend_otp);
         submit = (Button) view.findViewById(R.id.otp_verify_button);
 
+        getFCMRegistrationToken();
+
         submit.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -80,7 +88,7 @@ public class OtpFragment extends Fragment {
                     return;
                 }
 
-                Authotprequest authotprequest = new Authotprequest(transactionId,otp.getText().toString(),getFCMRegistrationToken(),pubkeyString);
+                Authotprequest authotprequest = new Authotprequest(transactionId,otp.getText().toString(),firebaseToken,pubkeyString);
                 apiServie.authenticate(authotprequest).enqueue(new Callback<Authotpresponse>() {
                     @Override
                     public void onResponse(Call<Authotpresponse> call, Response<Authotpresponse> response) {
@@ -122,7 +130,22 @@ public class OtpFragment extends Fragment {
         return publicKeyString;
     }
 
-    private String getFCMRegistrationToken(){
-        return FirebaseMessaging.getInstance().getToken().getResult();
+    private void getFCMRegistrationToken(){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if(!task.isSuccessful()){
+                    Log.d("Mohan","Firebase Messaging token not found " + task.getException().getMessage());
+                    return;
+                }else{
+                    firebaseToken = task.getResult();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(), "Not able to get Firebase token", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
