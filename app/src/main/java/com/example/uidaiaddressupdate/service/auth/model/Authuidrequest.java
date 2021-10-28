@@ -1,5 +1,9 @@
 package com.example.uidaiaddressupdate.service.auth.model;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
 public class Authuidrequest {
     public String getUid() {
         return uid;
@@ -9,5 +13,6 @@ public class Authuidrequest {
         this.uid = uid;
     }
 
+    @SerializedName("uid")
     private String uid;
 }

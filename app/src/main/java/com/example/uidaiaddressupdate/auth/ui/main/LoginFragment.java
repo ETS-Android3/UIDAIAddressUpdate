@@ -81,6 +81,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String aadharNumber = aadhar.getText().toString();
+                Log.d("Mohan","Request has been sent");
                 if(verifyAadhar(aadharNumber)){
                     Toast.makeText(getActivity(), "Correct format of aadhar", Toast.LENGTH_SHORT).show();
 
@@ -93,11 +94,12 @@ public class LoginFragment extends Fragment {
                         public void onResponse(Call<Authuidresponse> call, Response<Authuidresponse> response) {
                             String transactionId = response.body().getTransactionNo();
                             GoToOTPPage(transactionId);
+                            Log.d("Mohan","OTP request is correct");
                         }
 
                         @Override
                         public void onFailure(Call<Authuidresponse> call, Throwable t) {
-
+                            Log.d("Mohan","OTP Reqeust is failed : " + t.getMessage().toString());
                         }
                     });
 

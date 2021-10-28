@@ -18,5 +18,23 @@
         android:id="@+id/landlordSingleRequests"
         android:name="com.example.uidaiaddressupdate.landlord.LandlordSingleRequests"
         android:label="fragment_landlord_single_requests"
-        tools:layout="@layout/fragment_landlord_single_requests" />
+        tools:layout="@layout/fragment_landlord_single_requests" >
+        <action
+            android:id="@+id/action_landlordSingleRequests_to_landlordOtpPage"
+            app:destination="@id/landlordOtpPage" />
+    </fragment>
+    <fragment
+        android:id="@+id/landlordOtpPage"
+        android:name="com.example.uidaiaddressupdate.LandlordOtpPage"
+        android:label="fragment_landlord_otp_page"
+        tools:layout="@layout/fragment_landlord_otp_page" >
+        <action
+            android:id="@+id/action_landlordOtpPage_to_landlordAddressApprovedAck"
+            app:destination="@id/landlordAddressApprovedAck" />
+    </fragment>
+    <fragment
+        android:id="@+id/landlordAddressApprovedAck"
+        android:name="com.example.uidaiaddressupdate.LandlordAddressApprovedAck"
+        android:label="fragment_landlord_address_approved_ack"
+        tools:layout="@layout/fragment_landlord_address_approved_ack" />
 </navigation>

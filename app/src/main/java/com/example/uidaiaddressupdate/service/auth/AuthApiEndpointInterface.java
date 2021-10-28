@@ -12,11 +12,11 @@ import retrofit2.http.POST;
 
 public interface AuthApiEndpointInterface {
     @Headers({"Content-Type: application/json"})
-    @POST("https://stage1.uidai.gov.in/unifiedAppAuthService/api/v2/get/captcha")
+    @POST("/authuid")
     Call<Authuidresponse> sendOtp(@Body Authuidrequest authuidrequest);
 
     @Headers({"Content-Type: application/json"})
-    @POST("https://stage1.uidai.gov.in/unifiedAppAuthService/api/v2/get/captcha")
+    @POST("/authotp")
     Call<Authotpresponse> authenticate(@Body Authotprequest authotprequest);
 
 }

@@ -1,8 +1,17 @@
 package com.example.uidaiaddressupdate.service.auth.model;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
 public class Authotprequest {
+    @SerializedName("transactionNo")
     private String transactionNo;
+
+    @SerializedName("otp")
     private String otp;
+
+    @SerializedName("deviceID")
     private String deviceID;
 
     public Authotprequest(String transactionNo, String otp, String deviceID, String publicKey) {
@@ -44,5 +53,6 @@ public class Authotprequest {
         this.publicKey = publicKey;
     }
 
+    @SerializedName("publicKey")
     private String publicKey;
 }
