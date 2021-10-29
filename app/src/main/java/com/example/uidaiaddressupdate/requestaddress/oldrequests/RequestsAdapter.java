@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.uidaiaddressupdate.R;
+import com.example.uidaiaddressupdate.database.RenterTransactions;
 import com.example.uidaiaddressupdate.requestaddress.RequestAddressHome;
 import com.example.uidaiaddressupdate.requestaddress.RequestHome;
 
@@ -19,10 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHolder> {
 
-    private List<SingleRequest> requestsList;
+    private List<RenterTransactions> requestsList;
     private NavigateToRequestDetails context;
 
-    public RequestsAdapter(List<SingleRequest> requestsList,NavigateToRequestDetails context) {
+    public RequestsAdapter(List<RenterTransactions> requestsList,NavigateToRequestDetails context) {
         this.requestsList = requestsList;
         this.context = context;
     }
@@ -36,14 +37,14 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        SingleRequest singleRequest = requestsList.get(position);
-        holder.shareCode.setText(singleRequest.getSharecode());
-        holder.status.setText(getStatus(singleRequest.getStatus()));
+        RenterTransactions singleRequest = requestsList.get(position);
+        holder.shareCode.setText(singleRequest.getShareCode());
+        holder.status.setText(singleRequest.getTransactionStatus());
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("Mohan","Layout is Clicked");
-                (context).MoveToRequestDetails(singleRequest.getTransactionId());
+                (context).MoveToRequestDetails(singleRequest.getTransactionID());
             }
         });
     }

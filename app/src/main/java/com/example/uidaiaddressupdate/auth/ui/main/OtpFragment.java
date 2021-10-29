@@ -126,7 +126,6 @@ public class OtpFragment extends Fragment {
 
                     }
                 });
-
             }
         });
         return view;

@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.uidaiaddressupdate.R;
+import com.example.uidaiaddressupdate.database.LandlordTransactions;
+
 import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
@@ -13,10 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class LandlordRequestListAdapter extends RecyclerView.Adapter<LandlordRequestListAdapter.ViewHolder> {
 
-    private List<SingleLandlordRequestModel> AddressRequestsList;
+    private List<LandlordTransactions> AddressRequestsList;
     private LandlordRequests landlordRequestsInterface;
 
-    public LandlordRequestListAdapter(List<SingleLandlordRequestModel> addressRequestsList, LandlordRequests landlordRequestsInterface) {
+    public LandlordRequestListAdapter(List<LandlordTransactions> addressRequestsList, LandlordRequests landlordRequestsInterface) {
         AddressRequestsList = addressRequestsList;
         this.landlordRequestsInterface = landlordRequestsInterface;
     }
@@ -30,20 +32,20 @@ public class LandlordRequestListAdapter extends RecyclerView.Adapter<LandlordReq
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        SingleLandlordRequestModel requestModel  = AddressRequestsList.get(position);
-        holder.name.setText(requestModel.getUsername());
-        holder.phone.setText(requestModel.getPhonenumber());
+        LandlordTransactions requestModel  = AddressRequestsList.get(position);
+        holder.name.setText(requestModel.getRenterName());
+        holder.phone.setText(requestModel.getRenterNumber());
         holder.approve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                landlordRequestsInterface.GotToCaptchaPage(requestModel.getTransactionId());
+                landlordRequestsInterface.GotToCaptchaPage(requestModel.getTransactionID());
             }
         });
 
         holder.decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                landlordRequestsInterface.HandleRequestDeclined(requestModel.getTransactionId());
+                landlordRequestsInterface.HandleRequestDeclined(requestModel.getTransactionID());
             }
         });
     }
