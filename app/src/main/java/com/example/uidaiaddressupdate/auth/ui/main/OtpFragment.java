@@ -161,6 +161,7 @@ public class OtpFragment extends Fragment {
             public void onComplete(@NonNull Task<String> task) {
                 if(task.isSuccessful()){
                     FCMtoken = task.getResult();
+                    Log.d("FCMService", "Token " + FCMtoken);
                 }
             }
         });
