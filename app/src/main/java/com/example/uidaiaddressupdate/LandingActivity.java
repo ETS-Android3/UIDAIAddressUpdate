@@ -29,7 +29,7 @@ public class LandingActivity extends AppCompatActivity {
                     EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             );
-            SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
+            //SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
             if(sharedPreferences.contains(Constants.KEY_AUTH_TOKEN)){
                 //send to home page
                 Toast.makeText(this, "Logged In", Toast.LENGTH_SHORT).show();
