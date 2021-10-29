@@ -17,10 +17,6 @@ public class NewAddressRequestMessage {
         return renterNumber;
     }
 
-    public String getShareCode() {
-        return shareCode;
-    }
-
     @Override
     public String toString() {
         return "NewAddressRequestMessage{" +

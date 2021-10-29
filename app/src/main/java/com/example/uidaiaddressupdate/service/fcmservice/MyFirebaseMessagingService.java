@@ -69,27 +69,33 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void handleInitMessage(Map<String, String> messageData) {
         Log.d("FCMService", "Init message received");
         String transactionID = getValueFromMap(messageData, "transactionID");
-        String requesterSC = getValueFromMap(messageData, "reqesterSC");
+        String requesterSC = getValueFromMap(messageData, "requesterSC");
         String encryptedMessage = getValueFromMap(messageData, "encryptedMessage");
         String decryptedMessage = null;
         try {
             decryptedMessage = DecryptionUtils.decryptMessage(encryptedMessage);
-            Log.d("FCMService", "DecryptedMessage: " + decryptedMessage);
             Gson gson = new Gson();
             NewAddressRequestMessage addressRequestMessage = gson.fromJson(decryptedMessage, NewAddressRequestMessage.class);
             landlordTransactionsDao.insertTransaction(new LandlordTransactions(transactionID, addressRequestMessage.getRenterName(), addressRequestMessage.getRenterNumber(), "init", "", requesterSC));
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     private void handleAcceptedMessage(Map<String, String> messageData) {
         Log.d("FCMService", "Accepted message received");
+        String transactionID = getValueFromMap(messageData, "transactionID");
+        RenterTransactions renterTransactions = renterTransactionsDao.getTransaction(transactionID);
+        renterTransactions.setTransactionStatus("accepted");
+        renterTransactionsDao.insertTransaction(renterTransactions);
     }
 
     private void handleRejectedMessage(Map<String, String> messageData) {
         Log.d("FCMService", "Rejected message received");
+        String transactionID = getValueFromMap(messageData, "transactionID");
+        RenterTransactions renterTransactions = renterTransactionsDao.getTransaction(transactionID);
+        renterTransactions.setTransactionStatus("rejected");
+        renterTransactionsDao.insertTransaction(renterTransactions);
     }
     private void handleSharedMessage(Map<String, String> messageData) {
         Log.d("FCMService", "Shared message received");
@@ -99,6 +105,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
     private void handleCommittedMessage(Map<String, String> messageData) {
         Log.d("FCMService", "Committed message received");
+        String transactionID = getValueFromMap(messageData, "transactionID");
+        String newAddress = getValueFromMap(messageData, "newAddress");
+        LandlordTransactions landlordTransactions = landlordTransactionsDao.getTransaction(transactionID);
+        landlordTransactions.setTransactionStatus("committed");
+        landlordTransactions.setData(newAddress);
+        landlordTransactionsDao.insertTransaction(landlordTransactions);
     }
 }
 // message

@@ -132,7 +132,7 @@ public class LoginFragment extends Fragment {
         Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPwithSHA-1andMGF1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         Gson gson = new Gson();
-        NewAddressRequestMessage addressRequestMessage = new NewAddressRequestMessage("MOHAN", "9876543210", "AB");
+        NewAddressRequestMessage addressRequestMessage = new NewAddressRequestMessage("MOHAN", "9876543210");
         String plain = gson.toJson(addressRequestMessage);
         byte[] encryptedBytes = cipher.doFinal(plain.getBytes());
         Log.d("KeyTest", String.valueOf(encryptedBytes.length));
