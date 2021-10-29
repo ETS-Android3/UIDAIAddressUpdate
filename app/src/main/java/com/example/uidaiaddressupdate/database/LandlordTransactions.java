@@ -22,4 +22,5 @@ public class LandlordTransactions {
 
     @ColumnInfo
     public String data;
+
 }
