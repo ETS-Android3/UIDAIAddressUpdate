@@ -7,6 +7,7 @@ public class Constants {
     public static String KEY_AADHAR_NUMBER = "AadharNumber";
 
     public static String KEY_TRANSACTION_ID = "transactionID";
+    public static String KEY_RECEIVER_SHARECODE_ID = "receiverShareCode";
 
     //status
     public static String STATUS_INIT = "init";

@@ -17,7 +17,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 public class EncryptionUtils {
-    public static String encryptMessage(String publicKeyString, String Message) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeySpecException, BadPaddingException, IllegalBlockSizeException, InvalidKeyException {
+    public static String encryptMessage(String publicKeyString, String Message) throws Exception{
         //Generation of Key from String
         byte[] keyBytes = Base64.decode(publicKeyString, Base64.DEFAULT);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);

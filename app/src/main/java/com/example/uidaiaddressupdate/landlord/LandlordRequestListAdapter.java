@@ -38,14 +38,14 @@ public class LandlordRequestListAdapter extends RecyclerView.Adapter<LandlordReq
         holder.approve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                landlordRequestsInterface.GotToCaptchaPage(requestModel.getTransactionID());
+                landlordRequestsInterface.GotToCaptchaPage(requestModel.getTransactionID(), requestModel.getShareCode());
             }
         });
 
         holder.decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                landlordRequestsInterface.HandleRequestDeclined(requestModel.getTransactionID());
+                landlordRequestsInterface.HandleRequestDeclined(requestModel.getTransactionID(), requestModel.getShareCode());
             }
         });
     }

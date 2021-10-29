@@ -15,15 +15,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.uidaiaddressupdate.Constants;
+import com.example.uidaiaddressupdate.EncryptionUtils;
 import com.example.uidaiaddressupdate.R;
+import com.example.uidaiaddressupdate.SharedPrefHelper;
 import com.example.uidaiaddressupdate.Util;
 import com.example.uidaiaddressupdate.service.offlineekyc.OfflineEKYCService;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.ekycoffline.OfflineEkycXMLResponse;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.otp.OtpResponse;
 import com.example.uidaiaddressupdate.service.server.ServerApiService;
+import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyrequest;
+import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyresponse;
 import com.example.uidaiaddressupdate.service.server.model.sendekyc.Sendekycresponse;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Random;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +48,8 @@ public class LandlordOtpPage extends Fragment {
     private Button submit_otp;
     private String otpTxnId;
     private View view;
+    private String receiverShareCode;
+    private String transactionId;
 
     public LandlordOtpPage() {
         // Required empty public constructor
@@ -58,7 +71,8 @@ public class LandlordOtpPage extends Fragment {
 
         String captchaText = getArguments().getString("captchaText");
         String captchaTxnId = getArguments().getString("captchaTxnId");
-        String transactionId = getArguments().getString(Constants.KEY_TRANSACTION_ID);
+        transactionId = getArguments().getString(Constants.KEY_TRANSACTION_ID);
+        receiverShareCode = getArguments().getString(Constants.KEY_RECEIVER_SHARECODE_ID);
         sendOTP(captchaText,captchaTxnId);
 
 
@@ -85,7 +99,7 @@ public class LandlordOtpPage extends Fragment {
                         String passcode = Util.getRandomString();
                         String eKyc = response.body().geteKycXML();
 
-                        sendEkyc(filename,passcode,eKyc,transactionId);
+                        encryptPasscodeAndSendEkyc(filename,passcode,eKyc);
                         Log.d("eKYC", response.body().geteKycXML());
 
                     }
@@ -105,7 +119,30 @@ public class LandlordOtpPage extends Fragment {
         Navigation.findNavController(view).navigate(R.id.action_landlordOtpPage_to_landlordAddressApprovedAck);
     }
 
-    private void sendEkyc(String filename,String passcode, String eKyc, String transactionId){
+    private void encryptPasscodeAndSendEkyc(String filename,String passcode, String eKyc){
+        ServerApiService.getApiInstance().getPublicKey(new Publickeyrequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),receiverShareCode)).enqueue(new Callback<Publickeyresponse>() {
+            @Override
+            public void onResponse(Call<Publickeyresponse> call, Response<Publickeyresponse> response) {
+                String receiverPublicKey = response.body().getPublicKey();
+                Log.d("LandlordOtpPage", "Public Key: "+receiverPublicKey);
+
+                String encryptedPasscode = null;
+                try {
+                    encryptedPasscode = EncryptionUtils.encryptMessage(receiverPublicKey,passcode);
+                    sendEkyc(filename,encryptedPasscode,eKyc);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Publickeyresponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void sendEkyc(String filename,String passcode, String eKyc){
         ServerApiService.sendEkyc(transactionId,filename,passcode,eKyc).enqueue(new Callback<Sendekycresponse>() {
             @Override
             public void onResponse(Call<Sendekycresponse> call, Response<Sendekycresponse> response) {
