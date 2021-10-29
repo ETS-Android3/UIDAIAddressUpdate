@@ -1,5 +1,7 @@
 package com.example.uidaiaddressupdate.service.server;
 
+import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycRequest;
+import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycResponse;
 import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyrequest;
 import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyresponse;
 import com.example.uidaiaddressupdate.service.server.model.sendaddressrequest.Addressrequestformat;
@@ -9,6 +11,7 @@ import com.example.uidaiaddressupdate.service.server.model.sendekyc.Sendekycresp
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
@@ -24,4 +27,9 @@ public interface ServerEndpointInterface {
     @Headers({"Content-Type: application/json"})
     @POST("/sendrequest")
     Call<Addressrequestresponse> sendrequest(@Body Addressrequestformat addressrequestformat);
+
+    @Headers({"Content-Type: application/json"})
+    @GET("/getekyc")
+    Call<GetEkycResponse> getEkyc(@Body GetEkycRequest getEkycRequest);
+
 }

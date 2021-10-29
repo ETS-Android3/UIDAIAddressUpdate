@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import com.example.uidaiaddressupdate.NewAddressRequestMessage;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.service.auth.AuthApiEndpointInterface;
 import com.example.uidaiaddressupdate.service.auth.model.Authotprequest;
@@ -20,6 +21,7 @@ import com.example.uidaiaddressupdate.service.auth.model.Authuidrequest;
 import com.example.uidaiaddressupdate.service.auth.model.Authuidresponse;
 import com.example.uidaiaddressupdate.service.otpservice.OtpAPIService;
 import com.example.uidaiaddressupdate.service.otpservice.model.OtpRes;
+import com.google.gson.Gson;
 
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
@@ -76,6 +78,12 @@ public class LoginFragment extends Fragment {
         aadhar = (EditText)view.findViewById(R.id.login_et_aadhar);
         sendOtp = (Button) view.findViewById(R.id.login_send_otp);
 
+        try {
+            encryptText();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         sendOtp.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -93,7 +101,7 @@ public class LoginFragment extends Fragment {
                         @Override
                         public void onResponse(Call<Authuidresponse> call, Response<Authuidresponse> response) {
                             String transactionId = response.body().getTransactionNo();
-                            GoToOTPPage(transactionId);
+                            GoToOTPPage(transactionId,aadharNumber);
                             Log.d("Mohan","OTP request is correct");
                         }
 
@@ -112,6 +120,26 @@ public class LoginFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void encryptText() throws Exception {
+        KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
+        ks.load(null);
+        KeyStore.Entry pke = (KeyStore.Entry)ks.getEntry("aadharkeys",null);
+        KeyStore.PrivateKeyEntry prk = ((KeyStore.PrivateKeyEntry)pke);
+        PublicKey publicKey = prk.getCertificate().getPublicKey();
+        //Encryption
+        Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPwithSHA-1andMGF1Padding");
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+        Gson gson = new Gson();
+        NewAddressRequestMessage addressRequestMessage = new NewAddressRequestMessage("MOHAN", "9876543210", "AB");
+        String plain = gson.toJson(addressRequestMessage);
+        byte[] encryptedBytes = cipher.doFinal(plain.getBytes());
+        Log.d("KeyTest", String.valueOf(encryptedBytes.length));
+
+        String encryptedText = Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
+        Log.d("OriginalText", plain);
+        Log.d("EncryptedText", encryptedText);
     }
 
     @Override
@@ -134,9 +162,10 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    private void GoToOTPPage(String transactionID){
+    private void GoToOTPPage(String transactionID, String aadharNumber){
         Bundle bundle = new Bundle();
         bundle.putString("transactionId",transactionID);
+        bundle.putString("aadharNumber",aadharNumber);
         Fragment fragment = new OtpFragment();
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -183,15 +212,16 @@ public class LoginFragment extends Fragment {
         ks.load(null);
         KeyStore.Entry pke = (KeyStore.Entry)ks.getEntry("aadharkeys",null);
         KeyStore.PrivateKeyEntry prk = ((KeyStore.PrivateKeyEntry)pke);
-
+        PublicKey publicKey = prk.getCertificate().getPublicKey();
         //Encryption
         Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPwithSHA-1andMGF1Padding");
-        cipher.init(Cipher.ENCRYPT_MODE, pk2);
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         String plain = "test";
         byte[] encryptedBytes = cipher.doFinal(plain.getBytes());
         Log.d("KeyTest", String.valueOf(encryptedBytes.length));
 
         String encryptedText = Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
+        Log.d("EncryptedText", encryptedText);
 
         //Decryption
         Cipher cipher1 = Cipher.getInstance("RSA/ECB/OAEPwithSHA-1andMGF1Padding");
@@ -200,5 +230,4 @@ public class LoginFragment extends Fragment {
         String decryptedText = new String(decryptedBytes);
         Log.d("KeyTest",decryptedText);
     }
-
 }

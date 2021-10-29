@@ -2,15 +2,29 @@ package com.example.uidaiaddressupdate.service.fcmservice;
 
 import android.util.Log;
 
+import com.example.uidaiaddressupdate.DecryptionUtils;
+import com.example.uidaiaddressupdate.NewAddressRequestMessage;
+import com.example.uidaiaddressupdate.database.LandlordTransactions;
+import com.example.uidaiaddressupdate.database.LandlordTransactionsDao;
+import com.example.uidaiaddressupdate.database.RenterTransactions;
+import com.example.uidaiaddressupdate.database.RenterTransactionsDao;
+import com.example.uidaiaddressupdate.database.TransactionDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 
 import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
+    private TransactionDatabase transactionDatabase;
+    private LandlordTransactionsDao landlordTransactionsDao;
+    private RenterTransactionsDao renterTransactionsDao;
     @Override
     public void onCreate() {
         super.onCreate();
+        transactionDatabase = TransactionDatabase.getInstance(getApplicationContext());
+        landlordTransactionsDao = transactionDatabase.landlordTransactionsDao();
+        renterTransactionsDao = transactionDatabase.renterTransactionsDao();
         Log.d("FCMService", "Created");
     }
 
@@ -22,9 +36,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Map<String, String> messageData = remoteMessage.getData();
-        String transactionStatus = messageData.get("transactionStatus");
-        if(transactionStatus == null)
-            transactionStatus = "";
+        String transactionStatus = getValueFromMap(messageData, "status");
         switch (transactionStatus) {
             case "init":
                 handleInitMessage(messageData);
@@ -49,8 +61,27 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
+    private String getValueFromMap(Map<String, String> m, Object key) {
+        String value = m.get(key);
+        return value == null? "" : value;
+    }
+
     private void handleInitMessage(Map<String, String> messageData) {
         Log.d("FCMService", "Init message received");
+        String transactionID = getValueFromMap(messageData, "transactionID");
+        String requesterSC = getValueFromMap(messageData, "reqesterSC");
+        String encryptedMessage = getValueFromMap(messageData, "encryptedMessage");
+        String decryptedMessage = null;
+        try {
+            decryptedMessage = DecryptionUtils.decryptMessage(encryptedMessage);
+            Log.d("FCMService", "DecryptedMessage: " + decryptedMessage);
+            Gson gson = new Gson();
+            NewAddressRequestMessage addressRequestMessage = gson.fromJson(decryptedMessage, NewAddressRequestMessage.class);
+            landlordTransactionsDao.insertTransaction(new LandlordTransactions(transactionID, addressRequestMessage.getRenterName(), addressRequestMessage.getRenterNumber(), "init", "", requesterSC));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void handleAcceptedMessage(Map<String, String> messageData) {

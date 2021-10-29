@@ -13,7 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.R;
+import com.example.uidaiaddressupdate.database.LandlordTransactions;
+import com.example.uidaiaddressupdate.database.LandlordTransactionsDao;
+import com.example.uidaiaddressupdate.database.TransactionDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +29,8 @@ public class LandlordRequestsList extends Fragment implements LandlordRequests {
     private RecyclerView landlordRequestsRecyclerView;
     private List<SingleLandlordRequestModel> singleLandlordRequestModelList;
     private LandlordRequestListAdapter adapter;
-
+    private TransactionDatabase db;
+    private LandlordTransactionsDao landlordTransactionsDao;
 
     public LandlordRequestsList() {
         // Required empty public constructor
@@ -47,7 +52,16 @@ public class LandlordRequestsList extends Fragment implements LandlordRequests {
         landlordRequestsRecyclerView  = (RecyclerView) view.findViewById(R.id.landlord_request_list);
         singleLandlordRequestModelList = new ArrayList<>();
         loadData();
-        adapter = new LandlordRequestListAdapter(singleLandlordRequestModelList,this);
+
+        db = TransactionDatabase.getInstance(getContext());
+        landlordTransactionsDao = db.landlordTransactionsDao();
+
+        AddDummyDataToDatabase();
+
+        List<LandlordTransactions> landlordTransactionsList = landlordTransactionsDao.getTransactionList();
+        Toast.makeText(getContext(), "list size is " + landlordTransactionsList.size(), Toast.LENGTH_SHORT).show();
+
+        adapter = new LandlordRequestListAdapter(landlordTransactionsList,this);
 
         landlordRequestsRecyclerView.setHasFixedSize(true);
         landlordRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
@@ -57,15 +71,18 @@ public class LandlordRequestsList extends Fragment implements LandlordRequests {
     }
 
     @Override
-    public void GotToCaptchaPage(String transactionId) {
+    public void GotToCaptchaPage(String transactionId, String receiverShareCode) {
         //Move to Captcha Page
         Log.d("Mohan","Request Has approved");
         Toast.makeText(getContext(), "Request has approved", Toast.LENGTH_SHORT).show();
-        Navigation.findNavController(view).navigate(R.id.action_landlordRequestsList_to_landlordSingleRequests);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.KEY_TRANSACTION_ID,transactionId);
+        bundle.putString(Constants.KEY_RECEIVER_SHARECODE_ID,receiverShareCode);
+        Navigation.findNavController(view).navigate(R.id.action_landlordRequestsList_to_landlordSingleRequests,bundle);
     }
 
     @Override
-    public void HandleRequestDeclined(String transactionid) {
+    public void HandleRequestDeclined(String transactionid, String receiverShareCode) {
         //Request has declined
         Toast.makeText(getContext(), "Request has declined", Toast.LENGTH_SHORT).show();
     }
@@ -77,4 +94,10 @@ public class LandlordRequestsList extends Fragment implements LandlordRequests {
         singleLandlordRequestModelList.add(new SingleLandlordRequestModel("Sourav","ABCD","9876543210","null","ABCD"));
         singleLandlordRequestModelList.add(new SingleLandlordRequestModel("Pooja","ABCD","9876543210","null","ABCD"));
     }
+
+    private void AddDummyDataToDatabase(){
+        landlordTransactionsDao.insertTransaction(new LandlordTransactions("ABCD","Mohan Aman","9876543210","success","I am a good person","Share Code"));
+        landlordTransactionsDao.insertTransaction(new LandlordTransactions("EFGH","Aman PRanav","9876543210","success","I am a good person","Share Code"));
+    }
+
 }

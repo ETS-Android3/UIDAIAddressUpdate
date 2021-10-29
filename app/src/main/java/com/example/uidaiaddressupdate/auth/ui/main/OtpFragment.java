@@ -65,6 +65,7 @@ public class OtpFragment extends Fragment {
         // Inflate the layout for this fragment
 
         String transactionId = getArguments().getString("transactionId");
+        String aadharNumber = getArguments().getString("aadharNumber");
 
         View view = inflater.inflate(R.layout.fragment_otp, container, false);
         otp = (EditText) view.findViewById(R.id.otp_et_enter_otp);
@@ -104,10 +105,11 @@ public class OtpFragment extends Fragment {
                                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
                             );
                             SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
-                            Log.d("Mohan",response.body().toString());
+                                Log.d("Mohan",response.body().toString());
                             sharedPrefsEditor.putString("AuthToken",response.body().getAuthToken());
                             sharedPrefsEditor.putString("UidToken",response.body().getUidToken());
                             sharedPrefsEditor.putString("ShareableCode",response.body().getShareableCode());
+                            sharedPrefsEditor.putString("aadharNumber",aadharNumber);
 
                             sharedPrefsEditor.commit();
                         } catch (GeneralSecurityException e) {
@@ -126,7 +128,6 @@ public class OtpFragment extends Fragment {
 
                     }
                 });
-
             }
         });
         return view;

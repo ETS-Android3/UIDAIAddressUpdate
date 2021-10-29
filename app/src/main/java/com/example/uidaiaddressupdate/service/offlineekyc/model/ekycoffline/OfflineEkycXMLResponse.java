@@ -1,16 +1,14 @@
 package com.example.uidaiaddressupdate.service.offlineekyc.model.ekycoffline;
 
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
-public class OfflineEkycXMLResponse implements Serializable {
-    private static final long serialVersionUID = 6449564989990671308L;
+public class OfflineEkycXMLResponse{
 
     private String eKycXML;
     private String fileName;
     private String status;
-    private LocalDate requestDate;
+    private String requestDate;
     private String uidNumber;
 
     public String geteKycXML() {
@@ -19,5 +17,37 @@ public class OfflineEkycXMLResponse implements Serializable {
 
     public void seteKycXML(String eKycXML) {
         this.eKycXML = eKycXML;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRequestDate() {
+        return requestDate;
+    }
+
+    public void setRequestDate(String requestDate) {
+        this.requestDate = requestDate;
+    }
+
+    public String getUidNumber() {
+        return uidNumber;
+    }
+
+    public void setUidNumber(String uidNumber) {
+        this.uidNumber = uidNumber;
     }
 }

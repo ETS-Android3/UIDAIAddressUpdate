@@ -16,4 +16,51 @@ public class RenterTransactions {
 
     @ColumnInfo
     public String data;
+
+    @ColumnInfo
+    public String shareCode;
+
+    public RenterTransactions(){
+
+    }
+
+    public RenterTransactions(@NonNull String transactionID, String transactionStatus, String data, String shareCode) {
+        this.transactionID = transactionID;
+        this.transactionStatus = transactionStatus;
+        this.data = data;
+        this.shareCode = shareCode;
+    }
+
+    @NonNull
+    public String getTransactionID() {
+        return transactionID;
+    }
+
+    public void setTransactionID(@NonNull String transactionID) {
+        this.transactionID = transactionID;
+    }
+
+    public String getTransactionStatus() {
+        return transactionStatus;
+    }
+
+    public void setTransactionStatus(String transactionStatus) {
+        this.transactionStatus = transactionStatus;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public String getShareCode() {
+        return shareCode;
+    }
+
+    public void setShareCode(String shareCode) {
+        this.shareCode = shareCode;
+    }
 }
