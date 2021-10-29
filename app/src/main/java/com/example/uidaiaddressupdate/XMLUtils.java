@@ -16,11 +16,11 @@ public class XMLUtils {
         return "";
     }
 
-    public static NewAddressRequestMessage createAddressRequestMessageFromKYC(String eKYCXml,String shareCode) throws Exception {
+    public static NewAddressRequestMessage createAddressRequestMessageFromKYC(String eKYCXml) throws Exception {
         Document eKYCdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(eKYCXml)));
 
         NamedNodeMap poiAttributes = eKYCdoc.getElementsByTagName("Poi").item(0).getAttributes();
-        NewAddressRequestMessage addressRequestMessage = new NewAddressRequestMessage(poiAttributes.getNamedItem("name").getNodeValue(),poiAttributes.getNamedItem("phone").getNodeValue(),shareCode);
+        NewAddressRequestMessage addressRequestMessage = new NewAddressRequestMessage(poiAttributes.getNamedItem("name").getNodeValue(),poiAttributes.getNamedItem("phone").getNodeValue());
         return addressRequestMessage;
     }
 }

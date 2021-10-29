@@ -3,12 +3,10 @@ package com.example.uidaiaddressupdate;
 public class NewAddressRequestMessage {
     private String renterName;
     private String renterNumber;
-    private String shareCode;
 
-    public NewAddressRequestMessage(String renterName, String renterNumber, String shareCode) {
+    public NewAddressRequestMessage(String renterName, String renterNumber) {
         this.renterName = renterName;
         this.renterNumber = renterNumber;
-        this.shareCode = shareCode;
     }
 
     public String getRenterName() {
@@ -28,7 +26,6 @@ public class NewAddressRequestMessage {
         return "NewAddressRequestMessage{" +
                 "renterName='" + renterName + '\'' +
                 ", renterNumber='" + renterNumber + '\'' +
-                ", shareCode='" + shareCode + '\'' +
                 '}';
     }
 }
