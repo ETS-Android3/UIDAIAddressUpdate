@@ -6,7 +6,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class Transaction {
+public class LandlordTransactions {
     @NonNull
     @PrimaryKey
     public String transactionID;
