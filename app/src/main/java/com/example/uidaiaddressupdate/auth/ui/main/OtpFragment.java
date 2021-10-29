@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.security.crypto.EncryptedSharedPreferences;
@@ -26,6 +27,8 @@ import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.service.auth.AuthApiEndpointInterface;
 import com.example.uidaiaddressupdate.service.auth.model.Authotprequest;
 import com.example.uidaiaddressupdate.service.auth.model.Authotpresponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.io.IOException;
@@ -43,7 +46,7 @@ public class OtpFragment extends Fragment {
     private EditText otp;
     private TextView resendOtp;
     private Button submit;
-
+    private String FCMtoken = null;
     public OtpFragment() {
         // Required empty public constructor
     }
@@ -68,6 +71,7 @@ public class OtpFragment extends Fragment {
         resendOtp = (TextView) view.findViewById(R.id.otp_resend_otp);
         submit = (Button) view.findViewById(R.id.otp_verify_button);
 
+        getFCMRegistrationToken();
         submit.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -83,7 +87,7 @@ public class OtpFragment extends Fragment {
                     return;
                 }
 
-                String FCMtoken = getFCMRegistrationToken();
+
                 Log.d("FCM Token:",FCMtoken);
                 Authotprequest authotprequest = new Authotprequest(transactionId,otp.getText().toString(),FCMtoken,pubkeyString);
                 apiServie.authenticate(authotprequest).enqueue(new Callback<Authotpresponse>() {
@@ -100,7 +104,7 @@ public class OtpFragment extends Fragment {
                                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
                             );
                             SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
-
+                            Log.d("Mohan",response.body().toString());
                             sharedPrefsEditor.putString("AuthToken",response.body().getAuthToken());
                             sharedPrefsEditor.putString("UidToken",response.body().getUidToken());
                             sharedPrefsEditor.putString("ShareableCode",response.body().getShareableCode());
@@ -151,7 +155,14 @@ public class OtpFragment extends Fragment {
         return publicKeyString;
     }
 
-    private String getFCMRegistrationToken(){
-        return FirebaseMessaging.getInstance().getToken().getResult();
+    private void getFCMRegistrationToken(){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if(task.isSuccessful()){
+                    FCMtoken = task.getResult();
+                }
+            }
+        });
     }
 }

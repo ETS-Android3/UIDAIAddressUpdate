@@ -13,7 +13,7 @@ public interface TransactionDao {
     @Query("SELECT * FROM `Transaction`")
     List<Transaction> getTransactionList();
 
-    @Query("SELECT * FROM `Transaction` WHERE `Transaction`.transactionID = transactionID")
+    @Query("SELECT * FROM `Transaction` WHERE `Transaction`.transactionID = :transactionId")
     Transaction getTransaction(String transactionId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
