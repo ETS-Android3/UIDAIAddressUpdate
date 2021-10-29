@@ -7,13 +7,19 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.d("FCMService", "Created");
+    }
+
+    @Override
     public void onNewToken(String token) {
-        Log.d("MessagingService", "Refreshed token: " + token);
+        Log.d("FCMService", "Refreshed token: " + token);
         // TODO: Add action
     }
 
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        return;
+        Log.d("FCMService", "Message Received");
     }
 
 }
