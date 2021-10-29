@@ -4,7 +4,6 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/drawable/round_button.xml" value="0.2703125" />
-        <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/activity_landing.xml" value="0.24048913043478262" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/activity_landlord.xml" value="0.24010416666666667" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/activity_main.xml" value="0.24010416666666667" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/activity_request_home.xml" value="0.24010416666666667" />
@@ -24,6 +23,9 @@
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/main_fragment.xml" value="0.24010416666666667" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/old_request_layout.xml" value="0.24139492753623187" />
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/layout/single_address_request_layout.xml" value="0.264" />
+        <entry key="app/src/main/res/layout/fragment_enter_share_code.xml" value="0.26721014492753625" />
+        <entry key="app/src/main/res/layout/fragment_renter_o_t_p.xml" value="0.26721014492753625" />
+        <entry key="app/src/main/res/layout/fragment_request_sent_page.xml" value="0.1640625" />
       </map>
     </option>
   </component>

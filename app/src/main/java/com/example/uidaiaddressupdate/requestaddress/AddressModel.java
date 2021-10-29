@@ -14,6 +14,10 @@ public class AddressModel {
     private String pc;
     private String po;
 
+    public AddressModel(){
+
+    }
+
     public AddressModel(String co, String house, String street, String lm, String loc, String vtc, String subdist, String dist, String state, String country, String pc, String po) {
         this.co = co;
         this.house = house;

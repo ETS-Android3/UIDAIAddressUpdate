@@ -25,9 +25,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-//        byte[] base64Val = Base64.decode(captchaResponse.getCaptchaBase64String(),Base64.DEFAULT);
-//        Bitmap decodedByte = BitmapFactory.decodeByteArray(base64Val,0,base64Val.length);
-//
 public class LandlordSingleRequests extends Fragment {
 
     private ImageView captchaImage;
@@ -37,6 +34,7 @@ public class LandlordSingleRequests extends Fragment {
     private View view;
     private String captchaTxnId;
     private String transactionId;
+    private String receiverShareCode;
 
     public LandlordSingleRequests() {
         // Required empty public constructor
@@ -54,6 +52,7 @@ public class LandlordSingleRequests extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         transactionId = getArguments().getString(Constants.KEY_TRANSACTION_ID);
+        receiverShareCode = getArguments().getString(Constants.KEY_RECEIVER_SHARECODE_ID);
         view =  inflater.inflate(R.layout.fragment_landlord_single_requests, container, false);
         captchaImage = (ImageView) view.findViewById(R.id.captcha_image);
         captchaEditText = (EditText) view.findViewById(R.id.captcha_edit_text);
@@ -94,6 +93,8 @@ public class LandlordSingleRequests extends Fragment {
         bundle.putString("captchaTxnId",captchaTxnId);
         bundle.putString("captchaText",captchaText);
         bundle.putString(Constants.KEY_TRANSACTION_ID,transactionId);
+        bundle.putString(Constants.KEY_RECEIVER_SHARECODE_ID,receiverShareCode);
+
         Navigation.findNavController(view).navigate(R.id.action_landlordSingleRequests_to_landlordOtpPage,bundle);
     }
 }

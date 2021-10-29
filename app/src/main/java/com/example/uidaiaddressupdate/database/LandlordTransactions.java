@@ -26,6 +26,9 @@ public class LandlordTransactions {
     @ColumnInfo
     public String shareCode;
 
+    public LandlordTransactions(){
+
+    }
     public LandlordTransactions(@NonNull String transactionID, String renterName, String renterNumber, String transactionStatus, String data, String shareCode) {
         this.transactionID = transactionID;
         this.renterName = renterName;

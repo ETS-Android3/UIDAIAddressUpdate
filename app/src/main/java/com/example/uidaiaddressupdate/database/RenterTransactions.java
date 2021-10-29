@@ -20,6 +20,10 @@ public class RenterTransactions {
     @ColumnInfo
     public String shareCode;
 
+    public RenterTransactions(){
+
+    }
+
     public RenterTransactions(@NonNull String transactionID, String transactionStatus, String data, String shareCode) {
         this.transactionID = transactionID;
         this.transactionStatus = transactionStatus;
