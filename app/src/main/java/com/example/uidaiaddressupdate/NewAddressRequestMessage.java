@@ -9,6 +9,14 @@ public class NewAddressRequestMessage {
         this.renterNumber = renterNumber;
     }
 
+    public String getRenterName() {
+        return renterName;
+    }
+
+    public String getRenterNumber() {
+        return renterNumber;
+    }
+
     @Override
     public String toString() {
         return "NewAddressRequestMessage{" +
