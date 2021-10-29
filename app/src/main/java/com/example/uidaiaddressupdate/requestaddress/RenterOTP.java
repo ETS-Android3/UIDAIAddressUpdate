@@ -92,7 +92,7 @@ public class RenterOTP extends Fragment {
 
                         Log.d("KYC", response.body().geteKycString());
                         try {
-                            addressMessage = new Gson().toJson(XMLUtils.createAddressRequestMessageFromKYC(response.body().geteKycString(),receiverSharableCode));
+                            addressMessage = new Gson().toJson(XMLUtils.createAddressRequestMessageFromKYC(response.body().geteKycString()));
                             Log.d("KYC", addressMessage);
 
                             encryptedAddressMessage = EncryptionUtils.encryptMessage(receiverPublicKey,addressMessage);
