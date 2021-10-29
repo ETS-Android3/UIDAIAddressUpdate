@@ -1,7 +1,9 @@
 package com.example.uidaiaddressupdate.requestaddress;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
@@ -17,12 +19,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.uidaiaddressupdate.Constants;
+import com.example.uidaiaddressupdate.EncryptionUtils;
 import com.example.uidaiaddressupdate.R;
+import com.example.uidaiaddressupdate.XMLUtils;
 import com.example.uidaiaddressupdate.database.RenterTransactions;
 import com.example.uidaiaddressupdate.database.RenterTransactionsDao;
 import com.example.uidaiaddressupdate.database.TransactionDatabase;
 import com.example.uidaiaddressupdate.service.server.ServerApiService;
 import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycResponse;
+import com.google.gson.Gson;
 
 public class RequestDetails extends Fragment {
 
@@ -77,10 +82,26 @@ public class RequestDetails extends Fragment {
             @Override
             public void onClick(View v) {
                 ServerApiService.getEkyc(transactionID).enqueue(new Callback<GetEkycResponse>() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onResponse(Call<GetEkycResponse> call, Response<GetEkycResponse> response) {
                         //
+                        AddressModel addressModel = null;
                         Toast.makeText(getContext(), "Got EKyc", Toast.LENGTH_SHORT).show();
+                        try {
+                            String decryptedPasscode = EncryptionUtils.decryptMessage(response.body().getEncryptedPasscode());
+                            String eKYCxml = XMLUtils.getKYCxmlFromZip(response.body().getEncryptedEKYC(),decryptedPasscode);
+
+                             addressModel = XMLUtils.getAddressFromEKYCxml(eKYCxml);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            return ;
+                        }
+                        Bundle bundle = new Bundle();
+                        bundle.putString("addressModel",new Gson().toJson(addressModel));
+
+                        Navigation.findNavController(view).navigate(R.id.action_requestDetails_to_editAddress,bundle);
+
                     }
 
                     @Override
@@ -88,7 +109,6 @@ public class RequestDetails extends Fragment {
                         //
                     }
                 });
-                Navigation.findNavController(view).navigate(R.id.action_requestDetails_to_editAddress);
             }
         });
 

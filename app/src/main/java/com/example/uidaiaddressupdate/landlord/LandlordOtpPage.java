@@ -1,7 +1,9 @@
 package com.example.uidaiaddressupdate.landlord;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -19,6 +21,7 @@ import com.example.uidaiaddressupdate.EncryptionUtils;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.SharedPrefHelper;
 import com.example.uidaiaddressupdate.Util;
+import com.example.uidaiaddressupdate.XMLUtils;
 import com.example.uidaiaddressupdate.service.offlineekyc.OfflineEKYCService;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.ekycoffline.OfflineEkycXMLResponse;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.otp.OtpResponse;
@@ -27,6 +30,7 @@ import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publicke
 import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyresponse;
 import com.example.uidaiaddressupdate.service.server.model.sendekyc.Sendekycresponse;
 
+import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -92,15 +96,22 @@ public class LandlordOtpPage extends Fragment {
             public void onClick(View v) {
                 Log.d("eKYC",otp_edit_text.getText().toString());
                 Log.d("eKYC",otpTxnId);
-                OfflineEKYCService.makeOfflineEKYCCall("999952733847",otp_edit_text.getText().toString(),otpTxnId,"1234").enqueue(new Callback<OfflineEkycXMLResponse>() {
+                String passcode = Util.getRandomString();
+                OfflineEKYCService.makeOfflineEKYCCall("999952733847",otp_edit_text.getText().toString(),otpTxnId,passcode).enqueue(new Callback<OfflineEkycXMLResponse>() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onResponse(Call<OfflineEkycXMLResponse> call, Response<OfflineEkycXMLResponse> response) {
                         String filename = response.body().getFileName();
-                        String passcode = Util.getRandomString();
                         String eKyc = response.body().geteKycXML();
+                        Log.d("eKYC", response.body().geteKycXML());
+
+//                        try {
+//                            Log.d("eKYC decrrypted", XMLUtils.getKYCxmlFromZip(response.body().geteKycXML(), passcode));
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
 
                         encryptPasscodeAndSendEkyc(filename,passcode,eKyc);
-                        Log.d("eKYC", response.body().geteKycXML());
 
                     }
 

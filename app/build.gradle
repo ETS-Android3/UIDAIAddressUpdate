@@ -49,6 +49,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation "androidx.security:security-crypto:1.0.0"
+    implementation 'net.lingala.zip4j:zip4j:2.9.0'
 
     def room_version = "2.3.0"
 
