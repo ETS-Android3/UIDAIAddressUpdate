@@ -1,6 +1,7 @@
 package com.example.uidaiaddressupdate;
 
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -86,13 +87,14 @@ public class XMLUtils {
 
         byte[] decoder = Base64.getDecoder().decode(zipBase64);
 
-        ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(decoder), Charset.forName(password));
+        ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(decoder), password.toCharArray());
 
         LocalFileHeader localFileHeader;
         byte[] readBuffer = new byte[4096];
         int readLen;
 
         while ((localFileHeader = zipInputStream.getNextEntry()) != null) {
+            Log.d("eKYC",localFileHeader.getFileName());
             while ((readLen = zipInputStream.read(readBuffer)) != -1) {
                 eKYCxml += new String(readBuffer, StandardCharsets.UTF_8);
             }
