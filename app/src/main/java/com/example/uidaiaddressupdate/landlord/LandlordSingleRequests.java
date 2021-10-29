@@ -1,11 +1,14 @@
 package com.example.uidaiaddressupdate.landlord;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +17,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.uidaiaddressupdate.R;
-
+import com.example.uidaiaddressupdate.service.offlineekyc.OfflineEKYCService;
+import com.example.uidaiaddressupdate.service.offlineekyc.model.captcha.CaptchaResponse;
+//        byte[] base64Val = Base64.decode(captchaResponse.getCaptchaBase64String(),Base64.DEFAULT);
+//        Bitmap decodedByte = BitmapFactory.decodeByteArray(base64Val,0,base64Val.length);
+//
 public class LandlordSingleRequests extends Fragment {
 
     private ImageView captchaImage;
@@ -22,7 +29,7 @@ public class LandlordSingleRequests extends Fragment {
     private EditText captchaEditText;
     private AppCompatButton captchaContinue;
     private View view;
-
+    private String captchaTxnId;
 
     public LandlordSingleRequests() {
         // Required empty public constructor
@@ -45,10 +52,23 @@ public class LandlordSingleRequests extends Fragment {
         captchaRefresh = (TextView) view.findViewById(R.id.captcha_refresh);
         captchaContinue = (AppCompatButton) view.findViewById(R.id.captcha_continue);
 
+        try {
+            CaptchaResponse captchaResponse = OfflineEKYCService.makeCaptchaCall();
+            captchaTxnId = captchaResponse.getCaptchaTxnId();
+            byte[] base64Val = Base64.decode(captchaResponse.getCaptchaBase64String(),Base64.DEFAULT);
+            Bitmap decodedByte = BitmapFactory.decodeByteArray(base64Val,0,base64Val.length);
+
+            captchaImage.setImageBitmap(decodedByte);
+        } catch (Exception e) {
+            e.printStackTrace();
+            // End App
+        }
+
         captchaContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //send to OTP page
+                SendToOTPPage(captchaTxnId);
             }
         });
         return view;

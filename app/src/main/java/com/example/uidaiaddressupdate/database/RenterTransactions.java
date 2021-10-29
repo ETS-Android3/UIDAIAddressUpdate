@@ -6,16 +6,10 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class Transaction {
+public class RenterTransactions {
     @NonNull
     @PrimaryKey
     public String transactionID;
-
-    @ColumnInfo
-    public String renterName;
-
-    @ColumnInfo
-    public String renterNumber;
 
     @ColumnInfo
     public String transactionStatus;
