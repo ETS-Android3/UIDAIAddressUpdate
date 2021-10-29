@@ -22,4 +22,5 @@ public class Transaction {
 
     @ColumnInfo
     public String data;
+
 }
