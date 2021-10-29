@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.database.RenterTransactions;
 import com.example.uidaiaddressupdate.database.RenterTransactionsDao;
@@ -88,12 +89,17 @@ public class RequestAddressHome extends Fragment implements NavigateToRequestDet
     public void MoveToRequestDetails(String transactionId) {
         //Move to
         Log.d("Mohan","Inside Interface Method");
-        Navigation.findNavController(view).navigate(R.id.action_requestAddressHome_to_requestDetails);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.KEY_TRANSACTION_ID,transactionId);
+        Navigation.findNavController(view).navigate(R.id.action_requestAddressHome_to_requestDetails,bundle);
     }
 
     private void AddDummyDataToDatabase(){
-        renterTransactionsDao.insertTransaction(new RenterTransactions("ZMXNH","Success","this is a dummy data","ShareCode"));
-        renterTransactionsDao.insertTransaction(new RenterTransactions("ZHXNH","Success","this is a dummy data","ShareCode"));
-        renterTransactionsDao.insertTransaction(new RenterTransactions("ZLXNH","Success","this is a dummy data","ShareCode"));
+        renterTransactionsDao.insertTransaction(new RenterTransactions("ZMXNH", Constants.STATUS_INIT,"this is a dummy data","ShareCode"));
+        renterTransactionsDao.insertTransaction(new RenterTransactions("ZHXNH",Constants.STATUS_ABORTED,"this is a dummy data","ShareCode"));
+        renterTransactionsDao.insertTransaction(new RenterTransactions("ZLXNH1",Constants.STATUS_COMMITED,"this is a dummy data","ShareCode"));
+        renterTransactionsDao.insertTransaction(new RenterTransactions("ZLXNH2",Constants.STATUS_ACCEPTED,"this is a dummy data","ShareCode"));
+        renterTransactionsDao.insertTransaction(new RenterTransactions("ZLXNH3",Constants.STATUS_REJECTED,"this is a dummy data","ShareCode"));
+        renterTransactionsDao.insertTransaction(new RenterTransactions("ZLXNH4",Constants.STATUS_SHARED,"this is a dummy data","ShareCode"));
     }
 }

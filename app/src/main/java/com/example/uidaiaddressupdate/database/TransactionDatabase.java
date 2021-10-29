@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {LandlordTransactions.class,RenterTransactions.class}, version = 1)
+@Database(entities = {LandlordTransactions.class,RenterTransactions.class}, version = 2)
 public abstract class TransactionDatabase extends RoomDatabase {
     private static TransactionDatabase instance;
 

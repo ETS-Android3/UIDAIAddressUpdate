@@ -37,9 +37,8 @@
         android:label="fragment_enter_share_code"
         tools:layout="@layout/fragment_enter_share_code" >
         <action
-            android:id="@+id/action_enterShareCode_to_requestSentPage"
-            app:destination="@id/requestSentPage"
-            app:popUpTo="@id/requestAddressHome" />
+            android:id="@+id/action_enterShareCode_to_renterOTP"
+            app:destination="@id/renterOTP" />
     </fragment>
     <fragment
         android:id="@+id/requestSentPage"
@@ -50,5 +49,14 @@
             android:id="@+id/action_requestSentPage_to_requestAddressHome"
             app:destination="@id/requestAddressHome"
             app:popUpTo="@id/requestAddressHome" />
+    </fragment>
+    <fragment
+        android:id="@+id/renterOTP"
+        android:name="com.example.uidaiaddressupdate.RenterOTP"
+        android:label="fragment_renter_o_t_p"
+        tools:layout="@layout/fragment_renter_o_t_p" >
+        <action
+            android:id="@+id/action_renterOTP_to_requestSentPage"
+            app:destination="@id/requestSentPage" />
     </fragment>
 </navigation>

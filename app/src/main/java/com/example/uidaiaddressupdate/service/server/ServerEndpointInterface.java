@@ -9,6 +9,7 @@ import com.example.uidaiaddressupdate.service.server.model.sendekyc.Sendekycresp
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
@@ -24,4 +25,8 @@ public interface ServerEndpointInterface {
     @Headers({"Content-Type: application/json"})
     @POST("/sendrequest")
     Call<Addressrequestresponse> sendrequest(@Body Addressrequestformat addressrequestformat);
+
+//    @Headers({"Content-Type: application/json"})
+//    @GET()
+//
 }

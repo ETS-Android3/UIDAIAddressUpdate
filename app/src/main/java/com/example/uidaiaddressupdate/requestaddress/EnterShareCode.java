@@ -36,7 +36,7 @@ public class EnterShareCode extends Fragment {
         share_code_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_enterShareCode_to_requestSentPage);
+                Navigation.findNavController(view).navigate(R.id.action_enterShareCode_to_renterOTP);
             }
         });
         return view;
