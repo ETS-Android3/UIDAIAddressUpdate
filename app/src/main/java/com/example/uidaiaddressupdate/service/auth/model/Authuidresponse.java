@@ -12,5 +12,4 @@ public class Authuidresponse implements Serializable {
     public void setTransactionNo(String transactionNo) {
         this.transactionNo = transactionNo;
     }
-
 }
