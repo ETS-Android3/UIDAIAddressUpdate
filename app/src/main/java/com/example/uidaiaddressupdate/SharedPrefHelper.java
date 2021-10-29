@@ -15,6 +15,7 @@ public class SharedPrefHelper {
     private static String AuthToken = null;
     private static String UidToken = null;
     private static String ShareableCode = null;
+    private static String AadharNumber = null;
 
     private static void fetchAndSaveVariable(Context context){
         try {
@@ -31,6 +32,7 @@ public class SharedPrefHelper {
             AuthToken = sharedPreferences.getString(Constants.KEY_AUTH_TOKEN,null);
             UidToken = sharedPreferences.getString(Constants.KEY_UID_TOKEN,null);
             ShareableCode = sharedPreferences.getString(Constants.KEY_SHAREABLE_CODE,null);
+            AadharNumber = sharedPreferences.getString(Constants.KEY_AADHAR_NUMBER,null);
 
         }catch(Exception e){
             Toast.makeText(context, "Error while reading shared pref", Toast.LENGTH_SHORT).show();
@@ -62,5 +64,11 @@ public class SharedPrefHelper {
             fetchAndSaveVariable(context);
             return ShareableCode;
         }
+    }
+
+    public static String getAadharNumber(Context context) {
+        if(AadharNumber == null)
+            fetchAndSaveVariable(context);
+        return AadharNumber;
     }
 }

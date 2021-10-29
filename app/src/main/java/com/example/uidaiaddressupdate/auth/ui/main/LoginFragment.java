@@ -93,7 +93,7 @@ public class LoginFragment extends Fragment {
                         @Override
                         public void onResponse(Call<Authuidresponse> call, Response<Authuidresponse> response) {
                             String transactionId = response.body().getTransactionNo();
-                            GoToOTPPage(transactionId);
+                            GoToOTPPage(transactionId,aadharNumber);
                             Log.d("Mohan","OTP request is correct");
                         }
 
@@ -134,9 +134,10 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    private void GoToOTPPage(String transactionID){
+    private void GoToOTPPage(String transactionID, String aadharNumber){
         Bundle bundle = new Bundle();
         bundle.putString("transactionId",transactionID);
+        bundle.putString("aadharNumber",aadharNumber);
         Fragment fragment = new OtpFragment();
         fragment.setArguments(bundle);
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
