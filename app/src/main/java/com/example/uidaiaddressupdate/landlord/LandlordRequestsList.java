@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.database.LandlordTransactions;
 import com.example.uidaiaddressupdate.database.LandlordTransactionsDao;
@@ -74,7 +75,9 @@ public class LandlordRequestsList extends Fragment implements LandlordRequests {
         //Move to Captcha Page
         Log.d("Mohan","Request Has approved");
         Toast.makeText(getContext(), "Request has approved", Toast.LENGTH_SHORT).show();
-        Navigation.findNavController(view).navigate(R.id.action_landlordRequestsList_to_landlordSingleRequests);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.KEY_TRANSACTION_ID,transactionId);
+        Navigation.findNavController(view).navigate(R.id.action_landlordRequestsList_to_landlordSingleRequests,bundle);
     }
 
     @Override

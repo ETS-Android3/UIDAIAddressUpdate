@@ -5,6 +5,9 @@ import android.os.Bundle;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +21,8 @@ import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.database.RenterTransactions;
 import com.example.uidaiaddressupdate.database.RenterTransactionsDao;
 import com.example.uidaiaddressupdate.database.TransactionDatabase;
+import com.example.uidaiaddressupdate.service.server.ServerApiService;
+import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycResponse;
 
 public class RequestDetails extends Fragment {
 
@@ -71,6 +76,18 @@ public class RequestDetails extends Fragment {
         edit_address_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ServerApiService.getEkyc(transactionID).enqueue(new Callback<GetEkycResponse>() {
+                    @Override
+                    public void onResponse(Call<GetEkycResponse> call, Response<GetEkycResponse> response) {
+                        //
+                        Toast.makeText(getContext(), "Got EKyc", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetEkycResponse> call, Throwable t) {
+                        //
+                    }
+                });
                 Navigation.findNavController(view).navigate(R.id.action_requestDetails_to_editAddress);
             }
         });

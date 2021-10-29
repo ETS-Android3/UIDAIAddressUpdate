@@ -12,11 +12,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.R;
+import com.example.uidaiaddressupdate.Util;
 import com.example.uidaiaddressupdate.service.offlineekyc.OfflineEKYCService;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.ekycoffline.OfflineEkycXMLResponse;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.otp.OtpResponse;
+import com.example.uidaiaddressupdate.service.server.ServerApiService;
+import com.example.uidaiaddressupdate.service.server.model.sendekyc.Sendekycresponse;
+
+import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,7 +58,7 @@ public class LandlordOtpPage extends Fragment {
 
         String captchaText = getArguments().getString("captchaText");
         String captchaTxnId = getArguments().getString("captchaTxnId");
-
+        String transactionId = getArguments().getString(Constants.KEY_TRANSACTION_ID);
         sendOTP(captchaText,captchaTxnId);
 
 
@@ -74,8 +81,13 @@ public class LandlordOtpPage extends Fragment {
                 OfflineEKYCService.makeOfflineEKYCCall("999952733847",otp_edit_text.getText().toString(),otpTxnId,"1234").enqueue(new Callback<OfflineEkycXMLResponse>() {
                     @Override
                     public void onResponse(Call<OfflineEkycXMLResponse> call, Response<OfflineEkycXMLResponse> response) {
+                        String filename = response.body().getFileName();
+                        String passcode = Util.getRandomString();
+                        String eKyc = response.body().geteKycXML();
+
+                        sendEkyc(filename,passcode,eKyc,transactionId);
                         Log.d("eKYC", response.body().geteKycXML());
-                        sendToLandlordAddressApprovedAckPage();
+
                     }
 
                     @Override
@@ -91,6 +103,20 @@ public class LandlordOtpPage extends Fragment {
 
     private void sendToLandlordAddressApprovedAckPage(){
         Navigation.findNavController(view).navigate(R.id.action_landlordOtpPage_to_landlordAddressApprovedAck);
+    }
+
+    private void sendEkyc(String filename,String passcode, String eKyc, String transactionId){
+        ServerApiService.sendEkyc(transactionId,filename,passcode,eKyc).enqueue(new Callback<Sendekycresponse>() {
+            @Override
+            public void onResponse(Call<Sendekycresponse> call, Response<Sendekycresponse> response) {
+                Log.d("Mohan","Ekyc Uploaded");
+                sendToLandlordAddressApprovedAckPage();
+            }
+            @Override
+            public void onFailure(Call<Sendekycresponse> call, Throwable t) {
+                Toast.makeText(getContext(), "Error : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 //9999527333847
     private void sendOTP(String captchaText, String captchaTxnId){

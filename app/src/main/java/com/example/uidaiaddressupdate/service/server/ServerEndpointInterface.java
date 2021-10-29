@@ -1,5 +1,7 @@
 package com.example.uidaiaddressupdate.service.server;
 
+import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycRequest;
+import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycResponse;
 import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyrequest;
 import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyresponse;
 import com.example.uidaiaddressupdate.service.server.model.sendaddressrequest.Addressrequestformat;
@@ -26,7 +28,8 @@ public interface ServerEndpointInterface {
     @POST("/sendrequest")
     Call<Addressrequestresponse> sendrequest(@Body Addressrequestformat addressrequestformat);
 
-//    @Headers({"Content-Type: application/json"})
-//    @GET()
-//
+    @Headers({"Content-Type: application/json"})
+    @GET("/getekyc")
+    Call<GetEkycResponse> getEkyc(@Body GetEkycRequest getEkycRequest);
+
 }

@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import com.example.uidaiaddressupdate.landlord.LandlordActivity;
 import com.example.uidaiaddressupdate.requestaddress.RequestHome;
+import com.example.uidaiaddressupdate.sharecode.ShowShareCode;
 
 public class MainActivity extends AppCompatActivity {
     private AppCompatButton requestAddress, viewRequests, shareCode;
@@ -34,6 +35,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, LandlordActivity.class));
+            }
+        });
+
+        shareCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ShowShareCode.class));
             }
         });
     }
