@@ -24,9 +24,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-//        byte[] base64Val = Base64.decode(captchaResponse.getCaptchaBase64String(),Base64.DEFAULT);
-//        Bitmap decodedByte = BitmapFactory.decodeByteArray(base64Val,0,base64Val.length);
-//
 public class LandlordSingleRequests extends Fragment {
 
     private ImageView captchaImage;
