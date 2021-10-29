@@ -19,6 +19,11 @@ import android.widget.TextView;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.service.offlineekyc.OfflineEKYCService;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.captcha.CaptchaResponse;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 //        byte[] base64Val = Base64.decode(captchaResponse.getCaptchaBase64String(),Base64.DEFAULT);
 //        Bitmap decodedByte = BitmapFactory.decodeByteArray(base64Val,0,base64Val.length);
 //
@@ -52,29 +57,39 @@ public class LandlordSingleRequests extends Fragment {
         captchaRefresh = (TextView) view.findViewById(R.id.captcha_refresh);
         captchaContinue = (AppCompatButton) view.findViewById(R.id.captcha_continue);
 
-        try {
-            CaptchaResponse captchaResponse = OfflineEKYCService.makeCaptchaCall();
-            captchaTxnId = captchaResponse.getCaptchaTxnId();
-            byte[] base64Val = Base64.decode(captchaResponse.getCaptchaBase64String(),Base64.DEFAULT);
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(base64Val,0,base64Val.length);
 
-            captchaImage.setImageBitmap(decodedByte);
-        } catch (Exception e) {
-            e.printStackTrace();
-            // End App
-        }
+        OfflineEKYCService.makeCaptchaCall().enqueue(new Callback<CaptchaResponse>() {
+            @Override
+            public void onResponse(Call<CaptchaResponse> call, Response<CaptchaResponse> response) {
+                CaptchaResponse captchaResponse = response.body();
+                captchaTxnId = captchaResponse.getCaptchaTxnId();
+                byte[] base64Val = Base64.decode(captchaResponse.getCaptchaBase64String(),Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(base64Val,0,base64Val.length);
+
+                captchaImage.setImageBitmap(decodedByte);
+            }
+
+            @Override
+            public void onFailure(Call<CaptchaResponse> call, Throwable t) {
+                t.printStackTrace();
+                //End App
+            }
+        });
 
         captchaContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //send to OTP page
-                SendToOTPPage(captchaTxnId);
+                SendToOTPPage(captchaEditText.getText().toString());
             }
         });
         return view;
     }
 
-    private void SendToOTPPage( String transactionID){
-        Navigation.findNavController(view).navigate(R.id.action_landlordSingleRequests_to_landlordOtpPage);
+    private void SendToOTPPage(String captchaText){
+        Bundle bundle = new Bundle();
+        bundle.putString("captchaTxnId",captchaTxnId);
+        bundle.putString("captchaText",captchaText);
+        Navigation.findNavController(view).navigate(R.id.action_landlordSingleRequests_to_landlordOtpPage,bundle);
     }
 }

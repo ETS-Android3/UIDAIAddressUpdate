@@ -104,7 +104,7 @@ public class OtpFragment extends Fragment {
                                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
                             );
                             SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
-                            Log.d("Mohan",response.body().toString());
+                                Log.d("Mohan",response.body().toString());
                             sharedPrefsEditor.putString("AuthToken",response.body().getAuthToken());
                             sharedPrefsEditor.putString("UidToken",response.body().getUidToken());
                             sharedPrefsEditor.putString("ShareableCode",response.body().getShareableCode());
