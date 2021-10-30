@@ -75,7 +75,7 @@ public class LoginFragment extends Fragment {
                 String aadharNumber = aadhar.getText().toString();
                 Log.d("Mohan","Request has been sent");
                 if(verifyAadhar(aadharNumber)){
-                    Toast.makeText(getActivity(), "Correct format of aadhar", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "Correct format of aadhar", Toast.LENGTH_SHORT).show();
 
                     AuthApiEndpointInterface apiServie = AuthapiService.getApiInstance();
 
@@ -84,14 +84,32 @@ public class LoginFragment extends Fragment {
                     apiServie.sendOtp(authuidrequest).enqueue(new Callback<Authuidresponse>() {
                         @Override
                         public void onResponse(Call<Authuidresponse> call, Response<Authuidresponse> response) {
-                            String transactionId = response.body().getTransactionID();
-                            GoToOTPPage(transactionId,aadharNumber);
-                            Log.d("Mohan","OTP request is correct");
+                            switch (response.code()){
+                                case 200:
+                                    String transactionId = response.body().getTransactionID();
+                                    GoToOTPPage(transactionId,aadharNumber);
+                                    Log.d("Mohan","OTP request is correct");
+                                    break;
+
+                                case 400:
+                                    Toast.makeText(getActivity(),"Invalid request parameters",Toast.LENGTH_SHORT).show();
+                                    break;
+
+                                case 501:
+                                    Toast.makeText(getActivity(),"Invalid Aadhaar Number",Toast.LENGTH_SHORT).show();
+                                    break;
+
+                                default:
+                                    Toast.makeText(getActivity(),"Error code: "+String.valueOf(response.code()),Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+
                         }
 
                         @Override
                         public void onFailure(Call<Authuidresponse> call, Throwable t) {
-                            Log.d("Mohan","OTP Reqeust is failed : " + t.getMessage().toString());
+                            Toast.makeText(getActivity(),"Unable to contact the server. Try again later",Toast.LENGTH_SHORT).show();
+                            Log.d("Mohan","Unable to contact the server. OTP Request is failed : " + t.getMessage().toString());
                         }
                     });
 

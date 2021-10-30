@@ -74,7 +74,7 @@ public class LandlordRequestsList extends Fragment implements LandlordRequests {
     public void GotToCaptchaPage(String transactionId, String receiverShareCode) {
         //Move to Captcha Page
         Log.d("Mohan","Request Has approved");
-        Toast.makeText(getContext(), "Request has approved", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getContext(), "Request has approved", Toast.LENGTH_SHORT).show();
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_TRANSACTION_ID,transactionId);
         bundle.putString(Constants.KEY_RECEIVER_SHARECODE_ID,receiverShareCode);

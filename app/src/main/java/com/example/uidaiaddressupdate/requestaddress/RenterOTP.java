@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.uidaiaddressupdate.EncryptionUtils;
 import com.example.uidaiaddressupdate.R;
@@ -77,12 +78,21 @@ public class RenterOTP extends Fragment {
         OnlineEKYCApiService.getApiInstance().sendOtpOnPhone(otpRequest).enqueue(new Callback<OtpResponse>() {
             @Override
             public void onResponse(Call<OtpResponse> call, Response<OtpResponse> response) {
-                Log.d("NEW_TESTING",response.message());
-                Log.d("NEW_TESTING","success");
+
+                if (response.body().getStatus().equals("Y") || response.body().getStatus().equals("y")) {
+                    Log.d("NEW_TESTING", response.message());
+                    Log.d("NEW_TESTING", "success");
+                }
+                else{
+                    // TODO: OTP not sent. Do something
+                    Toast.makeText(getActivity(),"Error code: "+response.body().getStatus(),Toast.LENGTH_SHORT).show();
+                }
+
             }
 
             @Override
             public void onFailure(Call<OtpResponse> call, Throwable t) {
+                Toast.makeText(getActivity(),"Unable to contact the UIDAI server. Try again later",Toast.LENGTH_SHORT).show();
                 Log.d("NEW_TESTING","error");
                 t.printStackTrace();
             }
@@ -94,51 +104,82 @@ public class RenterOTP extends Fragment {
                 OnlineEKYCApiService.getApiInstance().getOnlineEKYC(new OnlineEKYCRequest(SharedPrefHelper.getAadharNumber(getContext()),txnId,otp_edit_text.getText().toString())).enqueue(new Callback<OnlineEKYCResponse>() {
                     @Override
                     public void onResponse(Call<OnlineEKYCResponse> call, Response<OnlineEKYCResponse> response) {
-                        String addressMessage;
-                        String encryptedAddressMessage;
-                        Log.d("KYC", response.message());
-                        Log.d("KYC", response.body().geteKycString());
-                        try {
-                            addressMessage = new Gson().toJson(XMLUtils.createAddressRequestMessageFromKYC(response.body().geteKycString()));
-                            Log.d("KYC", addressMessage);
+                        Log.d("KYC", response.body().getStatus());
+                        if (response.body().getStatus().equals("Y") || response.body().getStatus().equals("y")){
+                            String addressMessage;
+                            String encryptedAddressMessage;
+                            Log.d("KYC", response.message());
+                            Log.d("KYC", response.body().geteKycString());
+                            try {
+                                addressMessage = new Gson().toJson(XMLUtils.createAddressRequestMessageFromKYC(response.body().geteKycString()));
+                                Log.d("KYC", addressMessage);
 
-                            encryptedAddressMessage = EncryptionUtils.encryptMessage(receiverPublicKey,addressMessage);
+                                encryptedAddressMessage = EncryptionUtils.encryptMessage(receiverPublicKey,addressMessage);
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                return;
+                            }
+
+                            Addressrequestformat addressrequestformat =
+                                    new Addressrequestformat(receiverSharableCode,
+                                            SharedPrefHelper.getUidToken(getContext()),
+                                            SharedPrefHelper.getAuthToken(getContext()),
+                                            encryptedAddressMessage);
+
+                            ServerApiService.getApiInstance().sendrequest(addressrequestformat).enqueue(new Callback<Addressrequestresponse>() {
+                                @Override
+                                public void onResponse(Call<Addressrequestresponse> call, Response<Addressrequestresponse> response) {
+                                    switch (response.code()){
+                                        case 200:
+                                            Log.d("AddReq","SADADS");
+                                            Log.d("AddReq",response.message());
+//                                              Log.d("AddReq",response.body().getBody());
+                                            Log.d("AddReq",response.body().getTransactionID());
+
+                                            //Update in Client Side DB
+                                            RenterTransactions newTransaction = new RenterTransactions(response.body().getTransactionID(),"init","",receiverSharableCode);
+                                            TransactionDatabase.getInstance(getContext()).renterTransactionsDao().insertTransaction(newTransaction);
+
+                                            goToRequestSentPage();
+                                            break;
+
+                                        case 400:
+                                            Toast.makeText(getActivity(),"Invalid request parameters",Toast.LENGTH_SHORT).show();
+                                            break;
+
+                                        case 502:
+                                            Toast.makeText(getActivity(),"Unable to send request to lender. Aborting",Toast.LENGTH_SHORT).show();
+                                            break;
+
+                                        case 403:
+                                            Toast.makeText(getActivity(),"Invalid share code",Toast.LENGTH_SHORT).show();
+                                            break;
+
+                                        default:
+                                            Toast.makeText(getActivity(),"Error code: "+String.valueOf(response.code()),Toast.LENGTH_SHORT).show();
+                                            break;
+                                    }
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<Addressrequestresponse> call, Throwable t) {
+                                    Toast.makeText(getActivity(),"Unable to contact the server. Try again later",Toast.LENGTH_SHORT).show();
+                                    //Error
+                                }
+                            });
+                        }
+                        else {
+//                            Log.d("KYC", response.body().getErrCode());
+                            Toast.makeText(getActivity(),"Invalid OTP",Toast.LENGTH_SHORT).show();
                         }
 
-                        Addressrequestformat addressrequestformat =
-                                new Addressrequestformat(receiverSharableCode,
-                                        SharedPrefHelper.getUidToken(getContext()),
-                                        SharedPrefHelper.getAuthToken(getContext()),
-                                        encryptedAddressMessage);
-
-                        ServerApiService.getApiInstance().sendrequest(addressrequestformat).enqueue(new Callback<Addressrequestresponse>() {
-                            @Override
-                            public void onResponse(Call<Addressrequestresponse> call, Response<Addressrequestresponse> response) {
-                                Log.d("AddReq","SADADS");
-                                Log.d("AddReq",response.message());
-//                                Log.d("AddReq",response.body().getBody());
-                                Log.d("AddReq",response.body().getTransactionID());
-
-                                //Update in Client Side DB
-                                RenterTransactions newTransaction = new RenterTransactions(response.body().getTransactionID(),"init","",receiverSharableCode);
-                                TransactionDatabase.getInstance(getContext()).renterTransactionsDao().insertTransaction(newTransaction);
-
-                                goToRequestSentPage();
-                            }
-
-                            @Override
-                            public void onFailure(Call<Addressrequestresponse> call, Throwable t) {
-                                //Error
-                            }
-                        });
                     }
 
                     @Override
                     public void onFailure(Call<OnlineEKYCResponse> call, Throwable t) {
+                        Toast.makeText(getActivity(),"Unable to contact the UIDAI server. Try again later",Toast.LENGTH_SHORT).show();
                         //Error
                     }
                 });
