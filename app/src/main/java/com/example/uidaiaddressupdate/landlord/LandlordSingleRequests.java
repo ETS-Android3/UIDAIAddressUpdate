@@ -9,12 +9,14 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.R;
@@ -58,21 +60,32 @@ public class LandlordSingleRequests extends Fragment {
         captchaEditText = (EditText) view.findViewById(R.id.captcha_edit_text);
         captchaRefresh = (TextView) view.findViewById(R.id.captcha_refresh);
         captchaContinue = (AppCompatButton) view.findViewById(R.id.captcha_continue);
+        Toast.makeText(getContext(), transactionId, Toast.LENGTH_SHORT).show();
 
 
         OfflineEKYCService.makeCaptchaCall().enqueue(new Callback<CaptchaResponse>() {
             @Override
             public void onResponse(Call<CaptchaResponse> call, Response<CaptchaResponse> response) {
-                CaptchaResponse captchaResponse = response.body();
-                captchaTxnId = captchaResponse.getCaptchaTxnId();
-                byte[] base64Val = Base64.decode(captchaResponse.getCaptchaBase64String(),Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(base64Val,0,base64Val.length);
+                Log.d("captcha", response.body().getStatus());
+                if (response.body().getStatusCode()==200) {
 
-                captchaImage.setImageBitmap(decodedByte);
+                    CaptchaResponse captchaResponse = response.body();
+                    captchaTxnId = captchaResponse.getCaptchaTxnId();
+                    byte[] base64Val = Base64.decode(captchaResponse.getCaptchaBase64String(), Base64.DEFAULT);
+                    Bitmap decodedByte = BitmapFactory.decodeByteArray(base64Val, 0, base64Val.length);
+
+                    captchaImage.setImageBitmap(decodedByte);
+                }
+                else{
+                    Toast.makeText(getActivity(),"Unable to fetch captcha. Try again later",Toast.LENGTH_SHORT).show();
+                    // TODO: Unable to fetch captcha. Go BACK
+                }
+
             }
 
             @Override
             public void onFailure(Call<CaptchaResponse> call, Throwable t) {
+                Toast.makeText(getActivity(),"Unable to contact the UIDAI server. Try again later",Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
                 //End App
             }
@@ -87,6 +100,7 @@ public class LandlordSingleRequests extends Fragment {
         });
         return view;
     }
+
 
     private void SendToOTPPage(String captchaText){
         Bundle bundle = new Bundle();

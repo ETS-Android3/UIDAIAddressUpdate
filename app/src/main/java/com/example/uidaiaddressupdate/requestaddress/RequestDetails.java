@@ -11,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +22,13 @@ import android.widget.Toast;
 import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.EncryptionUtils;
 import com.example.uidaiaddressupdate.R;
+import com.example.uidaiaddressupdate.SharedPrefHelper;
 import com.example.uidaiaddressupdate.XMLUtils;
 import com.example.uidaiaddressupdate.database.RenterTransactions;
 import com.example.uidaiaddressupdate.database.RenterTransactionsDao;
 import com.example.uidaiaddressupdate.database.TransactionDatabase;
 import com.example.uidaiaddressupdate.service.server.ServerApiService;
+import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycRequest;
 import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycResponse;
 import com.google.gson.Gson;
 
@@ -80,31 +83,50 @@ public class RequestDetails extends Fragment {
         edit_address_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ServerApiService.getEkyc(transactionID).enqueue(new Callback<GetEkycResponse>() {
+                GetEkycRequest getEkycRequest = new GetEkycRequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionID);
+                ServerApiService.getEkyc(getEkycRequest).enqueue(new Callback<GetEkycResponse>() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onResponse(Call<GetEkycResponse> call, Response<GetEkycResponse> response) {
-                        //
-                        AddressModel addressModel = null;
-                        Toast.makeText(getContext(), "Got EKyc", Toast.LENGTH_SHORT).show();
-                        try {
-                            String decryptedPasscode = EncryptionUtils.decryptMessage(response.body().getEncryptedPasscode());
-                            String eKYCxml = XMLUtils.getKYCxmlFromZip(response.body().getEncryptedEKYC(),decryptedPasscode);
-                            addressModel = XMLUtils.getAddressFromEKYCxml(eKYCxml);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            return ;
+                        switch (response.code()){
+                            case 200:
+                                AddressModel addressModel = null;
+                                Toast.makeText(getContext(), "Got EKyc", Toast.LENGTH_SHORT).show();
+                                Log.d("eKYC",response.body().getEncryptedEKYC());
+                                try {
+                                    String decryptedPasscode = EncryptionUtils.decryptMessage(response.body().getEncryptedPasscode());
+                                    String eKYCxml = XMLUtils.getKYCxmlFromZip(response.body().getEncryptedEKYC(),decryptedPasscode);
+                                    addressModel = XMLUtils.getAddressFromEKYCxml(eKYCxml);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    return ;
+                                }
+                                Bundle bundle = new Bundle();
+                                bundle.putString("addressModel",new Gson().toJson(addressModel));
+                                bundle.putString(Constants.KEY_TRANSACTION_ID,transactionID);
+                                Navigation.findNavController(view).navigate(R.id.action_requestDetails_to_editAddress,bundle);
+
+                                break;
+
+                            case 400:
+                                Toast.makeText(getActivity(),"Invalid request parameters",Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case 403:
+                                Toast.makeText(getActivity(),"Invalid transactionID. Unable to fetch eKYC",Toast.LENGTH_SHORT).show();
+                                break;
+
+                            default:
+                                Toast.makeText(getActivity(),"Error code: "+String.valueOf(response.code()),Toast.LENGTH_SHORT).show();
+                                break;
                         }
-                        Bundle bundle = new Bundle();
-                        bundle.putString("addressModel",new Gson().toJson(addressModel));
-                        bundle.putString(Constants.KEY_TRANSACTION_ID,transactionID);
-                        Navigation.findNavController(view).navigate(R.id.action_requestDetails_to_editAddress,bundle);
 
                     }
 
                     @Override
                     public void onFailure(Call<GetEkycResponse> call, Throwable t) {
-                        //
+                        Toast.makeText(getActivity(),"Unable to contact the server. Try again later",Toast.LENGTH_SHORT).show();
+                        // Error
                     }
                 });
             }

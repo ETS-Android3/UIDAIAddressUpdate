@@ -11,16 +11,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.example.uidaiaddressupdate.NewAddressRequestMessage;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.service.auth.AuthApiEndpointInterface;
-import com.example.uidaiaddressupdate.service.auth.model.Authotprequest;
 import com.example.uidaiaddressupdate.service.auth.model.Authuidrequest;
 import com.example.uidaiaddressupdate.service.auth.model.Authuidresponse;
-import com.example.uidaiaddressupdate.service.otpservice.OtpAPIService;
-import com.example.uidaiaddressupdate.service.otpservice.model.OtpRes;
 import com.google.gson.Gson;
 
 import android.security.keystore.KeyGenParameterSpec;
@@ -34,24 +30,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.UnrecoverableEntryException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Scanner;
-import java.util.UUID;
 
 import javax.crypto.Cipher;
 
@@ -91,7 +75,7 @@ public class LoginFragment extends Fragment {
                 String aadharNumber = aadhar.getText().toString();
                 Log.d("Mohan","Request has been sent");
                 if(verifyAadhar(aadharNumber)){
-                    Toast.makeText(getActivity(), "Correct format of aadhar", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getActivity(), "Correct format of aadhar", Toast.LENGTH_SHORT).show();
 
                     AuthApiEndpointInterface apiServie = AuthapiService.getApiInstance();
 
@@ -100,14 +84,32 @@ public class LoginFragment extends Fragment {
                     apiServie.sendOtp(authuidrequest).enqueue(new Callback<Authuidresponse>() {
                         @Override
                         public void onResponse(Call<Authuidresponse> call, Response<Authuidresponse> response) {
-                            String transactionId = response.body().getTransactionNo();
-                            GoToOTPPage(transactionId,aadharNumber);
-                            Log.d("Mohan","OTP request is correct");
+                            switch (response.code()){
+                                case 200:
+                                    String transactionId = response.body().getTransactionID();
+                                    GoToOTPPage(transactionId,aadharNumber);
+                                    Log.d("Mohan","OTP request is correct");
+                                    break;
+
+                                case 400:
+                                    Toast.makeText(getActivity(),"Invalid request parameters",Toast.LENGTH_SHORT).show();
+                                    break;
+
+                                case 501:
+                                    Toast.makeText(getActivity(),"Invalid Aadhaar Number",Toast.LENGTH_SHORT).show();
+                                    break;
+
+                                default:
+                                    Toast.makeText(getActivity(),"Error code: "+String.valueOf(response.code()),Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+
                         }
 
                         @Override
                         public void onFailure(Call<Authuidresponse> call, Throwable t) {
-                            Log.d("Mohan","OTP Reqeust is failed : " + t.getMessage().toString());
+                            Toast.makeText(getActivity(),"Unable to contact the server. Try again later",Toast.LENGTH_SHORT).show();
+                            Log.d("Mohan","Unable to contact the server. OTP Request is failed : " + t.getMessage().toString());
                         }
                     });
 

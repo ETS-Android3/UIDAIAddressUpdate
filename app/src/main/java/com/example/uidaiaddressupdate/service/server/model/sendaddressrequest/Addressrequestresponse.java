@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 public class Addressrequestresponse implements Serializable {
     private String body;
-    private String transactionNo;
+    private String transactionID;
 
-    public Addressrequestresponse(String body, String transactionNo) {
+    public Addressrequestresponse(String body, String transactionID) {
         this.body = body;
-        this.transactionNo = transactionNo;
+        this.transactionID = transactionID;
     }
 
     public void setBody(String body) {
@@ -19,11 +19,11 @@ public class Addressrequestresponse implements Serializable {
         return body;
     }
 
-    public void setTransactionNo(String transactionNo) {
-        this.transactionNo = transactionNo;
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
     }
 
-    public String getTransactionNo() {
-        return transactionNo;
+    public String getTransactionID() {
+        return transactionID;
     }
 }

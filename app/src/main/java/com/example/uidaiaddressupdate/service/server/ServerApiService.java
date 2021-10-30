@@ -1,4 +1,5 @@
 package com.example.uidaiaddressupdate.service.server;
+import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycRequest;
 import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycResponse;
 import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyrequest;
@@ -17,7 +18,7 @@ public class ServerApiService {
     public static ServerEndpointInterface getApiInstance(){
         if(apiEndpointInterface == null){
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://52.147.193.119:8000")
+                    .baseUrl(Constants.SERVER_IP_ADDRESS)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -26,12 +27,12 @@ public class ServerApiService {
         return apiEndpointInterface;
     }
 
-    public static Call<GetEkycResponse> getEkyc(String transactionId){
-        return getApiInstance().getEkyc(transactionId);
+    public static Call<GetEkycResponse> getEkyc(GetEkycRequest getEkycRequest){
+        return getApiInstance().getEkyc(getEkycRequest);
     }
 
-    public static Call<Sendekycresponse> sendEkyc(String transactionId, String filename, String passcode,String ekyc){
-        Sendekycrequest sendekycrequest  =  new Sendekycrequest(transactionId,ekyc,filename,passcode);
+    public static Call<Sendekycresponse> sendEkyc(String uidToken, String authToken,String transactionId, String filename, String passcode,String ekyc){
+        Sendekycrequest sendekycrequest  =  new Sendekycrequest(uidToken,authToken,transactionId,ekyc,filename,passcode);
         return getApiInstance().sendEkyc(sendekycrequest);
     }
 }

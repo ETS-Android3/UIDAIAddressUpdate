@@ -40,12 +40,18 @@ public class XMLUtils {
     }
 
     public static AddressModel getAddressFromEKYCxml(String eKYCXml) throws Exception{
-        Document eKYCdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(eKYCXml)));
+
+        //Removing Sig
+        String eKYCxml1 = eKYCXml.substring(0,eKYCXml.indexOf("<Signature"));
+        eKYCxml1=eKYCxml1+"</OfflinePaperlessKyc>";
+        Log.d("eKYCXml",eKYCxml1);
+
+        Document eKYCdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(eKYCxml1)));
         NamedNodeMap poaAttributes = eKYCdoc.getElementsByTagName("Poa").item(0).getAttributes();
         AddressModel addressModel = new AddressModel();
 
-        if(poaAttributes.getNamedItem("co") != null)
-            addressModel.setCo(poaAttributes.getNamedItem("co").getNodeValue());
+        if(poaAttributes.getNamedItem("careof") != null)
+            addressModel.setCo(poaAttributes.getNamedItem("careof").getNodeValue());
 
         if(poaAttributes.getNamedItem("house") != null)
             addressModel.setHouse(poaAttributes.getNamedItem("house").getNodeValue());
@@ -53,8 +59,8 @@ public class XMLUtils {
         if(poaAttributes.getNamedItem("street") != null)
             addressModel.setStreet(poaAttributes.getNamedItem("street").getNodeValue());
 
-        if(poaAttributes.getNamedItem("lm") != null)
-            addressModel.setLm(poaAttributes.getNamedItem("lm").getNodeValue());
+        if(poaAttributes.getNamedItem("landmark") != null)
+            addressModel.setLm(poaAttributes.getNamedItem("landmark").getNodeValue());
 
         if(poaAttributes.getNamedItem("vtc") != null)
             addressModel.setVtc(poaAttributes.getNamedItem("vtc").getNodeValue());
@@ -62,7 +68,7 @@ public class XMLUtils {
         if(poaAttributes.getNamedItem("subdist") != null)
             addressModel.setSubdist(poaAttributes.getNamedItem("subdist").getNodeValue());
 
-        if(poaAttributes.getNamedItem("dcoist") != null)
+        if(poaAttributes.getNamedItem("dist") != null)
             addressModel.setDist(poaAttributes.getNamedItem("dist").getNodeValue());
 
         if(poaAttributes.getNamedItem("state") != null)
@@ -76,6 +82,9 @@ public class XMLUtils {
 
         if(poaAttributes.getNamedItem("po") != null)
             addressModel.setPo(poaAttributes.getNamedItem("po").getNodeValue());
+
+        if(poaAttributes.getNamedItem("loc") != null)
+            addressModel.setLoc(poaAttributes.getNamedItem("loc").getNodeValue());
 
         return addressModel;
     }
@@ -99,6 +108,7 @@ public class XMLUtils {
                 eKYCxml += new String(readBuffer, StandardCharsets.UTF_8);
             }
         }
+        Log.d("eKYC",eKYCxml);
 
         return eKYCxml;
     }

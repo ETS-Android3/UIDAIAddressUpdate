@@ -1,5 +1,6 @@
 package com.example.uidaiaddressupdate.auth.ui.main;
 
+import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.service.auth.AuthApiEndpointInterface;
 
 import retrofit2.Retrofit;
@@ -12,7 +13,7 @@ public class AuthapiService {
     public static AuthApiEndpointInterface getApiInstance(){
         if(apiEndpointInterface == null){
             retrofit = new Retrofit.Builder()
-                    .baseUrl("http://52.147.193.119:8000")
+                    .baseUrl(Constants.SERVER_IP_ADDRESS)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 

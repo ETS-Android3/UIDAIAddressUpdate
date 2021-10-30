@@ -21,7 +21,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.MainActivity;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.service.auth.AuthApiEndpointInterface;
@@ -90,37 +92,62 @@ public class OtpFragment extends Fragment {
 
 
                 Log.d("FCM Token:",FCMtoken);
-                Authotprequest authotprequest = new Authotprequest(transactionId,otp.getText().toString(),FCMtoken,pubkeyString);
+                Authotprequest authotprequest = new Authotprequest(transactionId,otp.getText().toString(),FCMtoken,pubkeyString,aadharNumber);
                 apiServie.authenticate(authotprequest).enqueue(new Callback<Authotpresponse>() {
                     @Override
                     public void onResponse(Call<Authotpresponse> call, Response<Authotpresponse> response) {
-                        try {
-                            KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
-                            String mainKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
-                            SharedPreferences sharedPreferences = EncryptedSharedPreferences.create(
-                                    "aadharsharedPreferences",
-                                    mainKeyAlias,
-                                    getContext(),
-                                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-                                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-                            );
-                            SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
-                                Log.d("Mohan",response.body().toString());
-                            sharedPrefsEditor.putString("AuthToken",response.body().getAuthToken());
-                            sharedPrefsEditor.putString("UidToken",response.body().getUidToken());
-                            sharedPrefsEditor.putString("ShareableCode",response.body().getShareableCode());
-                            sharedPrefsEditor.putString("aadharNumber",aadharNumber);
+                        switch(response.code()){
+                            case 200:
+                                try {
+                                    KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
+                                    String mainKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
+                                    SharedPreferences sharedPreferences = EncryptedSharedPreferences.create(
+                                            "aadharsharedPreferences",
+                                            mainKeyAlias,
+                                            getContext(),
+                                            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                                            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+                                    );
+                                    SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
+                                    Log.d("Mohan",response.body().toString());
+                                    sharedPrefsEditor.putString("AuthToken",response.body().getAuthToken());
+                                    sharedPrefsEditor.putString("UidToken",response.body().getUidToken());
+                                    sharedPrefsEditor.putString("ShareableCode",response.body().getShareableCode());
+                                    sharedPrefsEditor.putString(Constants.KEY_AADHAR_NUMBER,aadharNumber);
 
-                            sharedPrefsEditor.commit();
-                        } catch (GeneralSecurityException e) {
-                            e.printStackTrace();
-                            //App band karo
-                        } catch (IOException e) {
-                            //App band karo
-                            e.printStackTrace();
+                                    sharedPrefsEditor.commit();
+                                } catch (GeneralSecurityException e) {
+                                    e.printStackTrace();
+                                    //App band karo
+                                } catch (IOException e) {
+                                    //App band karo
+                                    e.printStackTrace();
+                                }
+
+                                SendToHome();
+                                break;
+
+                            case 400:
+                                Toast.makeText(getActivity(),"Invalid request parameters",Toast.LENGTH_SHORT).show();
+                                break;
+
+
+                            case 403:
+                            case 501:
+                                Toast.makeText(getActivity(),"Invalid OTP",Toast.LENGTH_SHORT).show();
+                                otp.getText().clear();
+                                break;
+
+                            case 503:
+                                Toast.makeText(getActivity(),"Maximum trials for OTP check reached, please request OTP again",Toast.LENGTH_SHORT).show();
+                                // TODO: Go back to LoginFragment
+                                break;
+
+                            default:
+                                Toast.makeText(getActivity(),"Error code: "+String.valueOf(response.code()),Toast.LENGTH_SHORT).show();
+                                break;
                         }
 
-                        SendToHome();
                     }
 
                     @Override

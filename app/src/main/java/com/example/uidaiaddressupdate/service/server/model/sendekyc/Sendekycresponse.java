@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Sendekycresponse implements Serializable {
     private String message;
-    private String transactionNo;
+    private String transactionID;
 
     public void setMessage(String message) {
         this.message = message;
@@ -14,11 +14,11 @@ public class Sendekycresponse implements Serializable {
         return message;
     }
 
-    public String getTransactionNo() {
-        return transactionNo;
+    public String getTransactionID() {
+        return transactionID;
     }
 
-    public void setTransactionNo(String transactionNo) {
-        this.transactionNo = transactionNo;
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
     }
 }
