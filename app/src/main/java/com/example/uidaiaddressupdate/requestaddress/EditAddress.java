@@ -2,53 +2,35 @@ package com.example.uidaiaddressupdate.requestaddress;
 
 import android.os.Bundle;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.example.uidaiaddressupdate.Constants;
+import com.example.uidaiaddressupdate.Location.LocationInterface;
+import com.example.uidaiaddressupdate.Location.MyLocationListener;
 import com.example.uidaiaddressupdate.R;
 import com.google.gson.Gson;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EditAddress#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class EditAddress extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class EditAddress extends Fragment implements LocationInterface {
+
+
     private AddressModel landLordAddressModel;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private EditText co, house, street, landmark, locality, village_town, subdist, dist, state, country, pincode, postoffice;
+    private AppCompatButton save;
+    private Double longitude,lattitude;
 
     public EditAddress() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EditAddress.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EditAddress newInstance(String param1, String param2) {
-        EditAddress fragment = new EditAddress();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +43,66 @@ public class EditAddress extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_edit_address, container, false);
+        View view = inflater.inflate(R.layout.fragment_edit_address, container, false);
+        String transactionID = getArguments().getString(Constants.KEY_TRANSACTION_ID);
+        MyLocationListener locationListener = new MyLocationListener(this);
+
+        co = (EditText) view.findViewById(R.id.addresss_co);
+        house = (EditText) view.findViewById(R.id.address_house);
+        street = (EditText) view.findViewById(R.id.address_street);
+        landmark = (EditText) view.findViewById(R.id.addresss_landmark);
+        locality = (EditText) view.findViewById(R.id.address_locality);
+        village_town = (EditText) view.findViewById(R.id.address_villege_or_town);
+        subdist = (EditText) view.findViewById(R.id.address_subdistrict);
+        dist = (EditText) view.findViewById(R.id.address_district);
+        state = (EditText) view.findViewById(R.id.address_state);
+        country = (EditText) view.findViewById(R.id.address_country);
+        pincode = (EditText) view.findViewById(R.id.address_pin_code);
+        postoffice = (EditText) view.findViewById(R.id.address_post_office);
+        save = (AppCompatButton)view.findViewById(R.id.address_save);
+
+        co.setText(landLordAddressModel.getCo());
+        house.setText(landLordAddressModel.getHouse());
+        street.setText(landLordAddressModel.getStreet());
+        landmark.setText(landLordAddressModel.getLm());
+        locality.setText(landLordAddressModel.getLoc());
+        village_town.setText(landLordAddressModel.getVtc());
+        subdist.setText(landLordAddressModel.getSubdist());
+        dist.setText(landLordAddressModel.getDist());
+        state.setText(landLordAddressModel.getState());
+        country.setText(landLordAddressModel.getCountry());
+        pincode.setText(landLordAddressModel.getPc());
+        postoffice.setText(landLordAddressModel.getPo());
+
+
+        AddressModel updatedAddress = new AddressModel();
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updatedAddress.setCo(co.getText().toString());
+                updatedAddress.setHouse(house.getText().toString());
+                updatedAddress.setStreet(street.getText().toString());
+                updatedAddress.setLm(landmark.getText().toString());
+                updatedAddress.setLoc(locality.getText().toString());
+                updatedAddress.setVtc(village_town.getText().toString());
+                updatedAddress.setSubdist(subdist.getText().toString());
+                updatedAddress.setDist(dist.getText().toString());
+                updatedAddress.setState(state.getText().toString());
+                updatedAddress.setCountry(country.getText().toString());
+                updatedAddress.setPc(pincode.getText().toString());
+                updatedAddress.setPo(postoffice.getText().toString());
+
+
+            }
+        });
+        return view;
+    }
+
+    @Override
+    public void updateLocation(Double longitude, Double lattitude) {
+        this.longitude = longitude;
+        this.lattitude = lattitude;
+        Toast.makeText(getContext(), "Coordinates are : (" + longitude + "," + lattitude + ")", Toast.LENGTH_SHORT).show();
     }
 }

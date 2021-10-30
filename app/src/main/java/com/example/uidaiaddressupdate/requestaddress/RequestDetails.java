@@ -49,7 +49,6 @@ public class RequestDetails extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         String transactionID = getArguments().getString(Constants.KEY_TRANSACTION_ID);
-
         transactionDatabase = TransactionDatabase.getInstance(getContext());
         renterTransactionsDao = transactionDatabase.renterTransactionsDao();
         RenterTransactions renterTransactions = renterTransactionsDao.getTransaction(transactionID);
@@ -66,7 +65,7 @@ public class RequestDetails extends Fragment {
         edit_address_btn = (AppCompatButton) view.findViewById(R.id.request_edit_and_update_address);
 
 
-        if(renterTransactions.getTransactionStatus() == Constants.STATUS_ACCEPTED){
+        if(renterTransactions.getTransactionStatus().equals(Constants.STATUS_ACCEPTED)){
             edit_address_btn.setVisibility(View.VISIBLE);
         }else{
             edit_address_btn.setVisibility(View.GONE);
@@ -91,15 +90,14 @@ public class RequestDetails extends Fragment {
                         try {
                             String decryptedPasscode = EncryptionUtils.decryptMessage(response.body().getEncryptedPasscode());
                             String eKYCxml = XMLUtils.getKYCxmlFromZip(response.body().getEncryptedEKYC(),decryptedPasscode);
-
-                             addressModel = XMLUtils.getAddressFromEKYCxml(eKYCxml);
+                            addressModel = XMLUtils.getAddressFromEKYCxml(eKYCxml);
                         } catch (Exception e) {
                             e.printStackTrace();
                             return ;
                         }
                         Bundle bundle = new Bundle();
                         bundle.putString("addressModel",new Gson().toJson(addressModel));
-
+                        bundle.putString(Constants.KEY_TRANSACTION_ID,transactionID);
                         Navigation.findNavController(view).navigate(R.id.action_requestDetails_to_editAddress,bundle);
 
                     }

@@ -27,8 +27,7 @@ public class ServerApiService {
     }
 
     public static Call<GetEkycResponse> getEkyc(String transactionId){
-        GetEkycRequest getEkycRequest = new GetEkycRequest(transactionId);
-        return getApiInstance().getEkyc(getEkycRequest);
+        return getApiInstance().getEkyc(transactionId);
     }
 
     public static Call<Sendekycresponse> sendEkyc(String transactionId, String filename, String passcode,String ekyc){
