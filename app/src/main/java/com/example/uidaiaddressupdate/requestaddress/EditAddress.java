@@ -110,10 +110,35 @@ public class EditAddress extends Fragment implements LocationInterface {
                 ServerApiService.getApiInstance().updateAddress(updateAddressRequest).enqueue(new Callback<UpdateAddressResponse>() {
                     @Override
                     public void onResponse(Call<UpdateAddressResponse> call, Response<UpdateAddressResponse> response) {
-                        Log.d("Address",new Gson().toJson(updateAddressRequest));
-                        Log.d("Address",response.message());
+                        switch (response.code()){
+                            case 200:
+                                Log.d("Address",new Gson().toJson(updateAddressRequest));
+                                Log.d("Address",response.message());
 
-                        Toast.makeText(getContext(),"Address Updated!!",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(),"Address Updated Successfully!!",Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case 400:
+                                Toast.makeText(getActivity(),"Invalid request parameters",Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case 401:
+                                Toast.makeText(getActivity(),"Addresses are too far",Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case 403:
+                                Toast.makeText(getActivity(),"Invalid addresses or transaction ID",Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case 409:
+                                Toast.makeText(getActivity(),"Address already updated",Toast.LENGTH_SHORT).show();
+                                break;
+
+                            default:
+                                Toast.makeText(getActivity(),"Error code: "+String.valueOf(response.code()),Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+
                     }
 
                     @Override

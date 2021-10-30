@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.SharedPrefHelper;
@@ -55,12 +56,29 @@ public class EnterShareCode extends Fragment {
                 ServerApiService.getApiInstance().getPublicKey(new Publickeyrequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),recieverShareCode)).enqueue(new Callback<Publickeyresponse>() {
                     @Override
                     public void onResponse(Call<Publickeyresponse> call, Response<Publickeyresponse> response) {
-                        Log.d("KYC",response.message());
-                        String publicKey = response.body().getPublicKey();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("publicKey",publicKey);
-                        bundle.putString("recieverShareCode",recieverShareCode);
-                        Navigation.findNavController(view).navigate(R.id.action_enterShareCode_to_renterOTP,bundle);
+                        switch (response.code()){
+                            case 200:
+                                Log.d("KYC",response.message());
+                                String publicKey = response.body().getPublicKey();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("publicKey",publicKey);
+                                bundle.putString("recieverShareCode",recieverShareCode);
+                                Navigation.findNavController(view).navigate(R.id.action_enterShareCode_to_renterOTP,bundle);
+                                break;
+
+                            case 400:
+                                Toast.makeText(getActivity(),"Invalid request parameters",Toast.LENGTH_SHORT).show();
+                                break;
+
+                            case 403:
+                                Toast.makeText(getActivity(),"Invalid share code",Toast.LENGTH_SHORT).show();
+                                break;
+
+                            default:
+                                Toast.makeText(getActivity(),"Error code: "+String.valueOf(response.code()),Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+
                     }
 
                     @Override

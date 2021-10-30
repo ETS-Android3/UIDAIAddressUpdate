@@ -103,22 +103,29 @@ public class LandlordOtpPage extends Fragment {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onResponse(Call<OfflineEkycXMLResponse> call, Response<OfflineEkycXMLResponse> response) {
-                        String filename = response.body().getFileName();
-                        String eKyc = response.body().geteKycXML();
-                        Log.d("eKYC", response.body().geteKycXML());
+                        if (response.body().getStatus().equals("Success")){
+                            String filename = response.body().getFileName();
+                            String eKyc = response.body().geteKycXML();
+                            Log.d("eKYC", response.body().geteKycXML());
 
-//                        try {
-//                            Log.d("eKYC decrrypted", XMLUtils.getKYCxmlFromZip(response.body().geteKycXML(), passcode));
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
+                            //                        try {
+                            //                            Log.d("eKYC decrrypted", XMLUtils.getKYCxmlFromZip(response.body().geteKycXML(), passcode));
+                            //                        } catch (IOException e) {
+                            //                            e.printStackTrace();
+                            //                        }
 
-                        encryptPasscodeAndSendEkyc(filename,passcode,eKyc);
+                            encryptPasscodeAndSendEkyc(filename, passcode, eKyc);
+                        }
+                        else{
+                            Toast.makeText(getActivity(),"Invalid OTP",Toast.LENGTH_SHORT).show();
+                        }
+
 
                     }
 
                     @Override
                     public void onFailure(Call<OfflineEkycXMLResponse> call, Throwable t) {
+                        Toast.makeText(getActivity(),"Unable to contact the UIDAI server. Try again later",Toast.LENGTH_SHORT).show();
                         t.printStackTrace();
                     }
                 });
@@ -136,16 +143,36 @@ public class LandlordOtpPage extends Fragment {
         ServerApiService.getApiInstance().getPublicKey(new Publickeyrequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),receiverShareCode)).enqueue(new Callback<Publickeyresponse>() {
             @Override
             public void onResponse(Call<Publickeyresponse> call, Response<Publickeyresponse> response) {
-                String receiverPublicKey = response.body().getPublicKey();
-                Log.d("LandlordOtpPage", "Public Key: "+receiverPublicKey);
 
-                String encryptedPasscode = null;
-                try {
-                    encryptedPasscode = EncryptionUtils.encryptMessage(receiverPublicKey,passcode);
-                    sendEkyc(filename,encryptedPasscode,eKyc);
-                } catch (Exception e){
-                    e.printStackTrace();
+                switch (response.code()){
+                    case 200:
+                        String receiverPublicKey = response.body().getPublicKey();
+                        Log.d("LandlordOtpPage", "Public Key: "+receiverPublicKey);
+
+                        String encryptedPasscode = null;
+                        try {
+                            encryptedPasscode = EncryptionUtils.encryptMessage(receiverPublicKey,passcode);
+                            sendEkyc(filename,encryptedPasscode,eKyc);
+                        } catch (Exception e){
+                            Toast.makeText(getActivity(),"Unable to encrypt passcode",Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                        break;
+
+                    case 400:
+                        Toast.makeText(getActivity(),"Invalid request parameters",Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case 403:
+                        Toast.makeText(getActivity(),"Invalid share code",Toast.LENGTH_SHORT).show();
+                        break;
+
+                    default:
+                        Toast.makeText(getActivity(),"Error code: "+String.valueOf(response.code()),Toast.LENGTH_SHORT).show();
+                        break;
                 }
+
+
             }
 
             @Override
@@ -159,20 +186,39 @@ public class LandlordOtpPage extends Fragment {
         ServerApiService.sendEkyc(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionId,filename,passcode,eKyc).enqueue(new Callback<Sendekycresponse>() {
             @Override
             public void onResponse(Call<Sendekycresponse> call, Response<Sendekycresponse> response) {
-                Log.d("Mohan","Ekyc Uploaded");
-                Log.d("Mohan",transactionId);
-                Log.d("Mohan",response.message());
+                switch (response.code()){
+                    case 200:
+                    case 502:
+                        Log.d("Mohan","Ekyc Uploaded");
+                        Log.d("Mohan",transactionId);
+                        Log.d("Mohan",response.message());
 
-                //Update in Client Side DB
-                LandlordTransactions curTransaction = TransactionDatabase.getInstance(getContext()).landlordTransactionsDao().getTransaction(transactionId);
-                curTransaction.setTransactionStatus("accepted");
-                TransactionDatabase.getInstance(getContext()).landlordTransactionsDao().insertTransaction(curTransaction);
+                        //Update in Client Side DB
+                        LandlordTransactions curTransaction = TransactionDatabase.getInstance(getContext()).landlordTransactionsDao().getTransaction(transactionId);
+                        curTransaction.setTransactionStatus("accepted");
+                        TransactionDatabase.getInstance(getContext()).landlordTransactionsDao().insertTransaction(curTransaction);
 
-                sendToLandlordAddressApprovedAckPage();
+                        sendToLandlordAddressApprovedAckPage();
+                        break;
+
+                    case 400:
+                        Toast.makeText(getActivity(),"Invalid request parameters",Toast.LENGTH_SHORT).show();
+                        break;
+
+                    case 403:
+                        Toast.makeText(getActivity(),"Invalid transactionID. Address request acceptance failed",Toast.LENGTH_SHORT).show();
+                        break;
+
+                    default:
+                        Toast.makeText(getActivity(),"Error code: "+String.valueOf(response.code()),Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
             }
             @Override
             public void onFailure(Call<Sendekycresponse> call, Throwable t) {
-                Toast.makeText(getContext(), "Error : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "Error : " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"Unable to contact the server. Try again later",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -181,12 +227,20 @@ public class LandlordOtpPage extends Fragment {
         OfflineEKYCService.makeOTPCall(SharedPrefHelper.getAadharNumber(getContext()),captchaTxnId,captchaText).enqueue(new Callback<OtpResponse>() {
             @Override
             public void onResponse(Call<OtpResponse> call, Response<OtpResponse> response) {
-                Log.d("eKYC", response.body().getMessage());
-                otpTxnId = response.body().getTxnId();
+                if (response.body().getStatus().equals("Success")) {
+                    Log.d("eKYC", response.body().getMessage());
+                    otpTxnId = response.body().getTxnId();
+                }
+                else{
+                    // TODO: OTP won't be sent. Do something
+                    Toast.makeText(getActivity(),"Error code: "+response.body().getStatus(),Toast.LENGTH_SHORT).show();
+                }
+
             }
 
             @Override
             public void onFailure(Call<OtpResponse> call, Throwable t) {
+                Toast.makeText(getActivity(),"Unable to contact the UIDAI server. Try again later",Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
                 //End App
             }
