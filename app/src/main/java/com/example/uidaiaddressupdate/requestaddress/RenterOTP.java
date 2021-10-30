@@ -70,7 +70,7 @@ public class RenterOTP extends Fragment {
         otp_edit_text = (EditText) view.findViewById(R.id.renter_otp_et_enter_otp);
         submit_otp = (Button) view.findViewById(R.id.renter_otp_verify_button);
 
-        OtpRequest otpRequest = new OtpRequest("999952733847",txnId);
+        OtpRequest otpRequest = new OtpRequest(SharedPrefHelper.getUidToken(getContext()),txnId);
         OnlineEKYCApiService.getApiInstance().sendOtpOnPhone(otpRequest).enqueue(new Callback<OtpResponse>() {
             @Override
             public void onResponse(Call<OtpResponse> call, Response<OtpResponse> response) {
@@ -86,7 +86,7 @@ public class RenterOTP extends Fragment {
         submit_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OnlineEKYCApiService.getApiInstance().getOnlineEKYC(new OnlineEKYCRequest("999952733847",txnId,otp_edit_text.getText().toString())).enqueue(new Callback<OnlineEKYCResponse>() {
+                OnlineEKYCApiService.getApiInstance().getOnlineEKYC(new OnlineEKYCRequest(SharedPrefHelper.getUidToken(getContext()),txnId,otp_edit_text.getText().toString())).enqueue(new Callback<OnlineEKYCResponse>() {
                     @Override
                     public void onResponse(Call<OnlineEKYCResponse> call, Response<OnlineEKYCResponse> response) {
                         String addressMessage;
@@ -106,7 +106,7 @@ public class RenterOTP extends Fragment {
 
                         Addressrequestformat addressrequestformat =
                                 new Addressrequestformat(receiverSharableCode,
-                                        "999952733847",
+                                        SharedPrefHelper.getUidToken(getContext()),
                                         SharedPrefHelper.getAuthToken(getContext()),
                                         encryptedAddressMessage);
 

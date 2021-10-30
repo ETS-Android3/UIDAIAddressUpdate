@@ -99,7 +99,7 @@ public class LandlordOtpPage extends Fragment {
                 Log.d("eKYC",otp_edit_text.getText().toString());
                 Log.d("eKYC",otpTxnId);
                 String passcode = Util.getRandomString();
-                OfflineEKYCService.makeOfflineEKYCCall("999952733847",otp_edit_text.getText().toString(),otpTxnId,passcode).enqueue(new Callback<OfflineEkycXMLResponse>() {
+                OfflineEKYCService.makeOfflineEKYCCall(SharedPrefHelper.getUidToken(getContext()),otp_edit_text.getText().toString(),otpTxnId,passcode).enqueue(new Callback<OfflineEkycXMLResponse>() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onResponse(Call<OfflineEkycXMLResponse> call, Response<OfflineEkycXMLResponse> response) {
@@ -176,7 +176,7 @@ public class LandlordOtpPage extends Fragment {
     }
 //9999527333847
     private void sendOTP(String captchaText, String captchaTxnId){
-        OfflineEKYCService.makeOTPCall("999952733847",captchaTxnId,captchaText).enqueue(new Callback<OtpResponse>() {
+        OfflineEKYCService.makeOTPCall(SharedPrefHelper.getUidToken(getContext()),captchaTxnId,captchaText).enqueue(new Callback<OtpResponse>() {
             @Override
             public void onResponse(Call<OtpResponse> call, Response<OtpResponse> response) {
                 Log.d("eKYC", response.body().getMessage());
