@@ -1,4 +1,4 @@
-package com.example.uidaiaddressupdate.landlord;
+package com.example.uidaiaddressupdate.lender;
 
 import android.os.Bundle;
 
@@ -12,10 +12,10 @@ import com.example.uidaiaddressupdate.R;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link LandlordAddressApprovedAck#newInstance} factory method to
+ * Use the {@link LenderAddressApprovedAck#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LandlordAddressApprovedAck extends Fragment {
+public class LenderAddressApprovedAck extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,7 +26,7 @@ public class LandlordAddressApprovedAck extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public LandlordAddressApprovedAck() {
+    public LenderAddressApprovedAck() {
         // Required empty public constructor
     }
 
@@ -36,11 +36,11 @@ public class LandlordAddressApprovedAck extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment LandlordAddressApprovedAck.
+     * @return A new instance of fragment LenderAddressApprovedAck.
      */
     // TODO: Rename and change types and number of parameters
-    public static LandlordAddressApprovedAck newInstance(String param1, String param2) {
-        LandlordAddressApprovedAck fragment = new LandlordAddressApprovedAck();
+    public static LenderAddressApprovedAck newInstance(String param1, String param2) {
+        LenderAddressApprovedAck fragment = new LenderAddressApprovedAck();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -57,6 +57,6 @@ public class LandlordAddressApprovedAck extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_landlord_address_approved_ack, container, false);
+        return inflater.inflate(R.layout.fragment_lender_address_approved_ack, container, false);
     }
 }

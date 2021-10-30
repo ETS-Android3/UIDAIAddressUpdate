@@ -30,7 +30,7 @@ import retrofit2.Response;
 public class EditAddress extends Fragment implements LocationInterface {
 
 
-    private AddressModel landLordAddressModel;
+    private AddressModel lenderAddressModel;
     private EditText co, house, street, landmark, locality, village_town, subdist, dist, state, country, pincode, postoffice;
     private AppCompatButton save;
     private Double longitude,lattitude;
@@ -45,7 +45,7 @@ public class EditAddress extends Fragment implements LocationInterface {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        landLordAddressModel = new Gson().fromJson(getArguments().getString("addressModel"),AddressModel.class);
+        lenderAddressModel = new Gson().fromJson(getArguments().getString("addressModel"),AddressModel.class);
     }
 
     @Override
@@ -70,18 +70,18 @@ public class EditAddress extends Fragment implements LocationInterface {
         postoffice = (EditText) view.findViewById(R.id.address_post_office);
         save = (AppCompatButton)view.findViewById(R.id.address_save);
 
-        co.setText(landLordAddressModel.getCo());
-        house.setText(landLordAddressModel.getHouse());
-        street.setText(landLordAddressModel.getStreet());
-        landmark.setText(landLordAddressModel.getLm());
-        locality.setText(landLordAddressModel.getLoc());
-        village_town.setText(landLordAddressModel.getVtc());
-        subdist.setText(landLordAddressModel.getSubdist());
-        dist.setText(landLordAddressModel.getDist());
-        state.setText(landLordAddressModel.getState());
-        country.setText(landLordAddressModel.getCountry());
-        pincode.setText(landLordAddressModel.getPc());
-        postoffice.setText(landLordAddressModel.getPo());
+        co.setText(lenderAddressModel.getCo());
+        house.setText(lenderAddressModel.getHouse());
+        street.setText(lenderAddressModel.getStreet());
+        landmark.setText(lenderAddressModel.getLm());
+        locality.setText(lenderAddressModel.getLoc());
+        village_town.setText(lenderAddressModel.getVtc());
+        subdist.setText(lenderAddressModel.getSubdist());
+        dist.setText(lenderAddressModel.getDist());
+        state.setText(lenderAddressModel.getState());
+        country.setText(lenderAddressModel.getCountry());
+        pincode.setText(lenderAddressModel.getPc());
+        postoffice.setText(lenderAddressModel.getPo());
 
 
         AddressModel updatedAddress = new AddressModel();
@@ -105,7 +105,7 @@ public class EditAddress extends Fragment implements LocationInterface {
                 Log.d("Address",String.valueOf(lattitude));
                 Log.d("Address",String.valueOf(longitude));
                 float[] coordinates = {0,0};
-                UpdateAddressRequest updateAddressRequest = new UpdateAddressRequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionID,landLordAddressModel,updatedAddress,coordinates,SharedPrefHelper.getAadharNumber(getContext()));
+                UpdateAddressRequest updateAddressRequest = new UpdateAddressRequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionID, lenderAddressModel,updatedAddress,coordinates,SharedPrefHelper.getAadharNumber(getContext()));
 
                 ServerApiService.getApiInstance().updateAddress(updateAddressRequest).enqueue(new Callback<UpdateAddressResponse>() {
                     @Override

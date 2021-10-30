@@ -14,7 +14,7 @@
         android:layout_marginTop="32dp"
         android:padding="16dp"
         android:drawableTop="@drawable/ic_right_24"
-        android:text="Request Address to landlord"
+        android:text="Request Address to lender"
         android:textAllCaps="false"
         android:textSize="16dp"
         app:layout_constraintStart_toStartOf="parent"

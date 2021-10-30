@@ -1,4 +1,4 @@
-package com.example.uidaiaddressupdate.landlord;
+package com.example.uidaiaddressupdate.lender;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,21 +6,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.uidaiaddressupdate.R;
-import com.example.uidaiaddressupdate.database.LandlordTransactions;
+import com.example.uidaiaddressupdate.database.LenderTransactions;
 
 import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class LandlordRequestListAdapter extends RecyclerView.Adapter<LandlordRequestListAdapter.ViewHolder> {
+public class LenderRequestListAdapter extends RecyclerView.Adapter<LenderRequestListAdapter.ViewHolder> {
 
-    private List<LandlordTransactions> AddressRequestsList;
-    private LandlordRequests landlordRequestsInterface;
+    private List<LenderTransactions> AddressRequestsList;
+    private LenderRequests lenderRequestsInterface;
 
-    public LandlordRequestListAdapter(List<LandlordTransactions> addressRequestsList, LandlordRequests landlordRequestsInterface) {
+    public LenderRequestListAdapter(List<LenderTransactions> addressRequestsList, LenderRequests lenderRequestsInterface) {
         AddressRequestsList = addressRequestsList;
-        this.landlordRequestsInterface = landlordRequestsInterface;
+        this.lenderRequestsInterface = lenderRequestsInterface;
     }
 
     @NonNull
@@ -32,20 +32,20 @@ public class LandlordRequestListAdapter extends RecyclerView.Adapter<LandlordReq
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        LandlordTransactions requestModel  = AddressRequestsList.get(position);
+        LenderTransactions requestModel  = AddressRequestsList.get(position);
         holder.name.setText(requestModel.getRenterName());
         holder.phone.setText(requestModel.getRenterNumber());
         holder.approve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                landlordRequestsInterface.GotToCaptchaPage(requestModel.getTransactionID(), requestModel.getShareCode());
+                lenderRequestsInterface.GotToCaptchaPage(requestModel.getTransactionID(), requestModel.getShareCode());
             }
         });
 
         holder.decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                landlordRequestsInterface.HandleRequestDeclined(requestModel.getTransactionID(), requestModel.getShareCode());
+                lenderRequestsInterface.HandleRequestDeclined(requestModel.getTransactionID(), requestModel.getShareCode());
             }
         });
     }

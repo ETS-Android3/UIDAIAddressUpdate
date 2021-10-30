@@ -1,4 +1,4 @@
-package com.example.uidaiaddressupdate.landlord;
+package com.example.uidaiaddressupdate.lender;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -21,8 +21,7 @@ import com.example.uidaiaddressupdate.EncryptionUtils;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.SharedPrefHelper;
 import com.example.uidaiaddressupdate.Util;
-import com.example.uidaiaddressupdate.XMLUtils;
-import com.example.uidaiaddressupdate.database.LandlordTransactions;
+import com.example.uidaiaddressupdate.database.LenderTransactions;
 import com.example.uidaiaddressupdate.database.TransactionDatabase;
 import com.example.uidaiaddressupdate.service.offlineekyc.OfflineEKYCService;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.ekycoffline.OfflineEkycXMLResponse;
@@ -32,22 +31,12 @@ import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publicke
 import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyresponse;
 import com.example.uidaiaddressupdate.service.server.model.sendekyc.Sendekycresponse;
 
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Random;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class LandlordOtpPage extends Fragment {
+public class LenderOtpPage extends Fragment {
 
     private EditText otp_edit_text;
     private TextView resend_otp;
@@ -57,7 +46,7 @@ public class LandlordOtpPage extends Fragment {
     private String receiverShareCode;
     private String transactionId;
 
-    public LandlordOtpPage() {
+    public LenderOtpPage() {
         // Required empty public constructor
     }
 
@@ -73,7 +62,7 @@ public class LandlordOtpPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_landlord_otp_page, container, false);
+        view =  inflater.inflate(R.layout.fragment_lender_otp_page, container, false);
 
         String captchaText = getArguments().getString("captchaText");
         String captchaTxnId = getArguments().getString("captchaTxnId");
@@ -82,9 +71,9 @@ public class LandlordOtpPage extends Fragment {
         sendOTP(captchaText,captchaTxnId);
 
 
-        otp_edit_text = (EditText) view.findViewById(R.id.landlord_otp_et_enter_otp);
-        resend_otp = (TextView) view.findViewById(R.id.landlord_otp_resend_otp);
-        submit_otp = (Button) view.findViewById(R.id.landlord_otp_verify_button);
+        otp_edit_text = (EditText) view.findViewById(R.id.lender_otp_et_enter_otp);
+        resend_otp = (TextView) view.findViewById(R.id.lender_otp_resend_otp);
+        submit_otp = (Button) view.findViewById(R.id.lender_otp_verify_button);
 
         resend_otp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,8 +124,8 @@ public class LandlordOtpPage extends Fragment {
         return view;
     }
 
-    private void sendToLandlordAddressApprovedAckPage(){
-        Navigation.findNavController(view).navigate(R.id.action_landlordOtpPage_to_landlordAddressApprovedAck);
+    private void sendToLenderAddressApprovedAckPage(){
+        Navigation.findNavController(view).navigate(R.id.action_lenderOtpPage_to_lenderAddressApprovedAck);
     }
 
     private void encryptPasscodeAndSendEkyc(String filename,String passcode, String eKyc){
@@ -147,7 +136,7 @@ public class LandlordOtpPage extends Fragment {
                 switch (response.code()){
                     case 200:
                         String receiverPublicKey = response.body().getPublicKey();
-                        Log.d("LandlordOtpPage", "Public Key: "+receiverPublicKey);
+                        Log.d("LenderOtpPage", "Public Key: "+receiverPublicKey);
 
                         String encryptedPasscode = null;
                         try {
@@ -194,11 +183,11 @@ public class LandlordOtpPage extends Fragment {
                         Log.d("Mohan",response.message());
 
                         //Update in Client Side DB
-                        LandlordTransactions curTransaction = TransactionDatabase.getInstance(getContext()).landlordTransactionsDao().getTransaction(transactionId);
+                        LenderTransactions curTransaction = TransactionDatabase.getInstance(getContext()).lenderTransactionsDao().getTransaction(transactionId);
                         curTransaction.setTransactionStatus("accepted");
-                        TransactionDatabase.getInstance(getContext()).landlordTransactionsDao().insertTransaction(curTransaction);
+                        TransactionDatabase.getInstance(getContext()).lenderTransactionsDao().insertTransaction(curTransaction);
 
-                        sendToLandlordAddressApprovedAckPage();
+                        sendToLenderAddressApprovedAckPage();
                         break;
 
                     case 400:

@@ -6,11 +6,11 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = {LandlordTransactions.class,RenterTransactions.class}, version = 2)
+@Database(entities = {LenderTransactions.class,RenterTransactions.class}, version = 2)
 public abstract class TransactionDatabase extends RoomDatabase {
     private static TransactionDatabase instance;
 
-    public abstract LandlordTransactionsDao landlordTransactionsDao();
+    public abstract LenderTransactionsDao lenderTransactionsDao();
     public abstract RenterTransactionsDao renterTransactionsDao();
 
     public static synchronized TransactionDatabase getInstance(Context context) {
