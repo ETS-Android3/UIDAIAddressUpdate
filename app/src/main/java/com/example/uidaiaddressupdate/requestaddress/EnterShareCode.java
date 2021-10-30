@@ -55,7 +55,8 @@ public class EnterShareCode extends Fragment {
                 ServerApiService.getApiInstance().getPublicKey(new Publickeyrequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),recieverShareCode)).enqueue(new Callback<Publickeyresponse>() {
                     @Override
                     public void onResponse(Call<Publickeyresponse> call, Response<Publickeyresponse> response) {
-                        String publicKey = "response.body().getPublicKey()";
+                        Log.d("KYC",response.message());
+                        String publicKey = response.body().getPublicKey();
                         Bundle bundle = new Bundle();
                         bundle.putString("publicKey",publicKey);
                         bundle.putString("recieverShareCode",recieverShareCode);

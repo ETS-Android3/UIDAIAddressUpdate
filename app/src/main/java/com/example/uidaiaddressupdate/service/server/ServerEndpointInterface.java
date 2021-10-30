@@ -8,6 +8,8 @@ import com.example.uidaiaddressupdate.service.server.model.sendaddressrequest.Ad
 import com.example.uidaiaddressupdate.service.server.model.sendaddressrequest.Addressrequestresponse;
 import com.example.uidaiaddressupdate.service.server.model.sendekyc.Sendekycrequest;
 import com.example.uidaiaddressupdate.service.server.model.sendekyc.Sendekycresponse;
+import com.example.uidaiaddressupdate.service.server.model.updateAddress.UpdateAddressRequest;
+import com.example.uidaiaddressupdate.service.server.model.updateAddress.UpdateAddressResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -30,7 +32,11 @@ public interface ServerEndpointInterface {
     Call<Addressrequestresponse> sendrequest(@Body Addressrequestformat addressrequestformat);
 
     @Headers({"Content-Type: application/json"})
-    @GET("/getekyc")
-    Call<GetEkycResponse> getEkyc(@Query("txnID") String txnID);
+    @POST("/getekyc")
+    Call<GetEkycResponse> getEkyc(@Body GetEkycRequest getEkycRequest);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("/updateaddress")
+    Call<UpdateAddressResponse> updateAddress(@Body UpdateAddressRequest updateAddressRequest);
 
 }

@@ -99,7 +99,7 @@ public class LandlordOtpPage extends Fragment {
                 Log.d("eKYC",otp_edit_text.getText().toString());
                 Log.d("eKYC",otpTxnId);
                 String passcode = Util.getRandomString();
-                OfflineEKYCService.makeOfflineEKYCCall(SharedPrefHelper.getUidToken(getContext()),otp_edit_text.getText().toString(),otpTxnId,passcode).enqueue(new Callback<OfflineEkycXMLResponse>() {
+                OfflineEKYCService.makeOfflineEKYCCall(SharedPrefHelper.getAadharNumber(getContext()),otp_edit_text.getText().toString(),otpTxnId,passcode).enqueue(new Callback<OfflineEkycXMLResponse>() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onResponse(Call<OfflineEkycXMLResponse> call, Response<OfflineEkycXMLResponse> response) {
@@ -156,10 +156,12 @@ public class LandlordOtpPage extends Fragment {
     }
 
     private void sendEkyc(String filename,String passcode, String eKyc){
-        ServerApiService.sendEkyc(transactionId,filename,passcode,eKyc).enqueue(new Callback<Sendekycresponse>() {
+        ServerApiService.sendEkyc(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionId,filename,passcode,eKyc).enqueue(new Callback<Sendekycresponse>() {
             @Override
             public void onResponse(Call<Sendekycresponse> call, Response<Sendekycresponse> response) {
                 Log.d("Mohan","Ekyc Uploaded");
+                Log.d("Mohan",transactionId);
+                Log.d("Mohan",response.message());
 
                 //Update in Client Side DB
                 LandlordTransactions curTransaction = TransactionDatabase.getInstance(getContext()).landlordTransactionsDao().getTransaction(transactionId);
@@ -176,7 +178,7 @@ public class LandlordOtpPage extends Fragment {
     }
 //9999527333847
     private void sendOTP(String captchaText, String captchaTxnId){
-        OfflineEKYCService.makeOTPCall(SharedPrefHelper.getUidToken(getContext()),captchaTxnId,captchaText).enqueue(new Callback<OtpResponse>() {
+        OfflineEKYCService.makeOTPCall(SharedPrefHelper.getAadharNumber(getContext()),captchaTxnId,captchaText).enqueue(new Callback<OtpResponse>() {
             @Override
             public void onResponse(Call<OtpResponse> call, Response<OtpResponse> response) {
                 Log.d("eKYC", response.body().getMessage());

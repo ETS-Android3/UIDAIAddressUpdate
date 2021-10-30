@@ -63,6 +63,7 @@ public class RenterOTP extends Fragment {
 
         receiverPublicKey = getArguments().getString("publicKey");
         receiverSharableCode = getArguments().getString("recieverShareCode");
+        Log.d("NEW_TESTING",receiverSharableCode);
 
         txnId = UUID.randomUUID().toString();
 
@@ -70,28 +71,32 @@ public class RenterOTP extends Fragment {
         otp_edit_text = (EditText) view.findViewById(R.id.renter_otp_et_enter_otp);
         submit_otp = (Button) view.findViewById(R.id.renter_otp_verify_button);
 
-        OtpRequest otpRequest = new OtpRequest(SharedPrefHelper.getUidToken(getContext()),txnId);
+        OtpRequest otpRequest = new OtpRequest(SharedPrefHelper.getAadharNumber(getContext()),txnId);
+        Log.d("NEW_TESTING",txnId);
+        Log.d("NEW_TESTING",SharedPrefHelper.getAadharNumber(getContext()));
         OnlineEKYCApiService.getApiInstance().sendOtpOnPhone(otpRequest).enqueue(new Callback<OtpResponse>() {
             @Override
             public void onResponse(Call<OtpResponse> call, Response<OtpResponse> response) {
                 Log.d("NEW_TESTING",response.message());
+                Log.d("NEW_TESTING","success");
             }
 
             @Override
             public void onFailure(Call<OtpResponse> call, Throwable t) {
-
+                Log.d("NEW_TESTING","error");
+                t.printStackTrace();
             }
         });
 
         submit_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OnlineEKYCApiService.getApiInstance().getOnlineEKYC(new OnlineEKYCRequest(SharedPrefHelper.getUidToken(getContext()),txnId,otp_edit_text.getText().toString())).enqueue(new Callback<OnlineEKYCResponse>() {
+                OnlineEKYCApiService.getApiInstance().getOnlineEKYC(new OnlineEKYCRequest(SharedPrefHelper.getAadharNumber(getContext()),txnId,otp_edit_text.getText().toString())).enqueue(new Callback<OnlineEKYCResponse>() {
                     @Override
                     public void onResponse(Call<OnlineEKYCResponse> call, Response<OnlineEKYCResponse> response) {
                         String addressMessage;
                         String encryptedAddressMessage;
-
+                        Log.d("KYC", response.message());
                         Log.d("KYC", response.body().geteKycString());
                         try {
                             addressMessage = new Gson().toJson(XMLUtils.createAddressRequestMessageFromKYC(response.body().geteKycString()));
@@ -116,10 +121,10 @@ public class RenterOTP extends Fragment {
                                 Log.d("AddReq","SADADS");
                                 Log.d("AddReq",response.message());
 //                                Log.d("AddReq",response.body().getBody());
-//                                Log.d("AddReq",response.body().getTransactionNo());
+                                Log.d("AddReq",response.body().getTransactionID());
 
                                 //Update in Client Side DB
-                                RenterTransactions newTransaction = new RenterTransactions(response.body().getTransactionNo(),"init","",receiverSharableCode);
+                                RenterTransactions newTransaction = new RenterTransactions(response.body().getTransactionID(),"init","",receiverSharableCode);
                                 TransactionDatabase.getInstance(getContext()).renterTransactionsDao().insertTransaction(newTransaction);
 
                                 goToRequestSentPage();

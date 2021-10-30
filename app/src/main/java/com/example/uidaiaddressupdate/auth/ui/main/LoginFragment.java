@@ -11,16 +11,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 
 import com.example.uidaiaddressupdate.NewAddressRequestMessage;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.service.auth.AuthApiEndpointInterface;
-import com.example.uidaiaddressupdate.service.auth.model.Authotprequest;
 import com.example.uidaiaddressupdate.service.auth.model.Authuidrequest;
 import com.example.uidaiaddressupdate.service.auth.model.Authuidresponse;
-import com.example.uidaiaddressupdate.service.otpservice.OtpAPIService;
-import com.example.uidaiaddressupdate.service.otpservice.model.OtpRes;
 import com.google.gson.Gson;
 
 import android.security.keystore.KeyGenParameterSpec;
@@ -34,24 +30,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.UnrecoverableEntryException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Scanner;
-import java.util.UUID;
 
 import javax.crypto.Cipher;
 
@@ -100,7 +84,7 @@ public class LoginFragment extends Fragment {
                     apiServie.sendOtp(authuidrequest).enqueue(new Callback<Authuidresponse>() {
                         @Override
                         public void onResponse(Call<Authuidresponse> call, Response<Authuidresponse> response) {
-                            String transactionId = response.body().getTransactionNo();
+                            String transactionId = response.body().getTransactionID();
                             GoToOTPPage(transactionId,aadharNumber);
                             Log.d("Mohan","OTP request is correct");
                         }

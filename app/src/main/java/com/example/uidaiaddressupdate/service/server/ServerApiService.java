@@ -27,12 +27,12 @@ public class ServerApiService {
         return apiEndpointInterface;
     }
 
-    public static Call<GetEkycResponse> getEkyc(String transactionId){
-        return getApiInstance().getEkyc(transactionId);
+    public static Call<GetEkycResponse> getEkyc(GetEkycRequest getEkycRequest){
+        return getApiInstance().getEkyc(getEkycRequest);
     }
 
-    public static Call<Sendekycresponse> sendEkyc(String transactionId, String filename, String passcode,String ekyc){
-        Sendekycrequest sendekycrequest  =  new Sendekycrequest(transactionId,ekyc,filename,passcode);
+    public static Call<Sendekycresponse> sendEkyc(String uidToken, String authToken,String transactionId, String filename, String passcode,String ekyc){
+        Sendekycrequest sendekycrequest  =  new Sendekycrequest(uidToken,authToken,transactionId,ekyc,filename,passcode);
         return getApiInstance().sendEkyc(sendekycrequest);
     }
 }

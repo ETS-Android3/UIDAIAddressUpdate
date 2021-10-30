@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.MainActivity;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.service.auth.AuthApiEndpointInterface;
@@ -90,7 +91,7 @@ public class OtpFragment extends Fragment {
 
 
                 Log.d("FCM Token:",FCMtoken);
-                Authotprequest authotprequest = new Authotprequest(transactionId,otp.getText().toString(),FCMtoken,pubkeyString);
+                Authotprequest authotprequest = new Authotprequest(transactionId,otp.getText().toString(),FCMtoken,pubkeyString,aadharNumber);
                 apiServie.authenticate(authotprequest).enqueue(new Callback<Authotpresponse>() {
                     @Override
                     public void onResponse(Call<Authotpresponse> call, Response<Authotpresponse> response) {
@@ -109,7 +110,7 @@ public class OtpFragment extends Fragment {
                             sharedPrefsEditor.putString("AuthToken",response.body().getAuthToken());
                             sharedPrefsEditor.putString("UidToken",response.body().getUidToken());
                             sharedPrefsEditor.putString("ShareableCode",response.body().getShareableCode());
-                            sharedPrefsEditor.putString("aadharNumber",aadharNumber);
+                            sharedPrefsEditor.putString(Constants.KEY_AADHAR_NUMBER,aadharNumber);
 
                             sharedPrefsEditor.commit();
                         } catch (GeneralSecurityException e) {

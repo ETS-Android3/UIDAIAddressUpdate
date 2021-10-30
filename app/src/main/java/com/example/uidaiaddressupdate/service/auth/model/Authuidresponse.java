@@ -3,13 +3,17 @@ package com.example.uidaiaddressupdate.service.auth.model;
 import java.io.Serializable;
 
 public class Authuidresponse implements Serializable {
-    private String transactionNo;
+    private String transactionID;
+    private String message;
 
-    public String getTransactionNo() {
-        return transactionNo;
+    public String getTransactionID() {
+        return transactionID;
     }
 
-    public void setTransactionNo(String transactionNo) {
-        this.transactionNo = transactionNo;
+    public String getMessage() { return message; }
+
+    public void setTransactionID(String transactionID, String message) {
+        this.transactionID = transactionID;
+        this.message = message;
     }
 }

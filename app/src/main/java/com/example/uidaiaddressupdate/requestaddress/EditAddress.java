@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,15 @@ import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.Location.LocationInterface;
 import com.example.uidaiaddressupdate.Location.MyLocationListener;
 import com.example.uidaiaddressupdate.R;
+import com.example.uidaiaddressupdate.SharedPrefHelper;
+import com.example.uidaiaddressupdate.service.server.ServerApiService;
+import com.example.uidaiaddressupdate.service.server.model.updateAddress.UpdateAddressRequest;
+import com.example.uidaiaddressupdate.service.server.model.updateAddress.UpdateAddressResponse;
 import com.google.gson.Gson;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class EditAddress extends Fragment implements LocationInterface {
@@ -93,7 +102,26 @@ public class EditAddress extends Fragment implements LocationInterface {
                 updatedAddress.setPc(pincode.getText().toString());
                 updatedAddress.setPo(postoffice.getText().toString());
 
+                Log.d("Address",String.valueOf(lattitude));
+                Log.d("Address",String.valueOf(longitude));
+                float[] coordinates = {0,0};
+                UpdateAddressRequest updateAddressRequest = new UpdateAddressRequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionID,landLordAddressModel,updatedAddress,coordinates,SharedPrefHelper.getAadharNumber(getContext()));
 
+                ServerApiService.getApiInstance().updateAddress(updateAddressRequest).enqueue(new Callback<UpdateAddressResponse>() {
+                    @Override
+                    public void onResponse(Call<UpdateAddressResponse> call, Response<UpdateAddressResponse> response) {
+                        Log.d("Address",new Gson().toJson(updateAddressRequest));
+                        Log.d("Address",response.message());
+
+                        Toast.makeText(getContext(),"Address Updated!!",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<UpdateAddressResponse> call, Throwable t) {
+                        t.printStackTrace();
+                        Toast.makeText(getContext(),"Error!!",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         return view;

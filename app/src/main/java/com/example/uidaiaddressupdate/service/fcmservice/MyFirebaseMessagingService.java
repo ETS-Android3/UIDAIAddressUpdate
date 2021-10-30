@@ -57,7 +57,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 handleAbortedMessage(messageData);
                 break;
             default:
-                Log.d("FCMService", "Invalid Message Status");
+                Log.d("FCMService", "Invalid Message Status "+transactionStatus);
         }
     }
 
@@ -71,11 +71,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String transactionID = getValueFromMap(messageData, "transactionID");
         String requesterSC = getValueFromMap(messageData, "requesterSC");
         String encryptedMessage = getValueFromMap(messageData, "encryptedMessage");
+        Log.d("FCMService ",encryptedMessage);
         String decryptedMessage = null;
         try {
             decryptedMessage = DecryptionUtils.decryptMessage(encryptedMessage);
+            Log.d("FCMService ",decryptedMessage);
             Gson gson = new Gson();
             NewAddressRequestMessage addressRequestMessage = gson.fromJson(decryptedMessage, NewAddressRequestMessage.class);
+            Log.d("FCMService ",addressRequestMessage.getRenterName());
+            Log.d("FCMService ",addressRequestMessage.getRenterNumber());
             landlordTransactionsDao.insertTransaction(new LandlordTransactions(transactionID, addressRequestMessage.getRenterName(), addressRequestMessage.getRenterNumber(), "init", "", requesterSC));
         } catch (Exception e) {
             e.printStackTrace();

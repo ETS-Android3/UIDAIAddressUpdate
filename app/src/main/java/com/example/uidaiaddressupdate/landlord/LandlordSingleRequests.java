@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.R;
@@ -58,6 +59,7 @@ public class LandlordSingleRequests extends Fragment {
         captchaEditText = (EditText) view.findViewById(R.id.captcha_edit_text);
         captchaRefresh = (TextView) view.findViewById(R.id.captcha_refresh);
         captchaContinue = (AppCompatButton) view.findViewById(R.id.captcha_continue);
+        Toast.makeText(getContext(), transactionId, Toast.LENGTH_SHORT).show();
 
 
         OfflineEKYCService.makeCaptchaCall().enqueue(new Callback<CaptchaResponse>() {
