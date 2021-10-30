@@ -9,6 +9,8 @@ public class Constants {
     public static String KEY_TRANSACTION_ID = "transactionID";
     public static String KEY_RECEIVER_SHARECODE_ID = "receiverShareCode";
 
+    public static String SERVER_IP_ADDRESS = "http://192.168.1.14:8000";
+
     //status
     public static String STATUS_INIT = "init";
     public static String STATUS_REJECTED = "rejected";
