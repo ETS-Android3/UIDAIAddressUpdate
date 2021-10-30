@@ -14,6 +14,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface ServerEndpointInterface {
     @Headers({"Content-Type: application/json"})
@@ -30,6 +31,6 @@ public interface ServerEndpointInterface {
 
     @Headers({"Content-Type: application/json"})
     @GET("/getekyc")
-    Call<GetEkycResponse> getEkyc(@Body GetEkycRequest getEkycRequest);
+    Call<GetEkycResponse> getEkyc(@Query("txnID") String txnID);
 
 }

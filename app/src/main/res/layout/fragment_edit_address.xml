@@ -26,6 +26,7 @@
             android:layout_marginTop="8dp"
             android:text="Care Of"/>
         <EditText
+            android:id="@+id/addresss_co"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter Care Of"
@@ -35,22 +36,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="House Number"/>
+            android:text="House Number/Identifier"/>
         <EditText
+            android:id="@+id/address_house"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter House number"
-            android:drawableEnd="@drawable/ic_edit_24"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Landmark"/>
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Landmark Id Any"
+            android:hint="Enter House number or Identifier"
             android:drawableEnd="@drawable/ic_edit_24"/>
 
         <TextView
@@ -59,6 +50,7 @@
             android:layout_marginTop="8dp"
             android:text="Street"/>
         <EditText
+            android:id="@+id/address_street"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter Street Name"
@@ -68,10 +60,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Locality"/>
+            android:text="Landmark"/>
         <EditText
+            android:id="@+id/addresss_landmark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="Landmark Id Any"
+            android:drawableEnd="@drawable/ic_edit_24"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Locality"/>
+        <EditText
+            android:id="@+id/address_locality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
             android:hint="Enter Locality if Any"
             android:drawableEnd="@drawable/ic_edit_24"/>
 
@@ -81,8 +87,10 @@
             android:layout_marginTop="8dp"
             android:text="Village/Town name"/>
         <EditText
+            android:id="@+id/address_villege_or_town"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:hint="Enter Village/Town Name"
             android:drawableEnd="@drawable/ic_edit_24"/>
 
@@ -93,8 +101,10 @@
             android:layout_marginTop="8dp"
             android:text="Sub District Name"/>
         <EditText
+            android:id="@+id/address_subdistrict"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:hint="Enter Sub District Name"
             android:drawableEnd="@drawable/ic_edit_24"/>
 
@@ -104,8 +114,10 @@
             android:layout_marginTop="8dp"
             android:text="District Name"/>
         <EditText
+            android:id="@+id/address_district"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:hint="Enter District Name"
             android:drawableEnd="@drawable/ic_edit_24"/>
 
@@ -115,8 +127,10 @@
             android:layout_marginTop="8dp"
             android:text="State"/>
         <EditText
+            android:id="@+id/address_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:hint="Enter State Name"
             android:drawableEnd="@drawable/ic_edit_24"/>
 
@@ -126,8 +140,10 @@
             android:layout_marginTop="8dp"
             android:text="Country Name"/>
         <EditText
+            android:id="@+id/address_country"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:hint="Enter Country Name"
             android:drawableEnd="@drawable/ic_edit_24"/>
 
@@ -137,8 +153,10 @@
             android:layout_marginTop="8dp"
             android:text="Pin Code"/>
         <EditText
+            android:id="@+id/address_pin_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:hint="Enter Pin Code"
             android:drawableEnd="@drawable/ic_edit_24"/>
 
@@ -148,13 +166,16 @@
             android:layout_marginTop="8dp"
             android:text="Post Office Name"/>
         <EditText
+            android:id="@+id/address_post_office"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:hint="Enter Post Office name if Any"
             android:drawableEnd="@drawable/ic_edit_24"/>
 
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/address_save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
