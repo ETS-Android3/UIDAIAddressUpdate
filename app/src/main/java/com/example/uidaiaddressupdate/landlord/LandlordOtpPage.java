@@ -22,6 +22,8 @@ import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.SharedPrefHelper;
 import com.example.uidaiaddressupdate.Util;
 import com.example.uidaiaddressupdate.XMLUtils;
+import com.example.uidaiaddressupdate.database.LandlordTransactions;
+import com.example.uidaiaddressupdate.database.TransactionDatabase;
 import com.example.uidaiaddressupdate.service.offlineekyc.OfflineEKYCService;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.ekycoffline.OfflineEkycXMLResponse;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.otp.OtpResponse;
@@ -158,6 +160,12 @@ public class LandlordOtpPage extends Fragment {
             @Override
             public void onResponse(Call<Sendekycresponse> call, Response<Sendekycresponse> response) {
                 Log.d("Mohan","Ekyc Uploaded");
+
+                //Update in Client Side DB
+                LandlordTransactions curTransaction = TransactionDatabase.getInstance(getContext()).landlordTransactionsDao().getTransaction(transactionId);
+                curTransaction.setTransactionStatus("accepted");
+                TransactionDatabase.getInstance(getContext()).landlordTransactionsDao().insertTransaction(curTransaction);
+
                 sendToLandlordAddressApprovedAckPage();
             }
             @Override
