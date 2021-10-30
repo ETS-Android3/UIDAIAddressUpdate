@@ -16,6 +16,8 @@ import com.example.uidaiaddressupdate.EncryptionUtils;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.SharedPrefHelper;
 import com.example.uidaiaddressupdate.XMLUtils;
+import com.example.uidaiaddressupdate.database.RenterTransactions;
+import com.example.uidaiaddressupdate.database.TransactionDatabase;
 import com.example.uidaiaddressupdate.service.onlineekyc.OnlineEKYCApiService;
 import com.example.uidaiaddressupdate.service.onlineekyc.model.ekyconline.OnlineEKYCRequest;
 import com.example.uidaiaddressupdate.service.onlineekyc.model.ekyconline.OnlineEKYCResponse;
@@ -116,7 +118,10 @@ public class RenterOTP extends Fragment {
 //                                Log.d("AddReq",response.body().getBody());
 //                                Log.d("AddReq",response.body().getTransactionNo());
 
-                                // TODO: Add Newly Created Transaction in RenterTransactions Table in Database
+                                //Update in Client Side DB
+                                RenterTransactions newTransaction = new RenterTransactions(response.body().getTransactionNo(),"init","",receiverSharableCode);
+                                TransactionDatabase.getInstance(getContext()).renterTransactionsDao().insertTransaction(newTransaction);
+
                                 goToRequestSentPage();
                             }
 
