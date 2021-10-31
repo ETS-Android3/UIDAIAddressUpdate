@@ -33,8 +33,8 @@ public class LandlordRequestListAdapter extends RecyclerView.Adapter<LandlordReq
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LandlordTransactions requestModel  = AddressRequestsList.get(position);
-        holder.name.setText(requestModel.getRenterName());
-        holder.phone.setText(requestModel.getRenterNumber());
+        holder.name.setText(requestModel.getRequesterName());
+        holder.phone.setText(requestModel.getRequesterNumber());
         holder.approve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

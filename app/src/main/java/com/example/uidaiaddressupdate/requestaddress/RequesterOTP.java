@@ -18,7 +18,7 @@ import com.example.uidaiaddressupdate.EncryptionUtils;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.SharedPrefHelper;
 import com.example.uidaiaddressupdate.XMLUtils;
-import com.example.uidaiaddressupdate.database.RenterTransactions;
+import com.example.uidaiaddressupdate.database.RequesterTransactions;
 import com.example.uidaiaddressupdate.database.TransactionDatabase;
 import com.example.uidaiaddressupdate.service.onlineekyc.OnlineEKYCApiService;
 import com.example.uidaiaddressupdate.service.onlineekyc.model.ekyconline.OnlineEKYCRequest;
@@ -36,7 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RenterOTP extends Fragment {
+public class RequesterOTP extends Fragment {
 
     private String receiverPublicKey;
     private String receiverSharableCode;
@@ -46,7 +46,7 @@ public class RenterOTP extends Fragment {
 
     private View view;
 
-    public RenterOTP() {
+    public RequesterOTP() {
         // Required empty public constructor
     }
 
@@ -61,7 +61,7 @@ public class RenterOTP extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_renter_o_t_p, container, false);
+        view = inflater.inflate(R.layout.fragment_requester_o_t_p, container, false);
 
         receiverPublicKey = getArguments().getString("publicKey");
         receiverSharableCode = getArguments().getString("recieverShareCode");
@@ -70,8 +70,8 @@ public class RenterOTP extends Fragment {
         txnId = UUID.randomUUID().toString();
 
 
-        otp_edit_text = (EditText) view.findViewById(R.id.renter_otp_et_enter_otp);
-        submit_otp = (Button) view.findViewById(R.id.renter_otp_verify_button);
+        otp_edit_text = (EditText) view.findViewById(R.id.requester_otp_et_enter_otp);
+        submit_otp = (Button) view.findViewById(R.id.requester_otp_verify_button);
 
         OtpRequest otpRequest = new OtpRequest(SharedPrefHelper.getAadharNumber(getContext()),txnId);
         Log.d("NEW_TESTING",txnId);
@@ -151,8 +151,8 @@ public class RenterOTP extends Fragment {
                                             Log.d("AddReq",response.body().getTransactionID());
 
                                             //Update in Client Side DB
-                                            RenterTransactions newTransaction = new RenterTransactions(response.body().getTransactionID(),"init","",receiverSharableCode);
-                                            TransactionDatabase.getInstance(getContext()).renterTransactionsDao().insertTransaction(newTransaction);
+                                            RequesterTransactions newTransaction = new RequesterTransactions(response.body().getTransactionID(),"init","",receiverSharableCode);
+                                            TransactionDatabase.getInstance(getContext()).requesterTransactionsDao().insertTransaction(newTransaction);
 
                                             goToRequestSentPage();
                                             break;
@@ -205,6 +205,6 @@ public class RenterOTP extends Fragment {
     }
 
     private void goToRequestSentPage(){
-        Navigation.findNavController(view).navigate(R.id.action_renterOTP_to_requestSentPage);
+        Navigation.findNavController(view).navigate(R.id.action_requesterOTP_to_requestSentPage);
     }
 }

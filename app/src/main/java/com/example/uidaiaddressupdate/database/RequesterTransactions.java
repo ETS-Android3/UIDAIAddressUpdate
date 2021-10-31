@@ -6,7 +6,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class RenterTransactions {
+public class RequesterTransactions {
     @NonNull
     @PrimaryKey
     public String transactionID;
@@ -20,11 +20,11 @@ public class RenterTransactions {
     @ColumnInfo
     public String shareCode;
 
-    public RenterTransactions(){
+    public RequesterTransactions(){
 
     }
 
-    public RenterTransactions(@NonNull String transactionID, String transactionStatus, String data, String shareCode) {
+    public RequesterTransactions(@NonNull String transactionID, String transactionStatus, String data, String shareCode) {
         this.transactionID = transactionID;
         this.transactionStatus = transactionStatus;
         this.data = data;

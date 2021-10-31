@@ -66,7 +66,7 @@ public class EnterShareCode extends Fragment {
                                 Bundle bundle = new Bundle();
                                 bundle.putString("publicKey",publicKey);
                                 bundle.putString("recieverShareCode",recieverShareCode);
-                                Navigation.findNavController(view).navigate(R.id.action_enterShareCode_to_renterOTP,bundle);
+                                Navigation.findNavController(view).navigate(R.id.action_enterShareCode_to_requesterOTP,bundle);
                                 break;
 
                             case 400:

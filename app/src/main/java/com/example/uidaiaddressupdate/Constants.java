@@ -12,8 +12,6 @@ public class Constants {
     public static String KEY_LONGITUDE = "KEY_LONGITUDE";
     public static String KEY_LATITUDE = "KEY_LATITUDE";
 
-    public static String SERVER_IP_ADDRESS = "http://13.232.96.11:8000";
-//    public static String SERVER_IP_ADDRESS = "http://192.168.137.1:8000";
     public static String SERVER_ADDRESS = "http://13.232.96.11:8000";
     public static String UIDAI_SERVER_ADDRESS = "https://stage1.uidai.gov.in/";
     public static String SHARED_PREFERENCES_FILE = "aadharsharedPreferences";

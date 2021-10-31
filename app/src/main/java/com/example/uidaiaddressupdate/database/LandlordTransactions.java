@@ -12,10 +12,10 @@ public class LandlordTransactions {
     public String transactionID;
 
     @ColumnInfo
-    public String renterName;
+    public String requesterName;
 
     @ColumnInfo
-    public String renterNumber;
+    public String requesterNumber;
 
     @ColumnInfo
     public String transactionStatus;
@@ -29,10 +29,10 @@ public class LandlordTransactions {
     public LandlordTransactions(){
 
     }
-    public LandlordTransactions(@NonNull String transactionID, String renterName, String renterNumber, String transactionStatus, String data, String shareCode) {
+    public LandlordTransactions(@NonNull String transactionID, String requesterName, String requesterNumber, String transactionStatus, String data, String shareCode) {
         this.transactionID = transactionID;
-        this.renterName = renterName;
-        this.renterNumber = renterNumber;
+        this.requesterName = requesterName;
+        this.requesterNumber = requesterNumber;
         this.transactionStatus = transactionStatus;
         this.data = data;
         this.shareCode = shareCode;
@@ -47,20 +47,20 @@ public class LandlordTransactions {
         this.transactionID = transactionID;
     }
 
-    public String getRenterName() {
-        return renterName;
+    public String getRequesterName() {
+        return requesterName;
     }
 
-    public void setRenterName(String renterName) {
-        this.renterName = renterName;
+    public void setRequesterName(String requesterName) {
+        this.requesterName = requesterName;
     }
 
-    public String getRenterNumber() {
-        return renterNumber;
+    public String getRequesterNumber() {
+        return requesterNumber;
     }
 
-    public void setRenterNumber(String renterNumber) {
-        this.renterNumber = renterNumber;
+    public void setRequesterNumber(String requesterNumber) {
+        this.requesterNumber = requesterNumber;
     }
 
     public String getTransactionStatus() {

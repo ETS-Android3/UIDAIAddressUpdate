@@ -17,8 +17,8 @@ import com.example.uidaiaddressupdate.MainActivity;
 import com.example.uidaiaddressupdate.NewAddressRequestMessage;
 import com.example.uidaiaddressupdate.database.LandlordTransactions;
 import com.example.uidaiaddressupdate.database.LandlordTransactionsDao;
-import com.example.uidaiaddressupdate.database.RenterTransactions;
-import com.example.uidaiaddressupdate.database.RenterTransactionsDao;
+import com.example.uidaiaddressupdate.database.RequesterTransactions;
+import com.example.uidaiaddressupdate.database.RequesterTransactionsDao;
 import com.example.uidaiaddressupdate.database.TransactionDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -31,14 +31,14 @@ import com.example.uidaiaddressupdate.R;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private TransactionDatabase transactionDatabase;
     private LandlordTransactionsDao landlordTransactionsDao;
-    private RenterTransactionsDao renterTransactionsDao;
+    private RequesterTransactionsDao requesterTransactionsDao;
 
     @Override
     public void onCreate() {
         super.onCreate();
         transactionDatabase = TransactionDatabase.getInstance(getApplicationContext());
         landlordTransactionsDao = transactionDatabase.landlordTransactionsDao();
-        renterTransactionsDao = transactionDatabase.renterTransactionsDao();
+        requesterTransactionsDao = transactionDatabase.requesterTransactionsDao();
         Log.d("FCMService", "Created");
     }
 
@@ -98,9 +98,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d("FCMService ", decryptedMessage);
             Gson gson = new Gson();
             NewAddressRequestMessage addressRequestMessage = gson.fromJson(decryptedMessage, NewAddressRequestMessage.class);
-            Log.d("FCMService ", addressRequestMessage.getRenterName());
-            Log.d("FCMService ", addressRequestMessage.getRenterNumber());
-            landlordTransactionsDao.insertTransaction(new LandlordTransactions(transactionID, addressRequestMessage.getRenterName(), addressRequestMessage.getRenterNumber(), "init", "", requesterSC));
+            Log.d("FCMService ", addressRequestMessage.getRequesterName());
+            Log.d("FCMService ", addressRequestMessage.getRequesterNumber());
+            landlordTransactionsDao.insertTransaction(new LandlordTransactions(transactionID, addressRequestMessage.getRequesterName(), addressRequestMessage.getRequesterNumber(), "init", "", requesterSC));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,17 +109,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void handleAcceptedMessage(Map<String, String> messageData) {
         Log.d("FCMService", "Accepted message received");
         String transactionID = getValueFromMap(messageData, "transactionID");
-        RenterTransactions renterTransactions = renterTransactionsDao.getTransaction(transactionID);
-        renterTransactions.setTransactionStatus("accepted");
-        renterTransactionsDao.insertTransaction(renterTransactions);
+        RequesterTransactions requesterTransactions = requesterTransactionsDao.getTransaction(transactionID);
+        requesterTransactions.setTransactionStatus("accepted");
+        requesterTransactionsDao.insertTransaction(requesterTransactions);
     }
 
     private void handleRejectedMessage(Map<String, String> messageData) {
         Log.d("FCMService", "Rejected message received");
         String transactionID = getValueFromMap(messageData, "transactionID");
-        RenterTransactions renterTransactions = renterTransactionsDao.getTransaction(transactionID);
-        renterTransactions.setTransactionStatus("rejected");
-        renterTransactionsDao.insertTransaction(renterTransactions);
+        RequesterTransactions requesterTransactions = requesterTransactionsDao.getTransaction(transactionID);
+        requesterTransactions.setTransactionStatus("rejected");
+        requesterTransactionsDao.insertTransaction(requesterTransactions);
     }
 
     private void handleSharedMessage(Map<String, String> messageData) {
