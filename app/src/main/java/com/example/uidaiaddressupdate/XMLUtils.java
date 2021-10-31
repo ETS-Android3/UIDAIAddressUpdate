@@ -27,10 +27,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class XMLUtils {
-    public static String getAddressFromeKYC(String eKYCXml){
-        return "";
-    }
-
     public static NewAddressRequestMessage createAddressRequestMessageFromKYC(String eKYCXml) throws Exception {
         Document eKYCdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(eKYCXml)));
 

@@ -22,7 +22,7 @@ public class SharedPrefHelper {
             KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
             String mainKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
             SharedPreferences sharedPreferences = EncryptedSharedPreferences.create(
-                    "aadharsharedPreferences",
+                    Constants.SHARED_PREFERENCES_FILE,
                     mainKeyAlias,
                     context,
                     EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,

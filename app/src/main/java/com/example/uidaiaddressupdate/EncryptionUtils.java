@@ -45,7 +45,6 @@ public class EncryptionUtils {
         cipher1.init(Cipher.DECRYPT_MODE, prk.getPrivateKey());
         byte[] decryptedBytes = cipher1.doFinal(Base64.decode(encrytedMessage,Base64.DEFAULT));
         String decryptedText = new String(decryptedBytes);
-        Log.d("KeyTest",decryptedText);
 
         return decryptedText;
     }

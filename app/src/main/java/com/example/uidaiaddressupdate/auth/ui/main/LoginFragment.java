@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.example.uidaiaddressupdate.NewAddressRequestMessage;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.service.auth.AuthApiEndpointInterface;
+import com.example.uidaiaddressupdate.service.auth.AuthapiService;
 import com.example.uidaiaddressupdate.service.auth.model.Authuidrequest;
 import com.example.uidaiaddressupdate.service.auth.model.Authuidresponse;
 import com.google.gson.Gson;

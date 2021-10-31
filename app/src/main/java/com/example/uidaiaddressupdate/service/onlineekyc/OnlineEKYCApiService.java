@@ -1,5 +1,6 @@
 package com.example.uidaiaddressupdate.service.onlineekyc;
 
+import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.service.server.ServerEndpointInterface;
 
 import retrofit2.Retrofit;
@@ -11,7 +12,7 @@ public class OnlineEKYCApiService {
     public static OnlineEKYCapiEndpointInterface getApiInstance(){
         if(apiEndpointInterface == null){
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://stage1.uidai.gov.in/")
+                    .baseUrl(Constants.UIDAI_SERVER_ADDRESS)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
