@@ -12,7 +12,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
-import com.example.uidaiaddressupdate.DecryptionUtils;
+import com.example.uidaiaddressupdate.EncryptionUtils;
 import com.example.uidaiaddressupdate.MainActivity;
 import com.example.uidaiaddressupdate.NewAddressRequestMessage;
 import com.example.uidaiaddressupdate.database.LandlordTransactions;
@@ -94,7 +94,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d("FCMService ", encryptedMessage);
         String decryptedMessage = null;
         try {
-            decryptedMessage = DecryptionUtils.decryptMessage(encryptedMessage);
+            decryptedMessage = EncryptionUtils.decryptMessage(encryptedMessage);
             Log.d("FCMService ", decryptedMessage);
             Gson gson = new Gson();
             NewAddressRequestMessage addressRequestMessage = gson.fromJson(decryptedMessage, NewAddressRequestMessage.class);

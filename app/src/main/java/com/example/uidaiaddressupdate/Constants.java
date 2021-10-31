@@ -14,6 +14,9 @@ public class Constants {
 
     public static String SERVER_IP_ADDRESS = "http://13.232.96.11:8000";
 //    public static String SERVER_IP_ADDRESS = "http://192.168.137.1:8000";
+    public static String SERVER_ADDRESS = "http://13.232.96.11:8000";
+    public static String UIDAI_SERVER_ADDRESS = "https://stage1.uidai.gov.in/";
+    public static String SHARED_PREFERENCES_FILE = "aadharsharedPreferences";
 
     //status
     public static String STATUS_INIT = "init";

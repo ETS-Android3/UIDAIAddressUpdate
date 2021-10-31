@@ -2,8 +2,6 @@ package com.example.uidaiaddressupdate.service.server;
 import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycRequest;
 import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycResponse;
-import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyrequest;
-import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyresponse;
 import com.example.uidaiaddressupdate.service.server.model.sendekyc.Sendekycrequest;
 import com.example.uidaiaddressupdate.service.server.model.sendekyc.Sendekycresponse;
 
@@ -18,7 +16,7 @@ public class ServerApiService {
     public static ServerEndpointInterface getApiInstance(){
         if(apiEndpointInterface == null){
             retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.SERVER_IP_ADDRESS)
+                    .baseUrl(Constants.SERVER_ADDRESS)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 

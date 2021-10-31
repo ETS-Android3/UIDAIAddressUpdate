@@ -1,6 +1,6 @@
 package com.example.uidaiaddressupdate.service.offlineekyc;
 
-import com.example.uidaiaddressupdate.service.offlineekyc.constant.Constants;
+import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.captcha.CaptchaRequest;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.captcha.CaptchaResponse;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.ekycoffline.OfflineEkycXMLRequest;
@@ -21,7 +21,7 @@ public class OfflineEKYCService {
     public static EKYCapiEndpointInterface getApiInstance(){
         if(apiEndpointInterface == null){
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://stage1.uidai.gov.in/")
+                    .baseUrl(Constants.UIDAI_SERVER_ADDRESS)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -30,29 +30,11 @@ public class OfflineEKYCService {
         return apiEndpointInterface;
     }
 
-//    public String getOfflineEKYC() throws Exception {
-//        UidToken = "";
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .build();
-//
-//        apiservice = retrofit.create(EKYCapiEndpointInterface.class);
-//
-//        CaptchaResponse captchaResponse = makeCaptchaCall();
-//
-//        byte[] base64Val = Base64.decode(captchaResponse.getCaptchaBase64String(),Base64.DEFAULT);
-//        Bitmap decodedByte = BitmapFactory.decodeByteArray(base64Val,0,base64Val.length);
-//
-//        OtpResponse otpResponse = makeOTPCall(captchaResponse.getCaptchaTxnId(),"");
-//
-//        OfflineEkycXMLResponse offlineEkycXMLResponse = makeOfflineEKYCCall("",otpResponse.getTxnId());
-//        return offlineEkycXMLResponse.geteKycXML();
-//    }
-
     public static Call<CaptchaResponse> makeCaptchaCall(){
         CaptchaRequest captchaRequest = new CaptchaRequest();
-        captchaRequest.setCaptchaLength(Constants.CAPTCHA_LENGTH);
-        captchaRequest.setCaptchaType(Constants.CAPTCHA_TYPE);
-        captchaRequest.setLangCode(Constants.CAPTCHA_LANG_CODE);
+        captchaRequest.setCaptchaLength(ServiceConstants.CAPTCHA_LENGTH);
+        captchaRequest.setCaptchaType(ServiceConstants.CAPTCHA_TYPE);
+        captchaRequest.setLangCode(ServiceConstants.CAPTCHA_LANG_CODE);
 
         return getApiInstance().fetchCaptchaResponse(captchaRequest);
 

@@ -1,4 +1,4 @@
-package com.example.uidaiaddressupdate.auth.ui.main;
+package com.example.uidaiaddressupdate.service.auth;
 
 import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.service.auth.AuthApiEndpointInterface;
@@ -13,7 +13,7 @@ public class AuthapiService {
     public static AuthApiEndpointInterface getApiInstance(){
         if(apiEndpointInterface == null){
             retrofit = new Retrofit.Builder()
-                    .baseUrl(Constants.SERVER_IP_ADDRESS)
+                    .baseUrl(Constants.SERVER_ADDRESS)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
