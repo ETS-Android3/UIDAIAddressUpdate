@@ -1,4 +1,4 @@
-package com.example.uidaiaddressupdate.landlord;
+package com.example.uidaiaddressupdate.lender;
 
 import android.app.ProgressDialog;
 import android.os.Build;
@@ -24,7 +24,7 @@ import com.example.uidaiaddressupdate.EncryptionUtils;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.SharedPrefHelper;
 import com.example.uidaiaddressupdate.Util;
-import com.example.uidaiaddressupdate.database.LandlordTransactions;
+import com.example.uidaiaddressupdate.database.LenderTransactions;
 import com.example.uidaiaddressupdate.database.TransactionDatabase;
 import com.example.uidaiaddressupdate.service.offlineekyc.OfflineEKYCService;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.ekycoffline.OfflineEkycXMLResponse;
@@ -39,7 +39,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class LandlordOtpPage extends Fragment {
+public class LenderOtpPage extends Fragment {
 
     private EditText otp_edit_text;
     private TextView resend_otp;
@@ -50,7 +50,7 @@ public class LandlordOtpPage extends Fragment {
     private String receiverShareCode;
     private String transactionId;
 
-    public LandlordOtpPage() {
+    public LenderOtpPage() {
         // Required empty public constructor
     }
 
@@ -66,7 +66,7 @@ public class LandlordOtpPage extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_landlord_otp_page, container, false);
+        view =  inflater.inflate(R.layout.fragment_lender_otp_page, container, false);
 
         String captchaText = getArguments().getString("captchaText");
         String captchaTxnId = getArguments().getString("captchaTxnId");
@@ -76,9 +76,9 @@ public class LandlordOtpPage extends Fragment {
 
 
 
-        otp_edit_text = (EditText) view.findViewById(R.id.landlord_otp_et_enter_otp);
-        resend_otp = (TextView) view.findViewById(R.id.landlord_otp_resend_otp);
-        submit_otp = (Button) view.findViewById(R.id.landlord_otp_verify_button);
+        otp_edit_text = (EditText) view.findViewById(R.id.lender_otp_et_enter_otp);
+        resend_otp = (TextView) view.findViewById(R.id.lender_otp_resend_otp);
+        submit_otp = (Button) view.findViewById(R.id.lender_otp_verify_button);
 
         resend_otp.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
         new Handler().postDelayed(new Runnable() {
@@ -156,10 +156,10 @@ public class LandlordOtpPage extends Fragment {
         return view;
     }
 
-    private void sendToLandlordAddressApprovedAckPage(){
+    private void sendToLenderAddressApprovedAckPage(){
         Bundle bundle = new Bundle();
         bundle.putString(Constants.KEY_TRANSACTION_ID,transactionId);
-        Navigation.findNavController(view).navigate(R.id.action_landlordOtpPage_to_landlordAddressApprovedAck,bundle);
+        Navigation.findNavController(view).navigate(R.id.action_lenderOtpPage_to_lenderAddressApprovedAck,bundle);
     }
 
     private void encryptPasscodeAndSendEkyc(String filename,String passcode, String eKyc){
@@ -173,7 +173,7 @@ public class LandlordOtpPage extends Fragment {
                 switch (response.code()){
                     case 200:
                         String receiverPublicKey = response.body().getPublicKey();
-                        Log.d("LandlordOtpPage", "Public Key: "+receiverPublicKey);
+                        Log.d("LenderOtpPage", "Public Key: "+receiverPublicKey);
 
                         String encryptedPasscode = null;
                         try {
@@ -225,11 +225,11 @@ public class LandlordOtpPage extends Fragment {
                         Log.d("Mohan",response.message());
 
                         //Update in Client Side DB
-                        LandlordTransactions curTransaction = TransactionDatabase.getInstance(getContext()).landlordTransactionsDao().getTransaction(transactionId);
+                        LenderTransactions curTransaction = TransactionDatabase.getInstance(getContext()).lenderTransactionsDao().getTransaction(transactionId);
                         curTransaction.setTransactionStatus("accepted");
-                        TransactionDatabase.getInstance(getContext()).landlordTransactionsDao().insertTransaction(curTransaction);
+                        TransactionDatabase.getInstance(getContext()).lenderTransactionsDao().insertTransaction(curTransaction);
 
-                        sendToLandlordAddressApprovedAckPage();
+                        sendToLenderAddressApprovedAckPage();
                         break;
 
                     case 400:

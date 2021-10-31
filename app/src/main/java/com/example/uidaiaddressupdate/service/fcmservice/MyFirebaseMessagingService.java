@@ -15,8 +15,8 @@ import androidx.core.app.NotificationCompat;
 import com.example.uidaiaddressupdate.EncryptionUtils;
 import com.example.uidaiaddressupdate.MainActivity;
 import com.example.uidaiaddressupdate.NewAddressRequestMessage;
-import com.example.uidaiaddressupdate.database.LandlordTransactions;
-import com.example.uidaiaddressupdate.database.LandlordTransactionsDao;
+import com.example.uidaiaddressupdate.database.LenderTransactions;
+import com.example.uidaiaddressupdate.database.LenderTransactionsDao;
 import com.example.uidaiaddressupdate.database.RequesterTransactions;
 import com.example.uidaiaddressupdate.database.RequesterTransactionsDao;
 import com.example.uidaiaddressupdate.database.TransactionDatabase;
@@ -30,14 +30,14 @@ import com.example.uidaiaddressupdate.R;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private TransactionDatabase transactionDatabase;
-    private LandlordTransactionsDao landlordTransactionsDao;
+    private LenderTransactionsDao lenderTransactionsDao;
     private RequesterTransactionsDao requesterTransactionsDao;
 
     @Override
     public void onCreate() {
         super.onCreate();
         transactionDatabase = TransactionDatabase.getInstance(getApplicationContext());
-        landlordTransactionsDao = transactionDatabase.landlordTransactionsDao();
+        lenderTransactionsDao = transactionDatabase.lenderTransactionsDao();
         requesterTransactionsDao = transactionDatabase.requesterTransactionsDao();
         Log.d("FCMService", "Created");
     }
@@ -100,7 +100,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NewAddressRequestMessage addressRequestMessage = gson.fromJson(decryptedMessage, NewAddressRequestMessage.class);
             Log.d("FCMService ", addressRequestMessage.getRequesterName());
             Log.d("FCMService ", addressRequestMessage.getRequesterNumber());
-            landlordTransactionsDao.insertTransaction(new LandlordTransactions(transactionID, addressRequestMessage.getRequesterName(), addressRequestMessage.getRequesterNumber(), "init", "", requesterSC));
+            lenderTransactionsDao.insertTransaction(new LenderTransactions(transactionID, addressRequestMessage.getRequesterName(), addressRequestMessage.getRequesterNumber(), "init", "", requesterSC));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -134,10 +134,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d("FCMService", "Committed message received");
         String transactionID = getValueFromMap(messageData, "transactionID");
         String newAddress = getValueFromMap(messageData, "newAddress");
-        LandlordTransactions landlordTransactions = landlordTransactionsDao.getTransaction(transactionID);
-        landlordTransactions.setTransactionStatus("committed");
-        landlordTransactions.setData(newAddress);
-        landlordTransactionsDao.insertTransaction(landlordTransactions);
+        LenderTransactions lenderTransactions = lenderTransactionsDao.getTransaction(transactionID);
+        lenderTransactions.setTransactionStatus("committed");
+        lenderTransactions.setData(newAddress);
+        lenderTransactionsDao.insertTransaction(lenderTransactions);
     }
 
     // To send notification when app is in foreground

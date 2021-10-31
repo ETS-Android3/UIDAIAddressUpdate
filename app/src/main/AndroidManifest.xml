@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".landlord.LandlordActivity"
+            android:name=".lender.LenderActivity"
             android:exported="true" />
         <activity
             android:name=".requestaddress.RequestHome"

@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".landlord.LandlordOtpPage">
+    tools:context=".lender.LenderOtpPage">
 
     <EditText
-        android:id="@+id/landlord_otp_et_enter_otp"
+        android:id="@+id/lender_otp_et_enter_otp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -45,7 +45,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
-        android:id="@+id/landlord_otp_resend_otp"
+        android:id="@+id/lender_otp_resend_otp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -54,10 +54,10 @@
         android:textStyle="bold"
         android:textColor="#0826CC"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/landlord_otp_et_enter_otp" />
+        app:layout_constraintTop_toBottomOf="@+id/lender_otp_et_enter_otp" />
 
     <Button
-        android:id="@+id/landlord_otp_verify_button"
+        android:id="@+id/lender_otp_verify_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -65,6 +65,6 @@
         android:text="Verify"
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/landlord_otp_et_enter_otp" />
+        app:layout_constraintTop_toBottomOf="@+id/lender_otp_et_enter_otp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
