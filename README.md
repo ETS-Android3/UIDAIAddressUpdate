@@ -20,5 +20,20 @@ Address Update Challenge in Urban Areas
 
 ## Running the Code
 
+#### Testing Already Deployed App
+The server is already deployed in one of the AWS India Data Centers. 
+1. The apk for the android app can be downloaded from 
+2. After Installation, user needs to enter his/her Aadhar Number. An OTP will be sent to mobile number registed with Aadhar.
+3. After sucessfull otp authentication, the user can make/approve address update requests as shown in the User Interface section of this Readme file.
+
+#### Testing Locally
+1.The code for server program can be found in the `server` directory. To start the server:
+```
+git clone https://github.com/mohan2106/UIDAIAddressUpdate
+cd server
+python manage.py migrate
+python manage.py runserver
+```
+
 ## User Interface
 
