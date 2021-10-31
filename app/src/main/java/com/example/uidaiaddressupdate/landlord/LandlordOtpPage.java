@@ -24,26 +24,15 @@ import com.example.uidaiaddressupdate.EncryptionUtils;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.SharedPrefHelper;
 import com.example.uidaiaddressupdate.Util;
-import com.example.uidaiaddressupdate.XMLUtils;
 import com.example.uidaiaddressupdate.database.LandlordTransactions;
 import com.example.uidaiaddressupdate.database.TransactionDatabase;
 import com.example.uidaiaddressupdate.service.offlineekyc.OfflineEKYCService;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.ekycoffline.OfflineEkycXMLResponse;
 import com.example.uidaiaddressupdate.service.offlineekyc.model.otp.OtpResponse;
 import com.example.uidaiaddressupdate.service.server.ServerApiService;
-import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyrequest;
-import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyresponse;
-import com.example.uidaiaddressupdate.service.server.model.sendekyc.Sendekycresponse;
-
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.util.Random;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import com.example.uidaiaddressupdate.service.server.model.getpublickey.PublicKeyRequest;
+import com.example.uidaiaddressupdate.service.server.model.getpublickey.PublicKeyResponse;
+import com.example.uidaiaddressupdate.service.server.model.sendekyc.SendEkycResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -177,9 +166,9 @@ public class LandlordOtpPage extends Fragment {
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Doing background work...");
         progressDialog.show();
-        ServerApiService.getApiInstance().getPublicKey(new Publickeyrequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),receiverShareCode)).enqueue(new Callback<Publickeyresponse>() {
+        ServerApiService.getApiInstance().getPublicKey(new PublicKeyRequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),receiverShareCode)).enqueue(new Callback<PublicKeyResponse>() {
             @Override
-            public void onResponse(Call<Publickeyresponse> call, Response<Publickeyresponse> response) {
+            public void onResponse(Call<PublicKeyResponse> call, Response<PublicKeyResponse> response) {
                 progressDialog.dismiss();
                 switch (response.code()){
                     case 200:
@@ -213,7 +202,7 @@ public class LandlordOtpPage extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<Publickeyresponse> call, Throwable t) {
+            public void onFailure(Call<PublicKeyResponse> call, Throwable t) {
                 progressDialog.dismiss();
                 Toast.makeText(getContext(), "Error : " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -224,9 +213,9 @@ public class LandlordOtpPage extends Fragment {
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Sending Address...");
         progressDialog.show();
-        ServerApiService.sendEkyc(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionId,filename,passcode,eKyc).enqueue(new Callback<Sendekycresponse>() {
+        ServerApiService.sendEkyc(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionId,filename,passcode,eKyc).enqueue(new Callback<SendEkycResponse>() {
             @Override
-            public void onResponse(Call<Sendekycresponse> call, Response<Sendekycresponse> response) {
+            public void onResponse(Call<SendEkycResponse> call, Response<SendEkycResponse> response) {
                 progressDialog.dismiss();
                 switch (response.code()){
                     case 200:
@@ -258,7 +247,7 @@ public class LandlordOtpPage extends Fragment {
 
             }
             @Override
-            public void onFailure(Call<Sendekycresponse> call, Throwable t) {
+            public void onFailure(Call<SendEkycResponse> call, Throwable t) {
                 progressDialog.dismiss();
 //                Toast.makeText(getContext(), "Error : " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 Toast.makeText(getActivity(),"Unable to contact the server. Try again later",Toast.LENGTH_SHORT).show();

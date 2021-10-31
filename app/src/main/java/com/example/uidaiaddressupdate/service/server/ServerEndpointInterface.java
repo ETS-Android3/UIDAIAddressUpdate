@@ -2,34 +2,34 @@ package com.example.uidaiaddressupdate.service.server;
 
 import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycRequest;
 import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycResponse;
-import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyrequest;
-import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyresponse;
-import com.example.uidaiaddressupdate.service.server.model.sendaddressrequest.Addressrequestformat;
-import com.example.uidaiaddressupdate.service.server.model.sendaddressrequest.Addressrequestresponse;
-import com.example.uidaiaddressupdate.service.server.model.sendekyc.Sendekycrequest;
-import com.example.uidaiaddressupdate.service.server.model.sendekyc.Sendekycresponse;
+import com.example.uidaiaddressupdate.service.server.model.getpublickey.PublicKeyRequest;
+import com.example.uidaiaddressupdate.service.server.model.getpublickey.PublicKeyResponse;
+import com.example.uidaiaddressupdate.service.server.model.rejectrequest.RejectRequestFormat;
+import com.example.uidaiaddressupdate.service.server.model.rejectrequest.RejectRequestResponse;
+import com.example.uidaiaddressupdate.service.server.model.sendaddressrequest.AddressRequestFormat;
+import com.example.uidaiaddressupdate.service.server.model.sendaddressrequest.AddressRequestResponse;
+import com.example.uidaiaddressupdate.service.server.model.sendekyc.SendEkycRequest;
+import com.example.uidaiaddressupdate.service.server.model.sendekyc.SendEkycResponse;
 import com.example.uidaiaddressupdate.service.server.model.updateAddress.UpdateAddressRequest;
 import com.example.uidaiaddressupdate.service.server.model.updateAddress.UpdateAddressResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 
 public interface ServerEndpointInterface {
     @Headers({"Content-Type: application/json"})
     @POST("/postekyc")
-    Call<Sendekycresponse> sendEkyc(@Body Sendekycrequest sendekycrequest);
+    Call<SendEkycResponse> sendEkyc(@Body SendEkycRequest sendekycrequest);
 
     @Headers({"Content-Type: application/json"})
     @POST("/getpublickey")
-    Call<Publickeyresponse> getPublicKey(@Body Publickeyrequest publickeyrequest);
+    Call<PublicKeyResponse> getPublicKey(@Body PublicKeyRequest publickeyrequest);
 
     @Headers({"Content-Type: application/json"})
     @POST("/sendrequest")
-    Call<Addressrequestresponse> sendrequest(@Body Addressrequestformat addressrequestformat);
+    Call<AddressRequestResponse> sendRequest(@Body AddressRequestFormat addressrequestformat);
 
     @Headers({"Content-Type: application/json"})
     @POST("/getekyc")
@@ -39,4 +39,7 @@ public interface ServerEndpointInterface {
     @POST("/updateaddress")
     Call<UpdateAddressResponse> updateAddress(@Body UpdateAddressRequest updateAddressRequest);
 
+    @Headers({"Content-Type: application/json"})
+    @POST("/rejectrequest")
+    Call<RejectRequestResponse> rejectRequest(@Body RejectRequestFormat rejectRequestFormat);
 }

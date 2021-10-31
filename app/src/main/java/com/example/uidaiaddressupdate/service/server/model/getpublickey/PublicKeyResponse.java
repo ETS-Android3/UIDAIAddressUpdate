@@ -2,7 +2,7 @@ package com.example.uidaiaddressupdate.service.server.model.getpublickey;
 
 import java.io.Serializable;
 
-public class Publickeyresponse implements Serializable {
+public class PublicKeyResponse implements Serializable {
     private String publicKey;
 
     public void setPublicKey(String publicKey) {

@@ -2,11 +2,11 @@ package com.example.uidaiaddressupdate.service.server.model.sendaddressrequest;
 
 import java.io.Serializable;
 
-public class Addressrequestresponse implements Serializable {
+public class AddressRequestResponse implements Serializable {
     private String body;
     private String transactionID;
 
-    public Addressrequestresponse(String body, String transactionID) {
+    public AddressRequestResponse(String body, String transactionID) {
         this.body = body;
         this.transactionID = transactionID;
     }

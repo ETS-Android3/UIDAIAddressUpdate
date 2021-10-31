@@ -26,8 +26,8 @@ import com.example.uidaiaddressupdate.service.onlineekyc.model.ekyconline.Online
 import com.example.uidaiaddressupdate.service.onlineekyc.model.otp.OtpRequest;
 import com.example.uidaiaddressupdate.service.onlineekyc.model.otp.OtpResponse;
 import com.example.uidaiaddressupdate.service.server.ServerApiService;
-import com.example.uidaiaddressupdate.service.server.model.sendaddressrequest.Addressrequestformat;
-import com.example.uidaiaddressupdate.service.server.model.sendaddressrequest.Addressrequestresponse;
+import com.example.uidaiaddressupdate.service.server.model.sendaddressrequest.AddressRequestFormat;
+import com.example.uidaiaddressupdate.service.server.model.sendaddressrequest.AddressRequestResponse;
 import com.google.gson.Gson;
 
 import java.util.UUID;
@@ -132,16 +132,16 @@ public class RenterOTP extends Fragment {
                                 return;
                             }
 
-                            Addressrequestformat addressrequestformat =
-                                    new Addressrequestformat(receiverSharableCode,
+                            AddressRequestFormat addressrequestformat =
+                                    new AddressRequestFormat(receiverSharableCode,
                                             SharedPrefHelper.getUidToken(getContext()),
                                             SharedPrefHelper.getAuthToken(getContext()),
                                             encryptedAddressMessage);
 
                             progressDialog.setMessage("Sending Address Request to Lender...");
-                            ServerApiService.getApiInstance().sendrequest(addressrequestformat).enqueue(new Callback<Addressrequestresponse>() {
+                            ServerApiService.getApiInstance().sendRequest(addressrequestformat).enqueue(new Callback<AddressRequestResponse>() {
                                 @Override
-                                public void onResponse(Call<Addressrequestresponse> call, Response<Addressrequestresponse> response) {
+                                public void onResponse(Call<AddressRequestResponse> call, Response<AddressRequestResponse> response) {
                                     progressDialog.dismiss();
                                     switch (response.code()){
                                         case 200:
@@ -177,7 +177,7 @@ public class RenterOTP extends Fragment {
                                 }
 
                                 @Override
-                                public void onFailure(Call<Addressrequestresponse> call, Throwable t) {
+                                public void onFailure(Call<AddressRequestResponse> call, Throwable t) {
                                     progressDialog.dismiss();
                                     Toast.makeText(getActivity(),"Unable to contact the server. Try again later",Toast.LENGTH_SHORT).show();
                                     //Error

@@ -17,9 +17,8 @@ import android.widget.Toast;
 import com.example.uidaiaddressupdate.R;
 import com.example.uidaiaddressupdate.SharedPrefHelper;
 import com.example.uidaiaddressupdate.service.server.ServerApiService;
-import com.example.uidaiaddressupdate.service.server.ServerEndpointInterface;
-import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyrequest;
-import com.example.uidaiaddressupdate.service.server.model.getpublickey.Publickeyresponse;
+import com.example.uidaiaddressupdate.service.server.model.getpublickey.PublicKeyRequest;
+import com.example.uidaiaddressupdate.service.server.model.getpublickey.PublicKeyResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,9 +55,9 @@ public class EnterShareCode extends Fragment {
                 progressDialog.setMessage("Wait while we send the request to lender...");
                 String recieverShareCode = sharecode_edit_text.getText().toString();
                 Log.d("KYC",recieverShareCode);
-                ServerApiService.getApiInstance().getPublicKey(new Publickeyrequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),recieverShareCode)).enqueue(new Callback<Publickeyresponse>() {
+                ServerApiService.getApiInstance().getPublicKey(new PublicKeyRequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),recieverShareCode)).enqueue(new Callback<PublicKeyResponse>() {
                     @Override
-                    public void onResponse(Call<Publickeyresponse> call, Response<Publickeyresponse> response) {
+                    public void onResponse(Call<PublicKeyResponse> call, Response<PublicKeyResponse> response) {
                         progressDialog.dismiss();
                         switch (response.code()){
                             case 200:
@@ -86,7 +85,7 @@ public class EnterShareCode extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(Call<Publickeyresponse> call, Throwable t) {
+                    public void onFailure(Call<PublicKeyResponse> call, Throwable t) {
                         t.printStackTrace();
                         //Error
                         progressDialog.dismiss();
