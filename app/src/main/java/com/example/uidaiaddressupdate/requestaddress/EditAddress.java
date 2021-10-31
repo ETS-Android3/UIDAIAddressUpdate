@@ -1,5 +1,6 @@
 package com.example.uidaiaddressupdate.requestaddress;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.uidaiaddressupdate.Constants;
+import com.example.uidaiaddressupdate.Location.Coordinates;
 import com.example.uidaiaddressupdate.Location.LocationInterface;
 import com.example.uidaiaddressupdate.Location.MyLocationListener;
 import com.example.uidaiaddressupdate.R;
@@ -27,13 +29,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class EditAddress extends Fragment implements LocationInterface {
+public class EditAddress extends Fragment {
 
 
     private AddressModel landLordAddressModel;
     private EditText co, house, street, landmark, locality, village_town, subdist, dist, state, country, pincode, postoffice;
     private AppCompatButton save;
-    private Double longitude,lattitude;
+    private Coordinates coordinates;
 
     public EditAddress() {
         // Required empty public constructor
@@ -54,8 +56,8 @@ public class EditAddress extends Fragment implements LocationInterface {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_edit_address, container, false);
         String transactionID = getArguments().getString(Constants.KEY_TRANSACTION_ID);
-        MyLocationListener locationListener = new MyLocationListener(this);
-
+        //MyLocationListener locationListener = new MyLocationListener(this);
+        coordinates = SharedPrefHelper.getCoordinates(getContext());
         co = (EditText) view.findViewById(R.id.addresss_co);
         house = (EditText) view.findViewById(R.id.address_house);
         street = (EditText) view.findViewById(R.id.address_street);
@@ -102,19 +104,24 @@ public class EditAddress extends Fragment implements LocationInterface {
                 updatedAddress.setPc(pincode.getText().toString());
                 updatedAddress.setPo(postoffice.getText().toString());
 
-                Log.d("Address",String.valueOf(lattitude));
-                Log.d("Address",String.valueOf(longitude));
-                float[] coordinates = {0,0};
-                UpdateAddressRequest updateAddressRequest = new UpdateAddressRequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionID,landLordAddressModel,updatedAddress,coordinates,SharedPrefHelper.getAadharNumber(getContext()));
+                Log.d("Address",String.valueOf(coordinates.getLatitude()));
+                Log.d("Address",String.valueOf(coordinates.getLongitude()));
+                ProgressDialog progressDialog = new ProgressDialog(getContext());
+                progressDialog.setMessage("Updating you address..");
+                progressDialog.show();
+
+                float[] coordinate = {Float.parseFloat(coordinates.getLatitude().toString()),Float.parseFloat(coordinates.getLongitude().toString())};
+                UpdateAddressRequest updateAddressRequest = new UpdateAddressRequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionID,landLordAddressModel,updatedAddress,coordinate,SharedPrefHelper.getAadharNumber(getContext()));
 
                 ServerApiService.getApiInstance().updateAddress(updateAddressRequest).enqueue(new Callback<UpdateAddressResponse>() {
                     @Override
                     public void onResponse(Call<UpdateAddressResponse> call, Response<UpdateAddressResponse> response) {
+                        progressDialog.dismiss();
                         switch (response.code()){
                             case 200:
                                 Log.d("Address",new Gson().toJson(updateAddressRequest));
                                 Log.d("Address",response.message());
-
+                                getActivity().finish();
                                 Toast.makeText(getContext(),"Address Updated Successfully!!",Toast.LENGTH_SHORT).show();
                                 break;
 
@@ -144,6 +151,7 @@ public class EditAddress extends Fragment implements LocationInterface {
                     @Override
                     public void onFailure(Call<UpdateAddressResponse> call, Throwable t) {
                         t.printStackTrace();
+                        progressDialog.dismiss();
                         Toast.makeText(getContext(),"Error!!",Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -152,10 +160,5 @@ public class EditAddress extends Fragment implements LocationInterface {
         return view;
     }
 
-    @Override
-    public void updateLocation(Double longitude, Double lattitude) {
-        this.longitude = longitude;
-        this.lattitude = lattitude;
-        Toast.makeText(getContext(), "Coordinates are : (" + longitude + "," + lattitude + ")", Toast.LENGTH_SHORT).show();
-    }
+
 }

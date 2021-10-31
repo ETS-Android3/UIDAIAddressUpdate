@@ -1,5 +1,6 @@
 package com.example.uidaiaddressupdate.requestaddress;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -50,11 +51,14 @@ public class EnterShareCode extends Fragment {
             @Override
             public void onClick(View v) {
 
+                ProgressDialog progressDialog = new ProgressDialog(getContext());
+                progressDialog.setMessage("Wait while we send the request to lender...");
                 String recieverShareCode = sharecode_edit_text.getText().toString();
                 Log.d("KYC",recieverShareCode);
                 ServerApiService.getApiInstance().getPublicKey(new PublicKeyRequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),recieverShareCode)).enqueue(new Callback<PublicKeyResponse>() {
                     @Override
                     public void onResponse(Call<PublicKeyResponse> call, Response<PublicKeyResponse> response) {
+                        progressDialog.dismiss();
                         switch (response.code()){
                             case 200:
                                 Log.d("KYC",response.message());
@@ -84,6 +88,8 @@ public class EnterShareCode extends Fragment {
                     public void onFailure(Call<PublicKeyResponse> call, Throwable t) {
                         t.printStackTrace();
                         //Error
+                        progressDialog.dismiss();
+                        Toast.makeText(getContext(), "Error : " + t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 

@@ -8,7 +8,6 @@
     <fragment
         android:id="@+id/requestAddressHome"
         android:name="com.example.uidaiaddressupdate.requestaddress.RequestAddressHome"
-        android:label="fragment_request_address_home"
         tools:layout="@layout/fragment_request_address_home" >
         <action
             android:id="@+id/action_requestAddressHome_to_requestDetails"
@@ -20,7 +19,6 @@
     <fragment
         android:id="@+id/requestDetails"
         android:name="com.example.uidaiaddressupdate.requestaddress.RequestDetails"
-        android:label="fragment_request_details"
         tools:layout="@layout/fragment_request_details" >
         <action
             android:id="@+id/action_requestDetails_to_editAddress"
@@ -29,7 +27,6 @@
     <fragment
         android:id="@+id/editAddress"
         android:name="com.example.uidaiaddressupdate.requestaddress.EditAddress"
-        android:label="fragment_edit_address"
         tools:layout="@layout/fragment_edit_address" />
     <fragment
         android:id="@+id/enterShareCode"
@@ -43,7 +40,6 @@
     <fragment
         android:id="@+id/requestSentPage"
         android:name="com.example.uidaiaddressupdate.requestaddress.RequestSentPage"
-        android:label="fragment_request_sent_page"
         tools:layout="@layout/fragment_request_sent_page" >
         <action
             android:id="@+id/action_requestSentPage_to_requestAddressHome"
@@ -53,7 +49,6 @@
     <fragment
         android:id="@+id/renterOTP"
         android:name="com.example.uidaiaddressupdate.requestaddress.RenterOTP"
-        android:label="fragment_renter_o_t_p"
         tools:layout="@layout/fragment_renter_o_t_p" >
         <action
             android:id="@+id/action_renterOTP_to_requestSentPage"

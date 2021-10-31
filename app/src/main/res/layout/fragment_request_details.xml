@@ -9,20 +9,22 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/request_edit_and_update_address"
-        android:layout_width="280dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/round_button"
-        android:textColor="@color/white"
-        android:textAllCaps="false"
         android:layout_marginBottom="16dp"
-        android:text="Edit and Update Address"
+        android:background="@drawable/round_button"
         android:drawableEnd="@drawable/ic_right_24"
         android:drawableTint="@color/white"
         android:paddingHorizontal="16dp"
+        android:text="Edit and Update Address"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/request_detail_withdraw"
@@ -83,6 +85,9 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:text="TextView"
+        android:textSize="18dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />

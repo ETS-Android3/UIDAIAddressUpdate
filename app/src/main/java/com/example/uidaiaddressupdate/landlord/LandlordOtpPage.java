@@ -1,12 +1,15 @@
 package com.example.uidaiaddressupdate.landlord;
 
+import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +46,7 @@ public class LandlordOtpPage extends Fragment {
     private Button submit_otp;
     private String otpTxnId;
     private View view;
+    private Boolean allowResendOTP = false;
     private String receiverShareCode;
     private String transactionId;
 
@@ -71,14 +75,37 @@ public class LandlordOtpPage extends Fragment {
         sendOTP(captchaText,captchaTxnId);
 
 
+
         otp_edit_text = (EditText) view.findViewById(R.id.landlord_otp_et_enter_otp);
         resend_otp = (TextView) view.findViewById(R.id.landlord_otp_resend_otp);
         submit_otp = (Button) view.findViewById(R.id.landlord_otp_verify_button);
 
+        resend_otp.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                allowResendOTP = true;
+                resend_otp.setTextColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            }
+        }, 60000);
+
         resend_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!allowResendOTP){
+                    Toast.makeText(getContext(), "wait for few seconds", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 sendOTP(captchaText,captchaTxnId);
+                allowResendOTP = false;
+                resend_otp.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        allowResendOTP = true;
+                        resend_otp.setTextColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+                    }
+                }, 60000);
             }
         });
 
@@ -87,11 +114,15 @@ public class LandlordOtpPage extends Fragment {
             public void onClick(View v) {
                 Log.d("eKYC",otp_edit_text.getText().toString());
                 Log.d("eKYC",otpTxnId);
+                ProgressDialog progressDialog = new ProgressDialog(getContext());
+                progressDialog.setMessage("Verifying OTP...");
+                progressDialog.show();
                 String passcode = Util.getRandomString();
                 OfflineEKYCService.makeOfflineEKYCCall(SharedPrefHelper.getAadharNumber(getContext()),otp_edit_text.getText().toString(),otpTxnId,passcode).enqueue(new Callback<OfflineEkycXMLResponse>() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onResponse(Call<OfflineEkycXMLResponse> call, Response<OfflineEkycXMLResponse> response) {
+                        progressDialog.dismiss();
                         if (response.body().getStatus().equals("Success")){
                             String filename = response.body().getFileName();
                             String eKyc = response.body().geteKycXML();
@@ -116,6 +147,7 @@ public class LandlordOtpPage extends Fragment {
                     public void onFailure(Call<OfflineEkycXMLResponse> call, Throwable t) {
                         Toast.makeText(getActivity(),"Unable to contact the UIDAI server. Try again later",Toast.LENGTH_SHORT).show();
                         t.printStackTrace();
+                        progressDialog.dismiss();
                     }
                 });
             }
@@ -125,14 +157,19 @@ public class LandlordOtpPage extends Fragment {
     }
 
     private void sendToLandlordAddressApprovedAckPage(){
-        Navigation.findNavController(view).navigate(R.id.action_landlordOtpPage_to_landlordAddressApprovedAck);
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.KEY_TRANSACTION_ID,transactionId);
+        Navigation.findNavController(view).navigate(R.id.action_landlordOtpPage_to_landlordAddressApprovedAck,bundle);
     }
 
     private void encryptPasscodeAndSendEkyc(String filename,String passcode, String eKyc){
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Doing background work...");
+        progressDialog.show();
         ServerApiService.getApiInstance().getPublicKey(new PublicKeyRequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),receiverShareCode)).enqueue(new Callback<PublicKeyResponse>() {
             @Override
             public void onResponse(Call<PublicKeyResponse> call, Response<PublicKeyResponse> response) {
-
+                progressDialog.dismiss();
                 switch (response.code()){
                     case 200:
                         String receiverPublicKey = response.body().getPublicKey();
@@ -166,15 +203,20 @@ public class LandlordOtpPage extends Fragment {
 
             @Override
             public void onFailure(Call<PublicKeyResponse> call, Throwable t) {
-
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), "Error : " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void sendEkyc(String filename,String passcode, String eKyc){
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Sending Address...");
+        progressDialog.show();
         ServerApiService.sendEkyc(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionId,filename,passcode,eKyc).enqueue(new Callback<SendEkycResponse>() {
             @Override
             public void onResponse(Call<SendEkycResponse> call, Response<SendEkycResponse> response) {
+                progressDialog.dismiss();
                 switch (response.code()){
                     case 200:
                     case 502:
@@ -206,6 +248,7 @@ public class LandlordOtpPage extends Fragment {
             }
             @Override
             public void onFailure(Call<SendEkycResponse> call, Throwable t) {
+                progressDialog.dismiss();
 //                Toast.makeText(getContext(), "Error : " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 Toast.makeText(getActivity(),"Unable to contact the server. Try again later",Toast.LENGTH_SHORT).show();
             }
@@ -213,9 +256,13 @@ public class LandlordOtpPage extends Fragment {
     }
 //9999527333847
     private void sendOTP(String captchaText, String captchaTxnId){
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Sending OTP...");
+        progressDialog.show();
         OfflineEKYCService.makeOTPCall(SharedPrefHelper.getAadharNumber(getContext()),captchaTxnId,captchaText).enqueue(new Callback<OtpResponse>() {
             @Override
             public void onResponse(Call<OtpResponse> call, Response<OtpResponse> response) {
+                progressDialog.dismiss();
                 if (response.body().getStatus().equals("Success")) {
                     Log.d("eKYC", response.body().getMessage());
                     otpTxnId = response.body().getTxnId();
@@ -229,6 +276,7 @@ public class LandlordOtpPage extends Fragment {
 
             @Override
             public void onFailure(Call<OtpResponse> call, Throwable t) {
+                progressDialog.dismiss();
                 Toast.makeText(getActivity(),"Unable to contact the UIDAI server. Try again later",Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
                 //End App

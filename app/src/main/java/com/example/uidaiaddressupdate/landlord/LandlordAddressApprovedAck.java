@@ -2,51 +2,30 @@ package com.example.uidaiaddressupdate.landlord;
 
 import android.os.Bundle;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.R;
+import com.example.uidaiaddressupdate.database.LandlordTransactionsDao;
+import com.example.uidaiaddressupdate.database.TransactionDatabase;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link LandlordAddressApprovedAck#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class LandlordAddressApprovedAck extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private AppCompatButton address_approved_ack_continue_btn;
+    private TransactionDatabase db;
+    private LandlordTransactionsDao landlordTransactionsDao;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public LandlordAddressApprovedAck() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment LandlordAddressApprovedAck.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static LandlordAddressApprovedAck newInstance(String param1, String param2) {
-        LandlordAddressApprovedAck fragment = new LandlordAddressApprovedAck();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,7 +35,19 @@ public class LandlordAddressApprovedAck extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        String transactionId = getArguments().getString(Constants.KEY_TRANSACTION_ID);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_landlord_address_approved_ack, container, false);
+        View view = inflater.inflate(R.layout.fragment_landlord_address_approved_ack, container, false);
+        db = TransactionDatabase.getInstance(getContext());
+        landlordTransactionsDao = db.landlordTransactionsDao();
+        address_approved_ack_continue_btn = (AppCompatButton) view.findViewById(R.id.address_approved_ack_continue_btn);
+        address_approved_ack_continue_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                landlordTransactionsDao.deleteTransaction(transactionId);
+                getActivity().finish();
+            }
+        });
+        return view;
     }
 }

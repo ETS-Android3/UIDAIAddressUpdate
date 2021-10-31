@@ -4,9 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.security.keystore.KeyGenParameterSpec;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.example.uidaiaddressupdate.Location.Coordinates;
 import com.example.uidaiaddressupdate.auth.LoginActivity;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKeys;
@@ -16,6 +21,8 @@ public class SharedPrefHelper {
     private static String UidToken = null;
     private static String ShareableCode = null;
     private static String AadharNumber = null;
+    private static Double longitude = null;
+    private static Double latitude = null;
 
     private static void fetchAndSaveVariable(Context context){
         try {
@@ -33,6 +40,8 @@ public class SharedPrefHelper {
             UidToken = sharedPreferences.getString(Constants.KEY_UID_TOKEN,null);
             ShareableCode = sharedPreferences.getString(Constants.KEY_SHAREABLE_CODE,null);
             AadharNumber = sharedPreferences.getString(Constants.KEY_AADHAR_NUMBER,null);
+            longitude = Double.parseDouble(sharedPreferences.getString(Constants.KEY_LONGITUDE,null));
+            latitude = Double.parseDouble(sharedPreferences.getString(Constants.KEY_LATITUDE,null));
 
         }catch(Exception e){
             Toast.makeText(context, "Error while reading shared pref", Toast.LENGTH_SHORT).show();
@@ -70,5 +79,37 @@ public class SharedPrefHelper {
         if(AadharNumber == null)
             fetchAndSaveVariable(context);
         return AadharNumber;
+    }
+
+    public static void saveCoordinates(Context context, Double longitude, Double lattitude){
+        KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
+        String mainKeyAlias = null;
+        try {
+            mainKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
+            SharedPreferences sharedPreferences = EncryptedSharedPreferences.create(
+                    "aadharsharedPreferences",
+                    mainKeyAlias,
+                    context,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            );
+            SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
+            //Log.d("Mohan",response.body().toString());
+            sharedPrefsEditor.putString(Constants.KEY_LONGITUDE,longitude.toString());
+            sharedPrefsEditor.putString(Constants.KEY_LATITUDE,lattitude.toString());
+            sharedPrefsEditor.commit();
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static Coordinates getCoordinates(Context context){
+        if (latitude == null){
+            fetchAndSaveVariable(context);
+        }
+        return new Coordinates(longitude,latitude);
     }
 }

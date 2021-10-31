@@ -1,5 +1,6 @@
 package com.example.uidaiaddressupdate.landlord;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -62,10 +63,14 @@ public class LandlordSingleRequests extends Fragment {
         captchaContinue = (AppCompatButton) view.findViewById(R.id.captcha_continue);
         Toast.makeText(getContext(), transactionId, Toast.LENGTH_SHORT).show();
 
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        progressDialog.setMessage("Loading captcha...");
+        progressDialog.show();
 
         OfflineEKYCService.makeCaptchaCall().enqueue(new Callback<CaptchaResponse>() {
             @Override
             public void onResponse(Call<CaptchaResponse> call, Response<CaptchaResponse> response) {
+                progressDialog.dismiss();
                 Log.d("captcha", response.body().getStatus());
                 if (response.body().getStatusCode()==200) {
 
@@ -87,6 +92,7 @@ public class LandlordSingleRequests extends Fragment {
             public void onFailure(Call<CaptchaResponse> call, Throwable t) {
                 Toast.makeText(getActivity(),"Unable to contact the UIDAI server. Try again later",Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
+                progressDialog.dismiss();
                 //End App
             }
         });
