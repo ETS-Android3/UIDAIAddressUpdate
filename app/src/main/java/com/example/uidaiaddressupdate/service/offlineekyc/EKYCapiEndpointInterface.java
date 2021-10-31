@@ -14,12 +14,11 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface EKYCapiEndpointInterface {
-
     @Headers({"Content-Type: application/json"})
     @POST("unifiedAppAuthService/api/v2/get/captcha")
     Call<CaptchaResponse> fetchCaptchaResponse(@Body CaptchaRequest captchaRequest);
 
-    @Headers({"appid:mAadhaar" ,
+    @Headers({"appid:mAadhaar",
             "Accept-Language:en_in",
             "Content-Type:application/json"})
     @POST("unifiedAppAuthService/api/v2/generate/aadhaar/otp")
@@ -28,5 +27,4 @@ public interface EKYCapiEndpointInterface {
     @Headers({"Content-Type: application/json"})
     @POST("eAadhaarService/api/downloadOfflineEkyc")
     Call<OfflineEkycXMLResponse> fetchEKYC(@Body OfflineEkycXMLRequest eKYCRequest);
-
 }

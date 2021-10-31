@@ -11,7 +11,6 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 public interface OnlineEKYCapiEndpointInterface {
-
     @Headers({"Content-Type:application/json"})
     @POST("onlineekyc/getOtp/")
     Call<OtpResponse> sendOtpOnPhone(@Body OtpRequest otpRequest);
@@ -19,5 +18,4 @@ public interface OnlineEKYCapiEndpointInterface {
     @Headers({"Content-Type:application/json"})
     @POST("onlineekyc/getEkyc/")
     Call<OnlineEKYCResponse> getOnlineEKYC(@Body OnlineEKYCRequest onlineEKYCRequest);
-
 }

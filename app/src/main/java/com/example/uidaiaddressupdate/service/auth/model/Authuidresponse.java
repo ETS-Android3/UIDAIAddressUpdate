@@ -10,7 +10,9 @@ public class Authuidresponse implements Serializable {
         return transactionID;
     }
 
-    public String getMessage() { return message; }
+    public String getMessage() {
+        return message;
+    }
 
     public void setTransactionID(String transactionID, String message) {
         this.transactionID = transactionID;

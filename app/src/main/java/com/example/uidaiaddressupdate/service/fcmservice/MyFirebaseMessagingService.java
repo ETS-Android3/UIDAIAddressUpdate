@@ -36,6 +36,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // Get database instances
         transactionDatabase = TransactionDatabase.getInstance(getApplicationContext());
         lenderTransactionsDao = transactionDatabase.lenderTransactionsDao();
         requesterTransactionsDao = transactionDatabase.requesterTransactionsDao();
@@ -45,9 +47,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         Log.d("FCMService", "Refreshed token: " + token);
-        // TODO: Add action
     }
 
+    /**
+     * Gets invoked when a data message is received or notification message is received when app is in foreground
+     *
+     * @param remoteMessage
+     */
     public void onMessageReceived(RemoteMessage remoteMessage) {
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         if (notification != null) {
@@ -76,7 +82,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     handleAbortedMessage(messageData);
                     break;
                 default:
-                    Log.d("FCMService", "Invalid Message Status " + transactionStatus);
+                    Log.d("FCMService", "Invalid Message Status, " + transactionStatus);
             }
         }
     }
@@ -140,7 +146,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         lenderTransactionsDao.insertTransaction(lenderTransactions);
     }
 
-    // To send notification when app is in foreground
+    /**
+     * Sends push notification when App is in foreground
+     *
+     * @param messageTitle
+     * @param messageBody
+     */
     private void sendNotification(String messageTitle, String messageBody) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

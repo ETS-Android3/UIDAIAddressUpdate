@@ -9,8 +9,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class OnlineEKYCApiService {
     private static OnlineEKYCapiEndpointInterface apiEndpointInterface = null;
     private static Retrofit retrofit = null;
-    public static OnlineEKYCapiEndpointInterface getApiInstance(){
-        if(apiEndpointInterface == null){
+
+    public static OnlineEKYCapiEndpointInterface getApiInstance() {
+        if (apiEndpointInterface == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(Constants.UIDAI_SERVER_ADDRESS)
                     .addConverterFactory(GsonConverterFactory.create())

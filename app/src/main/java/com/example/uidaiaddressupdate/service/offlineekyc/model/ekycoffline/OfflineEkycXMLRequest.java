@@ -6,7 +6,6 @@ public class OfflineEkycXMLRequest {
     private String otp;
     private String uid;
 
-
     public String getTxnNumber() {
         return txnNumber;
     }
@@ -30,7 +29,6 @@ public class OfflineEkycXMLRequest {
     public void setOtp(String otp) {
         this.otp = otp;
     }
-
 
     public String getUid() {
         return uid;

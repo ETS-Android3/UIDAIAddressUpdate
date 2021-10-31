@@ -1,9 +1,6 @@
 package com.example.uidaiaddressupdate.service.offlineekyc.model.ekycoffline;
 
-
-import java.time.LocalDate;
-
-public class OfflineEkycXMLResponse{
+public class OfflineEkycXMLResponse {
 
     private String eKycXML;
     private String fileName;
