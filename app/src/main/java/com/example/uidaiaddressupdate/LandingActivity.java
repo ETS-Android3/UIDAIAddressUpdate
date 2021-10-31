@@ -32,24 +32,29 @@ public class LandingActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(LandingActivity.this,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(LandingActivity.this, "You have already granted this permission!", Toast.LENGTH_SHORT).show();
-            CheckAndMoveToAuth();
+            waitCheckAndMove();
         } else {
             requestLocationPermission();
         }
 
     }
 
-    private void CheckAndMoveToAuth(){
-
+    /**
+     * This function will make the activity wait for 2 seconds and then call function for check and move
+     */
+    private void waitCheckAndMove(){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 MoveToAuth();
             }
-        }, 1000);
+        }, 2000);
 
     }
 
+    /**
+     * This function will check weather user is already loggedIn or not thereafter move to required page
+     */
     private void MoveToAuth(){
         try {
             KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
@@ -78,6 +83,9 @@ public class LandingActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Request For location permission
+     */
     private void requestLocationPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -112,7 +120,7 @@ public class LandingActivity extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             }
-            CheckAndMoveToAuth();
+            waitCheckAndMove();
         }
     }
 }
