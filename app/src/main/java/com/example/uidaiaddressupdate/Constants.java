@@ -16,7 +16,6 @@ public class Constants {
     public static String UIDAI_SERVER_ADDRESS = "https://stage1.uidai.gov.in/";
     public static String SHARED_PREFERENCES_FILE = "aadharsharedPreferences";
 
-    //status
     public static String STATUS_INIT = "init";
     public static String STATUS_REJECTED = "rejected";
     public static String STATUS_ACCEPTED = "accepted";

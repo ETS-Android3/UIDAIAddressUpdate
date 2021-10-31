@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi;
 
 import com.example.uidaiaddressupdate.requestaddress.AddressModel;
 
+
 import net.lingala.zip4j.io.inputstream.ZipInputStream;
 import net.lingala.zip4j.model.LocalFileHeader;
 
@@ -27,14 +28,25 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class XMLUtils {
+    /**
+     * Funciton to create address request message from kyc
+     * @param eKYCXml
+     * @return
+     * @throws Exception
+     */
     public static NewAddressRequestMessage createAddressRequestMessageFromKYC(String eKYCXml) throws Exception {
         Document eKYCdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(eKYCXml)));
-
         NamedNodeMap poiAttributes = eKYCdoc.getElementsByTagName("Poi").item(0).getAttributes();
         NewAddressRequestMessage addressRequestMessage = new NewAddressRequestMessage(poiAttributes.getNamedItem("name").getNodeValue(),poiAttributes.getNamedItem("phone").getNodeValue());
         return addressRequestMessage;
     }
 
+    /**
+     * Function to get Address from KYC xml
+     * @param eKYCXml
+     * @return
+     * @throws Exception
+     */
     public static AddressModel getAddressFromEKYCxml(String eKYCXml) throws Exception{
 
         //Removing Sig
@@ -85,6 +97,13 @@ public class XMLUtils {
         return addressModel;
     }
 
+    /**
+     *
+     * @param zipBase64
+     * @param password
+     * @return
+     * @throws IOException
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public static String getKYCxmlFromZip(String zipBase64, String password) throws IOException {
 

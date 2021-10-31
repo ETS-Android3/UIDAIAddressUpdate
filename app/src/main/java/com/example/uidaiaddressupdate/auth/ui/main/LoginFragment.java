@@ -48,7 +48,6 @@ import retrofit2.Response;
 
 public class LoginFragment extends Fragment {
 
-    private authViewModel mViewModel;
     private EditText aadhar;
     private Button sendOtp;
     private ProgressBar loginProgressBar;
@@ -131,6 +130,11 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
+    /**
+     * All of the data that has been stored should be in encrypted format.
+     * This function will
+     * @throws Exception
+     */
     private void encryptText() throws Exception {
         KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
         ks.load(null);
@@ -154,8 +158,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(authViewModel.class);
-        // TODO: Use the ViewModel
+
     }
 
     private Boolean verifyAadhar(String aadhar_number){

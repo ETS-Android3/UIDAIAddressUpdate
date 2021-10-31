@@ -67,5 +67,5 @@
         android:textAllCaps="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/otp_et_enter_otp" />
-    
+
 </androidx.constraintlayout.widget.ConstraintLayout>
