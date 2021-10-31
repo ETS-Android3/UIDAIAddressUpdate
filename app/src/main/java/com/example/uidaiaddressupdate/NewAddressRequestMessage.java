@@ -1,27 +1,27 @@
 package com.example.uidaiaddressupdate;
 
 public class NewAddressRequestMessage {
-    private String renterName;
-    private String renterNumber;
+    private String requesterName;
+    private String requesterNumber;
 
-    public NewAddressRequestMessage(String renterName, String renterNumber) {
-        this.renterName = renterName;
-        this.renterNumber = renterNumber;
+    public NewAddressRequestMessage(String requesterName, String requesterNumber) {
+        this.requesterName = requesterName;
+        this.requesterNumber = requesterNumber;
     }
 
-    public String getRenterName() {
-        return renterName;
+    public String getRequesterName() {
+        return requesterName;
     }
 
-    public String getRenterNumber() {
-        return renterNumber;
+    public String getRequesterNumber() {
+        return requesterNumber;
     }
 
     @Override
     public String toString() {
         return "NewAddressRequestMessage{" +
-                "renterName='" + renterName + '\'' +
-                ", renterNumber='" + renterNumber + '\'' +
+                "requesterName='" + requesterName + '\'' +
+                ", requesterNumber='" + requesterNumber + '\'' +
                 '}';
     }
 }

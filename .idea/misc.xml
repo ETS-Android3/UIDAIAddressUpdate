@@ -28,6 +28,7 @@
         <entry key="..\:/Users/LENOVO/AndroidStudioProjects/UIDAI_Address_update/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2703125" />
         <entry key="app/src/main/res/layout/fragment_enter_share_code.xml" value="0.26721014492753625" />
         <entry key="app/src/main/res/layout/fragment_renter_o_t_p.xml" value="0.26721014492753625" />
+        <entry key="app/src/main/res/layout/fragment_request_address_home.xml" value="0.17135416666666667" />
         <entry key="app/src/main/res/layout/fragment_request_sent_page.xml" value="0.1640625" />
       </map>
     </option>

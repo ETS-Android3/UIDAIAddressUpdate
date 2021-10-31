@@ -1,6 +1,5 @@
 package com.example.uidaiaddressupdate.requestaddress.oldrequests;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.uidaiaddressupdate.R;
-import com.example.uidaiaddressupdate.database.RenterTransactions;
-import com.example.uidaiaddressupdate.requestaddress.RequestAddressHome;
-import com.example.uidaiaddressupdate.requestaddress.RequestHome;
+import com.example.uidaiaddressupdate.database.RequesterTransactions;
 
 import java.util.List;
 
@@ -20,10 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHolder> {
 
-    private List<RenterTransactions> requestsList;
+    private List<RequesterTransactions> requestsList;
     private NavigateToRequestDetails context;
 
-    public RequestsAdapter(List<RenterTransactions> requestsList,NavigateToRequestDetails context) {
+    public RequestsAdapter(List<RequesterTransactions> requestsList, NavigateToRequestDetails context) {
         this.requestsList = requestsList;
         this.context = context;
     }
@@ -37,7 +34,7 @@ public class RequestsAdapter extends RecyclerView.Adapter<RequestsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        RenterTransactions singleRequest = requestsList.get(position);
+        RequesterTransactions singleRequest = requestsList.get(position);
         holder.shareCode.setText(singleRequest.getShareCode());
         holder.status.setText(singleRequest.getTransactionStatus());
         holder.layout.setOnClickListener(new View.OnClickListener() {
