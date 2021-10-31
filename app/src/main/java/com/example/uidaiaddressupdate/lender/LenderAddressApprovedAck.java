@@ -21,11 +21,9 @@ public class LenderAddressApprovedAck extends Fragment {
     private TransactionDatabase db;
     private LenderTransactionsDao lenderTransactionsDao;
 
-
     public LenderAddressApprovedAck() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,6 +36,7 @@ public class LenderAddressApprovedAck extends Fragment {
         String transactionId = getArguments().getString(Constants.KEY_TRANSACTION_ID);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_lender_address_approved_ack, container, false);
+        // Delete transaction from lender database after approval
         db = TransactionDatabase.getInstance(getContext());
         lenderTransactionsDao = db.lenderTransactionsDao();
         address_approved_ack_continue_btn = (AppCompatButton) view.findViewById(R.id.address_approved_ack_continue_btn);

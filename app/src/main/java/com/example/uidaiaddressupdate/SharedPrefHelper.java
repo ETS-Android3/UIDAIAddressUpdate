@@ -24,6 +24,10 @@ public class SharedPrefHelper {
     private static Double longitude = null;
     private static Double latitude = null;
 
+    /**
+     * Function to read data from shared preference once and store it locally.
+     * @param context
+     */
     private static void fetchAndSaveVariable(Context context){
         try {
             KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
@@ -48,40 +52,60 @@ public class SharedPrefHelper {
         }
     }
 
+    /**
+     * Get Auth Token stored in the SharedPreference at the time of login
+     * @param context
+     * @return
+     */
     public static String getAuthToken(Context context){
-        if(AuthToken != null){
-            return AuthToken;
-        }else{
+        if (AuthToken == null) {
             fetchAndSaveVariable(context);
-            return AuthToken;
         }
+        return AuthToken;
     }
 
+    /**
+     * Get Uid Token of user that has been shared in the shared preferences at the time of login
+     * @param context
+     * @return
+     */
     public static String getUidToken(Context context){
-        if(UidToken != null){
-            return UidToken;
-        }else{
+        if (UidToken == null) {
             fetchAndSaveVariable(context);
-            return UidToken;
         }
+        return UidToken;
     }
 
+    /**
+     * Function to get ShareableCode from shared Preference
+     * @param context
+     * @return
+     */
     public static String getShareableCode(Context context){
-        if(ShareableCode != null){
-            return ShareableCode;
-        }else{
+        if (ShareableCode == null) {
             fetchAndSaveVariable(context);
-            return ShareableCode;
         }
+        return ShareableCode;
     }
 
+    /**
+     * Function to get aadhar number from shared preference
+     * @param context
+     * @return
+     */
     public static String getAadharNumber(Context context) {
         if(AadharNumber == null)
             fetchAndSaveVariable(context);
         return AadharNumber;
     }
 
-    public static void saveCoordinates(Context context, Double longitude, Double lattitude){
+    /**
+     * Function to save coordinates in shared preference
+     * @param context
+     * @param longitude
+     * @param latitude
+     */
+    public static void saveCoordinates(Context context, Double longitude, Double latitude){
         KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
         String mainKeyAlias = null;
         try {
@@ -94,9 +118,8 @@ public class SharedPrefHelper {
                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
             );
             SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
-            //Log.d("Mohan",response.body().toString());
             sharedPrefsEditor.putString(Constants.KEY_LONGITUDE,longitude.toString());
-            sharedPrefsEditor.putString(Constants.KEY_LATITUDE,lattitude.toString());
+            sharedPrefsEditor.putString(Constants.KEY_LATITUDE,latitude.toString());
             sharedPrefsEditor.commit();
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
@@ -106,6 +129,11 @@ public class SharedPrefHelper {
 
     }
 
+    /**
+     * Function to get coordinates from shared preference
+     * @param context
+     * @return
+     */
     public static Coordinates getCoordinates(Context context){
         if (latitude == null){
             fetchAndSaveVariable(context);

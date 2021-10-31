@@ -43,11 +43,9 @@ public class LenderSingleRequests extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -56,7 +54,7 @@ public class LenderSingleRequests extends Fragment {
         // Inflate the layout for this fragment
         transactionId = getArguments().getString(Constants.KEY_TRANSACTION_ID);
         receiverShareCode = getArguments().getString(Constants.KEY_RECEIVER_SHARECODE_ID);
-        view =  inflater.inflate(R.layout.fragment_lender_single_requests, container, false);
+        view = inflater.inflate(R.layout.fragment_lender_single_requests, container, false);
         captchaImage = (ImageView) view.findViewById(R.id.captcha_image);
         captchaEditText = (EditText) view.findViewById(R.id.captcha_edit_text);
         captchaRefresh = (TextView) view.findViewById(R.id.captcha_refresh);
@@ -72,50 +70,42 @@ public class LenderSingleRequests extends Fragment {
             @Override
             public void onResponse(Call<CaptchaResponse> call, Response<CaptchaResponse> response) {
                 progressDialog.dismiss();
-                Log.d("captcha", response.body().getStatus());
-                if (response.body().getStatusCode()==200) {
-
+                Log.d("Captcha", response.body().getStatus());
+                if (response.body().getStatusCode() == 200) {
                     CaptchaResponse captchaResponse = response.body();
                     captchaTxnId = captchaResponse.getCaptchaTxnId();
                     byte[] base64Val = Base64.decode(captchaResponse.getCaptchaBase64String(), Base64.DEFAULT);
                     Bitmap decodedByte = BitmapFactory.decodeByteArray(base64Val, 0, base64Val.length);
-
                     captchaImage.setImageBitmap(decodedByte);
-                }
-                else{
-                    Toast.makeText(getActivity(),"Unable to fetch captcha. Try again later",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "Unable to fetch captcha. Try again later", Toast.LENGTH_SHORT).show();
                     // TODO: Unable to fetch captcha. Go BACK
                 }
-
             }
 
             @Override
             public void onFailure(Call<CaptchaResponse> call, Throwable t) {
-                Toast.makeText(getActivity(),"Unable to contact the UIDAI server. Try again later",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Unable to contact the UIDAI server. Try again later", Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
                 progressDialog.dismiss();
-                //End App
             }
         });
 
         captchaContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //send to OTP page
                 SendToOTPPage(captchaEditText.getText().toString());
             }
         });
         return view;
     }
 
-
-    private void SendToOTPPage(String captchaText){
+    private void SendToOTPPage(String captchaText) {
         Bundle bundle = new Bundle();
-        bundle.putString("captchaTxnId",captchaTxnId);
-        bundle.putString("captchaText",captchaText);
-        bundle.putString(Constants.KEY_TRANSACTION_ID,transactionId);
-        bundle.putString(Constants.KEY_RECEIVER_SHARECODE_ID,receiverShareCode);
-
-        Navigation.findNavController(view).navigate(R.id.action_lenderSingleRequests_to_lenderOtpPage,bundle);
+        bundle.putString("captchaTxnId", captchaTxnId);
+        bundle.putString("captchaText", captchaText);
+        bundle.putString(Constants.KEY_TRANSACTION_ID, transactionId);
+        bundle.putString(Constants.KEY_RECEIVER_SHARECODE_ID, receiverShareCode);
+        Navigation.findNavController(view).navigate(R.id.action_lenderSingleRequests_to_lenderOtpPage, bundle);
     }
 }

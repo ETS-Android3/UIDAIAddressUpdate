@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class Authuidrequest {
+    @SerializedName("uid")
+    private String uid;
+    
     public String getUid() {
         return uid;
     }
@@ -12,7 +15,4 @@ public class Authuidrequest {
     public void setUid(String uid) {
         this.uid = uid;
     }
-
-    @SerializedName("uid")
-    private String uid;
 }

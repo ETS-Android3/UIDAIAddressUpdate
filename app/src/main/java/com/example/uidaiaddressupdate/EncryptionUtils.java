@@ -17,6 +17,13 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 public class EncryptionUtils {
+    /**
+     * Function for encrypting the message
+     * @param publicKeyString
+     * @param Message
+     * @return
+     * @throws Exception
+     */
     public static String encryptMessage(String publicKeyString, String Message) throws Exception{
         //Generation of Key from String
         byte[] keyBytes = Base64.decode(publicKeyString, Base64.DEFAULT);
@@ -35,6 +42,12 @@ public class EncryptionUtils {
         return encryptedText;
     }
 
+    /**
+     * Function for decrypting the message
+     * @param encrytedMessage
+     * @return
+     * @throws Exception
+     */
     public static String decryptMessage(String encrytedMessage) throws Exception {
         Log.d("Decryption",encrytedMessage);
         KeyStore ks = KeyStore.getInstance("AndroidKeyStore");

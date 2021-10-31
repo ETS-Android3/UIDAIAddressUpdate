@@ -18,8 +18,8 @@ public class OfflineEKYCService {
     private static EKYCapiEndpointInterface apiEndpointInterface;
     private static Retrofit retrofit = null;
 
-    public static EKYCapiEndpointInterface getApiInstance(){
-        if(apiEndpointInterface == null){
+    public static EKYCapiEndpointInterface getApiInstance() {
+        if (apiEndpointInterface == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(Constants.UIDAI_SERVER_ADDRESS)
                     .addConverterFactory(GsonConverterFactory.create())
@@ -30,7 +30,7 @@ public class OfflineEKYCService {
         return apiEndpointInterface;
     }
 
-    public static Call<CaptchaResponse> makeCaptchaCall(){
+    public static Call<CaptchaResponse> makeCaptchaCall() {
         CaptchaRequest captchaRequest = new CaptchaRequest();
         captchaRequest.setCaptchaLength(ServiceConstants.CAPTCHA_LENGTH);
         captchaRequest.setCaptchaType(ServiceConstants.CAPTCHA_TYPE);
@@ -40,18 +40,18 @@ public class OfflineEKYCService {
 
     }
 
-    public static Call<OtpResponse> makeOTPCall(String UidToken, String captchaTxnId, String captchaText){
+    public static Call<OtpResponse> makeOTPCall(String UidToken, String captchaTxnId, String captchaText) {
         OtpRequest otpRequest = new OtpRequest();
         otpRequest.setUidNumber(UidToken);
         otpRequest.setCaptchaTxnId(captchaTxnId);
         otpRequest.setCaptchaValue(captchaText);
-        otpRequest.setTransactionId("mAadhaar:"+UUID.randomUUID().toString());
+        otpRequest.setTransactionId("mAadhaar:" + UUID.randomUUID().toString());
 
-        return getApiInstance().sendOtpOnPhone(UUID.randomUUID().toString(),otpRequest);
+        return getApiInstance().sendOtpOnPhone(UUID.randomUUID().toString(), otpRequest);
 
     }
 
-    public static Call<OfflineEkycXMLResponse> makeOfflineEKYCCall(String UidToken, String otp, String otpTxnId,String shareCode) {
+    public static Call<OfflineEkycXMLResponse> makeOfflineEKYCCall(String UidToken, String otp, String otpTxnId, String shareCode) {
         OfflineEkycXMLRequest offlineEkycXMLRequest = new OfflineEkycXMLRequest();
         offlineEkycXMLRequest.setUid(UidToken);
         offlineEkycXMLRequest.setShareCode(shareCode);

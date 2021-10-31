@@ -71,13 +71,20 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
         });
     }
 
+    /**
+     * Callback function called from LocationListener
+     * @param longitude
+     * @param lattitude
+     */
     @Override
     public void updateLocation(Double longitude, Double lattitude) {
         Log.d("Mohan","Coordinates are : (" + longitude + "," + lattitude  + ")");
         SharedPrefHelper.saveCoordinates(this,longitude,lattitude);
-        Toast.makeText(this, "Coordinates are : (" + longitude + "," + lattitude  + ")" , Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * request for location permission if location permission is not granted
+     */
     private void requestLocationPermission() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -112,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
             } else {
                 Toast.makeText(this, "Permission DENIED", Toast.LENGTH_SHORT).show();
             }
-            //CheckAndMoveToAuth();
         }
     }
 }

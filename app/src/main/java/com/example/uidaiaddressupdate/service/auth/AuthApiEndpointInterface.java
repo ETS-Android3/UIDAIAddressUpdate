@@ -18,5 +18,4 @@ public interface AuthApiEndpointInterface {
     @Headers({"Content-Type: application/json"})
     @POST("/authotp")
     Call<Authotpresponse> authenticate(@Body Authotprequest authotprequest);
-
 }
