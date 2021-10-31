@@ -1,5 +1,6 @@
 package com.example.uidaiaddressupdate.requestaddress;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -101,10 +102,20 @@ public class RenterOTP extends Fragment {
         submit_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(otp_edit_text.getText().toString().length() != 6){
+                    otp_edit_text.setError("Enter Correct OTP");
+                    otp_edit_text.requestFocus();
+                    Toast.makeText(getContext(), "Enter Correct OTP", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                ProgressDialog progressDialog = new ProgressDialog(getContext());
+                progressDialog.setMessage("Verifying OTP...");
+                progressDialog.show();
                 OnlineEKYCApiService.getApiInstance().getOnlineEKYC(new OnlineEKYCRequest(SharedPrefHelper.getAadharNumber(getContext()),txnId,otp_edit_text.getText().toString())).enqueue(new Callback<OnlineEKYCResponse>() {
                     @Override
                     public void onResponse(Call<OnlineEKYCResponse> call, Response<OnlineEKYCResponse> response) {
                         Log.d("KYC", response.body().getStatus());
+
                         if (response.body().getStatus().equals("Y") || response.body().getStatus().equals("y")){
                             String addressMessage;
                             String encryptedAddressMessage;
@@ -127,9 +138,11 @@ public class RenterOTP extends Fragment {
                                             SharedPrefHelper.getAuthToken(getContext()),
                                             encryptedAddressMessage);
 
+                            progressDialog.setMessage("Sending Address Request to Lender...");
                             ServerApiService.getApiInstance().sendrequest(addressrequestformat).enqueue(new Callback<Addressrequestresponse>() {
                                 @Override
                                 public void onResponse(Call<Addressrequestresponse> call, Response<Addressrequestresponse> response) {
+                                    progressDialog.dismiss();
                                     switch (response.code()){
                                         case 200:
                                             Log.d("AddReq","SADADS");
@@ -165,6 +178,7 @@ public class RenterOTP extends Fragment {
 
                                 @Override
                                 public void onFailure(Call<Addressrequestresponse> call, Throwable t) {
+                                    progressDialog.dismiss();
                                     Toast.makeText(getActivity(),"Unable to contact the server. Try again later",Toast.LENGTH_SHORT).show();
                                     //Error
                                 }
@@ -172,6 +186,7 @@ public class RenterOTP extends Fragment {
                         }
                         else {
 //                            Log.d("KYC", response.body().getErrCode());
+                            progressDialog.dismiss();
                             Toast.makeText(getActivity(),"Invalid OTP",Toast.LENGTH_SHORT).show();
                         }
 
@@ -179,6 +194,7 @@ public class RenterOTP extends Fragment {
 
                     @Override
                     public void onFailure(Call<OnlineEKYCResponse> call, Throwable t) {
+                        progressDialog.dismiss();
                         Toast.makeText(getActivity(),"Unable to contact the UIDAI server. Try again later",Toast.LENGTH_SHORT).show();
                         //Error
                     }

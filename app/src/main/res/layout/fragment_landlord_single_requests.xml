@@ -25,13 +25,14 @@
            android:id="@+id/captcha_image"
            android:layout_width="0dp"
            android:layout_weight="6"
-           android:layout_height="wrap_content"/>
+           android:layout_height="80dp"/>
 
        <TextView
            android:id="@+id/captcha_refresh"
            android:layout_width="0dp"
            android:layout_height="wrap_content"
            android:layout_weight="1"
+           android:layout_marginTop="24dp"
            android:drawableStart="@drawable/ic_refresh_24"
            android:textSize="32dp"
            android:textColor="@color/black"

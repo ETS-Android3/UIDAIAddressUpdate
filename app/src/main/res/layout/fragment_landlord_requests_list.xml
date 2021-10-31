@@ -10,4 +10,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/single_address_request_layout"/>
+
+    <TextView
+        android:id="@+id/no_address_request_text"
+        android:layout_width="match_parent"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:layout_height="match_parent"
+        android:text="There is no address request for you"
+        android:textSize="32dp"
+        android:padding="16dp"/>
 </FrameLayout>

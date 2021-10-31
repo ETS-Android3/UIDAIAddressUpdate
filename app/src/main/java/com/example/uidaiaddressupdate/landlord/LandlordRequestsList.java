@@ -1,8 +1,11 @@
 package com.example.uidaiaddressupdate.landlord;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.uidaiaddressupdate.Constants;
@@ -31,6 +35,7 @@ public class LandlordRequestsList extends Fragment implements LandlordRequests {
     private LandlordRequestListAdapter adapter;
     private TransactionDatabase db;
     private LandlordTransactionsDao landlordTransactionsDao;
+    private TextView no_address_request_text;
 
     public LandlordRequestsList() {
         // Required empty public constructor
@@ -51,16 +56,22 @@ public class LandlordRequestsList extends Fragment implements LandlordRequests {
         view =  inflater.inflate(R.layout.fragment_landlord_requests_list, container, false);
         landlordRequestsRecyclerView  = (RecyclerView) view.findViewById(R.id.landlord_request_list);
         singleLandlordRequestModelList = new ArrayList<>();
-        loadData();
+        //loadData();
+        no_address_request_text = (TextView)view.findViewById(R.id.no_address_request_text);
+        no_address_request_text.setVisibility(View.GONE);
 
         db = TransactionDatabase.getInstance(getContext());
         landlordTransactionsDao = db.landlordTransactionsDao();
 
-        AddDummyDataToDatabase();
+        //AddDummyDataToDatabase();
 
         List<LandlordTransactions> landlordTransactionsList = landlordTransactionsDao.getTransactionList();
-        Toast.makeText(getContext(), "list size is " + landlordTransactionsList.size(), Toast.LENGTH_SHORT).show();
-
+        //Toast.makeText(getContext(), "list size is " + landlordTransactionsList.size(), Toast.LENGTH_SHORT).show();
+        if(landlordTransactionsList.size() == 0){
+            no_address_request_text.setVisibility(View.VISIBLE);
+        }else{
+            no_address_request_text.setVisibility(View.GONE);
+        }
         adapter = new LandlordRequestListAdapter(landlordTransactionsList,this);
 
         landlordRequestsRecyclerView.setHasFixedSize(true);
@@ -85,19 +96,28 @@ public class LandlordRequestsList extends Fragment implements LandlordRequests {
     public void HandleRequestDeclined(String transactionid, String receiverShareCode) {
         //Request has declined
         Toast.makeText(getContext(), "Request has declined", Toast.LENGTH_SHORT).show();
+        landlordTransactionsDao.deleteTransaction(transactionid);
+//        adapter.notifyDataSetChanged();
+        updateFragment();
     }
 
-    private void loadData(){
-        singleLandlordRequestModelList.add(new SingleLandlordRequestModel("Mohan","ABCD","9876543210","null","ABCD"));
-        singleLandlordRequestModelList.add(new SingleLandlordRequestModel("Aman","ABCD","9876543210","null","ABCD"));
-        singleLandlordRequestModelList.add(new SingleLandlordRequestModel("Pranav","ABCD","9876543210","null","ABCD"));
-        singleLandlordRequestModelList.add(new SingleLandlordRequestModel("Sourav","ABCD","9876543210","null","ABCD"));
-        singleLandlordRequestModelList.add(new SingleLandlordRequestModel("Pooja","ABCD","9876543210","null","ABCD"));
+    private void updateFragment(){
+        List<LandlordTransactions> landlordTransactionsList = landlordTransactionsDao.getTransactionList();
+        if(landlordTransactionsList.size() == 0){
+            no_address_request_text.setVisibility(View.VISIBLE);
+        }else{
+            no_address_request_text.setVisibility(View.GONE);
+        }
+
+        adapter = new LandlordRequestListAdapter(landlordTransactionsList,this);
+
+//        landlordRequestsRecyclerView.setHasFixedSize(true);
+//        landlordRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        landlordRequestsRecyclerView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
-    private void AddDummyDataToDatabase(){
-        landlordTransactionsDao.insertTransaction(new LandlordTransactions("ABCD","Mohan Aman","9876543210","success","I am a good person","Share Code"));
-        landlordTransactionsDao.insertTransaction(new LandlordTransactions("EFGH","Aman PRanav","9876543210","success","I am a good person","Share Code"));
-    }
+
+
 
 }

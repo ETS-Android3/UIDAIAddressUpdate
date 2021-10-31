@@ -3,6 +3,7 @@ package com.example.uidaiaddressupdate.Location;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -19,6 +20,8 @@ public class MyLocationListener implements LocationListener {
         double longitude = location.getLongitude();
         double latitude = location.getLatitude();
         locationInterface.updateLocation(longitude,latitude);
+
+        Log.d("Mohan","Coordinates are : (" + longitude + "," + latitude  + ")");
     }
 
     @Override

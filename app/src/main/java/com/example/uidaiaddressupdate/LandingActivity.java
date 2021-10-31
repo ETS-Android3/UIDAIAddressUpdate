@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.security.keystore.KeyGenParameterSpec;
 import android.widget.Toast;
 
@@ -39,6 +40,17 @@ public class LandingActivity extends AppCompatActivity {
     }
 
     private void CheckAndMoveToAuth(){
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                MoveToAuth();
+            }
+        }, 1000);
+
+    }
+
+    private void MoveToAuth(){
         try {
             KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
             String mainKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);

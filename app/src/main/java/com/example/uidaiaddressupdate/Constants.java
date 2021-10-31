@@ -9,6 +9,9 @@ public class Constants {
     public static String KEY_TRANSACTION_ID = "transactionID";
     public static String KEY_RECEIVER_SHARECODE_ID = "receiverShareCode";
 
+    public static String KEY_LONGITUDE = "KEY_LONGITUDE";
+    public static String KEY_LATITUDE = "KEY_LATITUDE";
+
     public static String SERVER_IP_ADDRESS = "http://13.232.96.11:8000";
 //    public static String SERVER_IP_ADDRESS = "http://192.168.137.1:8000";
 

@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.security.KeyFactory;
@@ -49,6 +50,7 @@ public class LoginFragment extends Fragment {
     private authViewModel mViewModel;
     private EditText aadhar;
     private Button sendOtp;
+    private ProgressBar loginProgressBar;
 
     public static LoginFragment newInstance() {
         return new LoginFragment();
@@ -61,7 +63,8 @@ public class LoginFragment extends Fragment {
         View view =  inflater.inflate(R.layout.login_fragment, container, false);
         aadhar = (EditText)view.findViewById(R.id.login_et_aadhar);
         sendOtp = (Button) view.findViewById(R.id.login_send_otp);
-
+        loginProgressBar = (ProgressBar) view.findViewById(R.id.login_progressBar);
+        loginProgressBar.setVisibility(View.GONE);
         try {
             encryptText();
         } catch (Exception e) {
@@ -72,11 +75,12 @@ public class LoginFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
+
                 String aadharNumber = aadhar.getText().toString();
                 Log.d("Mohan","Request has been sent");
                 if(verifyAadhar(aadharNumber)){
 //                    Toast.makeText(getActivity(), "Correct format of aadhar", Toast.LENGTH_SHORT).show();
-
+                    loginProgressBar.setVisibility(View.VISIBLE);
                     AuthApiEndpointInterface apiServie = AuthapiService.getApiInstance();
 
                     Authuidrequest authuidrequest = new Authuidrequest();
@@ -84,6 +88,7 @@ public class LoginFragment extends Fragment {
                     apiServie.sendOtp(authuidrequest).enqueue(new Callback<Authuidresponse>() {
                         @Override
                         public void onResponse(Call<Authuidresponse> call, Response<Authuidresponse> response) {
+                            loginProgressBar.setVisibility(View.GONE);
                             switch (response.code()){
                                 case 200:
                                     String transactionId = response.body().getTransactionID();
@@ -108,6 +113,7 @@ public class LoginFragment extends Fragment {
 
                         @Override
                         public void onFailure(Call<Authuidresponse> call, Throwable t) {
+                            loginProgressBar.setVisibility(View.GONE);
                             Toast.makeText(getActivity(),"Unable to contact the server. Try again later",Toast.LENGTH_SHORT).show();
                             Log.d("Mohan","Unable to contact the server. OTP Request is failed : " + t.getMessage().toString());
                         }

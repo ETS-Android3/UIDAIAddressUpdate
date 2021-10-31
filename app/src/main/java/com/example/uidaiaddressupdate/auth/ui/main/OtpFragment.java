@@ -1,5 +1,6 @@
 package com.example.uidaiaddressupdate.auth.ui.main;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +51,7 @@ public class OtpFragment extends Fragment {
     private TextView resendOtp;
     private Button submit;
     private String FCMtoken = null;
+    private ProgressBar progressBar;
     public OtpFragment() {
         // Required empty public constructor
     }
@@ -70,6 +73,7 @@ public class OtpFragment extends Fragment {
         String aadharNumber = getArguments().getString("aadharNumber");
 
         View view = inflater.inflate(R.layout.fragment_otp, container, false);
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
         otp = (EditText) view.findViewById(R.id.otp_et_enter_otp);
         resendOtp = (TextView) view.findViewById(R.id.otp_resend_otp);
         submit = (Button) view.findViewById(R.id.otp_verify_button);
@@ -80,8 +84,18 @@ public class OtpFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                AuthApiEndpointInterface apiServie = AuthapiService.getApiInstance();
+                String otp_text = otp.getText().toString();
+                if(otp_text.length() != 6){
+                    Toast.makeText(getContext(), "Enter correct OTP", Toast.LENGTH_SHORT).show();
+                    otp.setError("Enter Correct OTP");
+                    otp.requestFocus();
+                    return;
+                }
 
+//                progressBar.setVisibility(View.VISIBLE);
+                progressDialog.setMessage("Verifying OTP");
+                progressDialog.show();
+                AuthApiEndpointInterface apiServie = AuthapiService.getApiInstance();
                 String pubkeyString = "";
                 try {
                     pubkeyString = generateEncryptionKeys();
@@ -96,6 +110,8 @@ public class OtpFragment extends Fragment {
                 apiServie.authenticate(authotprequest).enqueue(new Callback<Authotpresponse>() {
                     @Override
                     public void onResponse(Call<Authotpresponse> call, Response<Authotpresponse> response) {
+                        //progressBar.setVisibility(View.GONE);
+                        progressDialog.dismiss();
                         switch(response.code()){
                             case 200:
                                 try {
@@ -152,7 +168,9 @@ public class OtpFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<Authotpresponse> call, Throwable t) {
-
+                        //progressBar.setVisibility(View.GONE);
+                        progressDialog.dismiss();
+                        Toast.makeText(getContext(), "Error : " + t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
             }

@@ -1,5 +1,6 @@
 package com.example.uidaiaddressupdate.requestaddress;
 
+import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -62,7 +63,7 @@ public class RequestDetails extends Fragment {
         status = (TextView) view.findViewById(R.id.request_details_status);
 
         shareCode.setText(renterTransactions.getShareCode());
-        status.setText(renterTransactions.getTransactionStatus());
+        status.setText(renterTransactions.getTransactionStatus() + " : " + getMessage(renterTransactions.getTransactionStatus()));
 
         withdraw_btn = (AppCompatButton) view.findViewById(R.id.request_detail_withdraw);
         edit_address_btn = (AppCompatButton) view.findViewById(R.id.request_edit_and_update_address);
@@ -74,15 +75,19 @@ public class RequestDetails extends Fragment {
             edit_address_btn.setVisibility(View.GONE);
         }
 
-        if(renterTransactions.getTransactionStatus().equals(Constants.STATUS_COMMITED) || renterTransactions.getTransactionStatus().equals(Constants.STATUS_ABORTED)){
-            withdraw_btn.setVisibility(View.GONE);
-        }else{
-            withdraw_btn.setVisibility(View.VISIBLE);
-        }
+//        if(renterTransactions.getTransactionStatus().equals(Constants.STATUS_COMMITED) || renterTransactions.getTransactionStatus().equals(Constants.STATUS_ABORTED)){
+//            withdraw_btn.setVisibility(View.GONE);
+//        }else{
+//            withdraw_btn.setVisibility(View.VISIBLE);
+//        }
+        withdraw_btn.setVisibility(View.GONE);
 
         edit_address_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ProgressDialog progressDialog = new ProgressDialog(getContext());
+                progressDialog.setMessage("Getting Address of Lender...");
+                progressDialog.show();
                 GetEkycRequest getEkycRequest = new GetEkycRequest(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionID);
                 ServerApiService.getEkyc(getEkycRequest).enqueue(new Callback<GetEkycResponse>() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -99,8 +104,10 @@ public class RequestDetails extends Fragment {
                                     addressModel = XMLUtils.getAddressFromEKYCxml(eKYCxml);
                                 } catch (Exception e) {
                                     e.printStackTrace();
+                                    progressDialog.dismiss();
                                     return ;
                                 }
+                                progressDialog.dismiss();
                                 Bundle bundle = new Bundle();
                                 bundle.putString("addressModel",new Gson().toJson(addressModel));
                                 bundle.putString(Constants.KEY_TRANSACTION_ID,transactionID);
@@ -109,14 +116,17 @@ public class RequestDetails extends Fragment {
                                 break;
 
                             case 400:
+                                progressDialog.dismiss();
                                 Toast.makeText(getActivity(),"Invalid request parameters",Toast.LENGTH_SHORT).show();
                                 break;
 
                             case 403:
+                                progressDialog.dismiss();
                                 Toast.makeText(getActivity(),"Invalid transactionID. Unable to fetch eKYC",Toast.LENGTH_SHORT).show();
                                 break;
 
                             default:
+                                progressDialog.dismiss();
                                 Toast.makeText(getActivity(),"Error code: "+String.valueOf(response.code()),Toast.LENGTH_SHORT).show();
                                 break;
                         }
@@ -125,6 +135,7 @@ public class RequestDetails extends Fragment {
 
                     @Override
                     public void onFailure(Call<GetEkycResponse> call, Throwable t) {
+                        progressDialog.dismiss();
                         Toast.makeText(getActivity(),"Unable to contact the server. Try again later",Toast.LENGTH_SHORT).show();
                         // Error
                     }
@@ -133,5 +144,23 @@ public class RequestDetails extends Fragment {
         });
 
         return view;
+    }
+
+    private String getMessage(String status){
+        if(status.equals(Constants.STATUS_ABORTED)){
+            return "You request has been aborted due to some reason.";
+        }else if (status.equals(Constants.STATUS_ACCEPTED)){
+            return "Lender has shared his/her address with you.";
+        }else if (status.equals(Constants.STATUS_INIT)){
+            return "You have initiated the request.";
+        }else if (status.equals(Constants.STATUS_REJECTED)){
+            return "Sorry you request has been rejected";
+        }else if (status.equals(Constants.STATUS_COMMITED)){
+            return "Congrats, your request has been successfully updated";
+        }else if (status.equals(Constants.STATUS_SHARED)){
+            return "Lenders Ekyc has been shared with you";
+        }else {
+            return "Unkown Status";
+        }
     }
 }
