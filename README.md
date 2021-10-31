@@ -67,3 +67,5 @@ public Static String SERVER_ADDRESS = '<your_server_address>'
 
 ## User Interface
 
+Landlord side demo video: https://drive.google.com/file/d/11En_L0HUc-6rB5pi41zpGQBrk637996n/view?usp=drivesdk
+Tenant side demo video: https://drive.google.com/file/d/1G24EMNueYq08H8Y4KlWmI89d01keqIpa/view?usp=sharing
