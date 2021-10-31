@@ -48,10 +48,11 @@ The server is already deployed in one of the AWS India Data Centers.
 3. After sucessfull otp authentication, the user can make/approve address update requests as shown in the User Interface section of this Readme file.
 
 #### Testing Locally
-1. The code for server program can be found in the `server` directory. To start the server:
+1. The code for server program can be found in the `Server` directory. To start the server:
 ```
 git clone https://github.com/mohan2106/UIDAIAddressUpdate
-cd server
+cd Server
+python manage.py makemigrations
 python manage.py migrate
 python manage.py runserver
 ```
