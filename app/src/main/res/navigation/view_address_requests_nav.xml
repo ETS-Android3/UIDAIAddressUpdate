@@ -3,45 +3,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/view_address_requests_nav"
-    app:startDestination="@id/landlordRequestsList">
+    app:startDestination="@id/lenderRequestsList">
 
     <fragment
-        android:id="@+id/landlordRequestsList"
-        android:name="com.example.uidaiaddressupdate.landlord.LandlordRequestsList"
-        android:label="fragment_landlord_requests_list"
-        tools:layout="@layout/fragment_landlord_requests_list" >
+        android:id="@+id/lenderRequestsList"
+        android:name="com.example.uidaiaddressupdate.lender.LenderRequestsList"
+        android:label="fragment_lender_requests_list"
+        tools:layout="@layout/fragment_lender_requests_list" >
         <action
-            android:id="@+id/action_landlordRequestsList_to_landlordSingleRequests"
-            app:destination="@id/landlordSingleRequests" />
+            android:id="@+id/action_lenderRequestsList_to_lenderSingleRequests"
+            app:destination="@id/lenderSingleRequests" />
     </fragment>
     <fragment
-        android:id="@+id/landlordSingleRequests"
-        android:name="com.example.uidaiaddressupdate.landlord.LandlordSingleRequests"
-        android:label="fragment_landlord_single_requests"
-        tools:layout="@layout/fragment_landlord_single_requests" >
+        android:id="@+id/lenderSingleRequests"
+        android:name="com.example.uidaiaddressupdate.lender.LenderSingleRequests"
+        android:label="fragment_lender_single_requests"
+        tools:layout="@layout/fragment_lender_single_requests" >
         <action
-            android:id="@+id/action_landlordSingleRequests_to_landlordOtpPage"
-            app:destination="@id/landlordOtpPage"
-            app:popUpTo="@id/landlordRequestsList" />
+            android:id="@+id/action_lenderSingleRequests_to_lenderOtpPage"
+            app:destination="@id/lenderOtpPage"
+            app:popUpTo="@id/lenderRequestsList" />
     </fragment>
     <fragment
-        android:id="@+id/landlordOtpPage"
-        android:name="com.example.uidaiaddressupdate.landlord.LandlordOtpPage"
-        android:label="fragment_landlord_otp_page"
-        tools:layout="@layout/fragment_landlord_otp_page" >
+        android:id="@+id/lenderOtpPage"
+        android:name="com.example.uidaiaddressupdate.lender.LenderOtpPage"
+        android:label="fragment_lender_otp_page"
+        tools:layout="@layout/fragment_lender_otp_page" >
         <action
-            android:id="@+id/action_landlordOtpPage_to_landlordAddressApprovedAck"
-            app:destination="@id/landlordAddressApprovedAck"
-            app:popUpTo="@id/landlordRequestsList" />
+            android:id="@+id/action_lenderOtpPage_to_lenderAddressApprovedAck"
+            app:destination="@id/lenderAddressApprovedAck"
+            app:popUpTo="@id/lenderRequestsList" />
     </fragment>
     <fragment
-        android:id="@+id/landlordAddressApprovedAck"
-        android:name="com.example.uidaiaddressupdate.landlord.LandlordAddressApprovedAck"
-        android:label="fragment_landlord_address_approved_ack"
-        tools:layout="@layout/fragment_landlord_address_approved_ack" >
+        android:id="@+id/lenderAddressApprovedAck"
+        android:name="com.example.uidaiaddressupdate.lender.LenderAddressApprovedAck"
+        android:label="fragment_lender_address_approved_ack"
+        tools:layout="@layout/fragment_lender_address_approved_ack" >
         <action
-            android:id="@+id/action_landlordAddressApprovedAck_to_landlordRequestsList"
-            app:destination="@id/landlordRequestsList"
-            app:popUpTo="@id/landlordRequestsList" />
+            android:id="@+id/action_lenderAddressApprovedAck_to_lenderRequestsList"
+            app:destination="@id/lenderRequestsList"
+            app:popUpTo="@id/lenderRequestsList" />
     </fragment>
 </navigation>

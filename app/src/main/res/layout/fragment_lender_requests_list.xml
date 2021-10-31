@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".landlord.LandlordRequestsList">
+    tools:context=".lender.LenderRequestsList">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/landlord_request_list"
+        android:id="@+id/lender_request_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:listitem="@layout/single_address_request_layout"/>

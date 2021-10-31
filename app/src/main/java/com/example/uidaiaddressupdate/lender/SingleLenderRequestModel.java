@@ -1,13 +1,13 @@
-package com.example.uidaiaddressupdate.landlord;
+package com.example.uidaiaddressupdate.lender;
 
-public class SingleLandlordRequestModel {
+public class SingleLenderRequestModel {
     private String username;
     private String sharecode;
     private String phonenumber;
     private String image;
     private String transactionId;
 
-    public SingleLandlordRequestModel(String username, String sharecode, String phonenumber, String image, String transactionId) {
+    public SingleLenderRequestModel(String username, String sharecode, String phonenumber, String image, String transactionId) {
         this.username = username;
         this.sharecode = sharecode;
         this.phonenumber = phonenumber;

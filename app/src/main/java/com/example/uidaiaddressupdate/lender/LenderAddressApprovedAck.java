@@ -1,4 +1,4 @@
-package com.example.uidaiaddressupdate.landlord;
+package com.example.uidaiaddressupdate.lender;
 
 import android.os.Bundle;
 
@@ -11,18 +11,18 @@ import android.view.ViewGroup;
 
 import com.example.uidaiaddressupdate.Constants;
 import com.example.uidaiaddressupdate.R;
-import com.example.uidaiaddressupdate.database.LandlordTransactionsDao;
+import com.example.uidaiaddressupdate.database.LenderTransactionsDao;
 import com.example.uidaiaddressupdate.database.TransactionDatabase;
 
 
-public class LandlordAddressApprovedAck extends Fragment {
+public class LenderAddressApprovedAck extends Fragment {
 
     private AppCompatButton address_approved_ack_continue_btn;
     private TransactionDatabase db;
-    private LandlordTransactionsDao landlordTransactionsDao;
+    private LenderTransactionsDao lenderTransactionsDao;
 
 
-    public LandlordAddressApprovedAck() {
+    public LenderAddressApprovedAck() {
         // Required empty public constructor
     }
 
@@ -37,14 +37,14 @@ public class LandlordAddressApprovedAck extends Fragment {
                              Bundle savedInstanceState) {
         String transactionId = getArguments().getString(Constants.KEY_TRANSACTION_ID);
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_landlord_address_approved_ack, container, false);
+        View view = inflater.inflate(R.layout.fragment_lender_address_approved_ack, container, false);
         db = TransactionDatabase.getInstance(getContext());
-        landlordTransactionsDao = db.landlordTransactionsDao();
+        lenderTransactionsDao = db.lenderTransactionsDao();
         address_approved_ack_continue_btn = (AppCompatButton) view.findViewById(R.id.address_approved_ack_continue_btn);
         address_approved_ack_continue_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                landlordTransactionsDao.deleteTransaction(transactionId);
+                lenderTransactionsDao.deleteTransaction(transactionId);
                 getActivity().finish();
             }
         });
