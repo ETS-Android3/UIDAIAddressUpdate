@@ -17,6 +17,27 @@ Address Update Challenge in Urban Areas
 * For the solution, you will interface with your landlord in an online manner using a smartphone or online portal to request his address (known as Introducer and performing the role of the donor).
 
 ## Solution Approach
+We have added 3 functionalities to solve the above problem
+### Authentication using Aadhar number
+* User need to login to the application using their aadhar number and otp will be sent to the mobile number added to that aadhar number. 
+* After Login user will receive their sharable code the he/she can share with anyone. (For security purpose we are not allowing them to share aadhar number)
+### Request Address from requester side to lender
+* In this flow user need the sharable code of lender.
+* Using sharable code of lender, requester can request him/her for their address.
+* After the approval of address from lender, requester will get notification about the approval, thereafter he/she can do minor modification in the address provided by lender and set it as his/her address. 
+### Accept and Approve Address update from lender side
+* When requester make an Address request to the lender, lender will get notification about the request.
+* In the request he will be able to see name and contact number of requester for verification. 
+* He can accept or reject the request.
+* After rejection, a notification will be sent to requester about the rejection he received. 
+* After clicking on approve, lender will have to fill the captcha and thereafter he/she also need to fill the otp he/she will receive on his/her mobile number added in the aadhar. 
+* After verification through otp and ofline ekyc of lender will be shared with the requester in the encrypted form. 
+* Requester will download the offline ekyc, decrypt it and use the address of lender. 
+### View sharable code.
+* User can access their Sharable Code in the app.  
+## NOTE:
+* All the data sharing are happening in the encrypted format.
+* We are not storing the personal data anywhere
 
 ## Running the Code
 
