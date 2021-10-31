@@ -1,11 +1,11 @@
 # Aadhaar Hackathon 2021
 Team Name: codesociety   
-Team Leader: [Pranav Gupta](https://www.github.com/pranavg000)  
+Team Leader: [Pranav Gupta](https://www.linkedin.com/in/pranavg000/)  
 Team Members:
-[Aman Kumar Singh](https://www.github.com/amankrsingh1812) |
-[Mohan Kumar](https://www.github.com/mohan2106) |
-[Pooja Gajendra Bhagat](https://www.github.com/PoojaB01) |
-[Sourav Goel](https://www.github.com/coolgoel)
+[Aman Kumar Singh](https://www.linkedin.com/in/aman2018/) |
+[Mohan Kumar](https://www.linkedin.com/in/mohanjnv1/) |
+[Pooja Gajendra Bhagat](https://www.linkedin.com/in/poojabhagat/) |
+[Sourav Goel](https://www.linkedin.com/in/sourav-goel6174/)
 
 ## Theme
 Address Update
@@ -27,13 +27,20 @@ The server is already deployed in one of the AWS India Data Centers.
 3. After sucessfull otp authentication, the user can make/approve address update requests as shown in the User Interface section of this Readme file.
 
 #### Testing Locally
-1.The code for server program can be found in the `server` directory. To start the server:
+1. The code for server program can be found in the `server` directory. To start the server:
 ```
 git clone https://github.com/mohan2106/UIDAIAddressUpdate
 cd server
 python manage.py migrate
 python manage.py runserver
 ```
+
+2. Update `SERVER_ADDRESS` in [Constants.java](/app/src/main/java/com/example/uidaiaddressupdate/Constants.java)
+``` 
+public Static String SERVER_ADDRESS = '<your_server_address>'
+```
+
+3. To build and run the application, follow the guide: https://developer.android.com/studio/run
 
 ## User Interface
 
