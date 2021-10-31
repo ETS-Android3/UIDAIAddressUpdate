@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKeys;
 
@@ -119,7 +120,7 @@ public class OtpFragment extends Fragment {
                                     KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
                                     String mainKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
                                     SharedPreferences sharedPreferences = EncryptedSharedPreferences.create(
-                                            "aadharsharedPreferences",
+                                            Constants.SHARED_PREFERENCES_FILE,
                                             mainKeyAlias,
                                             getContext(),
                                             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
@@ -127,9 +128,9 @@ public class OtpFragment extends Fragment {
                                     );
                                     SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
                                     Log.d("Mohan",response.body().toString());
-                                    sharedPrefsEditor.putString("AuthToken",response.body().getAuthToken());
-                                    sharedPrefsEditor.putString("UidToken",response.body().getUidToken());
-                                    sharedPrefsEditor.putString("ShareableCode",response.body().getShareableCode());
+                                    sharedPrefsEditor.putString(Constants.KEY_AUTH_TOKEN,response.body().getAuthToken());
+                                    sharedPrefsEditor.putString(Constants.KEY_UID_TOKEN,response.body().getUidToken());
+                                    sharedPrefsEditor.putString(Constants.KEY_SHAREABLE_CODE,response.body().getShareableCode());
                                     sharedPrefsEditor.putString(Constants.KEY_AADHAR_NUMBER,aadharNumber);
 
                                     sharedPrefsEditor.commit();
@@ -157,7 +158,7 @@ public class OtpFragment extends Fragment {
 
                             case 503:
                                 Toast.makeText(getActivity(),"Maximum trials for OTP check reached, please request OTP again",Toast.LENGTH_SHORT).show();
-                                // TODO: Go back to LoginFragment
+                                getActivity().getSupportFragmentManager().popBackStackImmediate();
                                 break;
 
                             default:

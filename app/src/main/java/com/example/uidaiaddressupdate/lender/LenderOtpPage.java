@@ -85,7 +85,6 @@ public class LenderOtpPage extends Fragment {
             @Override
             public void run() {
                 allowResendOTP = true;
-                resend_otp.setTextColor(ContextCompat.getColor(getContext(), R.color.purple_500));
             }
         }, 60000);
 
@@ -114,42 +113,43 @@ public class LenderOtpPage extends Fragment {
             public void onClick(View v) {
                 Log.d("eKYC",otp_edit_text.getText().toString());
                 Log.d("eKYC",otpTxnId);
+                Log.d("eKYC",transactionId);
                 ProgressDialog progressDialog = new ProgressDialog(getContext());
                 progressDialog.setMessage("Verifying OTP...");
-                progressDialog.show();
-                String passcode = Util.getRandomString();
-                OfflineEKYCService.makeOfflineEKYCCall(SharedPrefHelper.getAadharNumber(getContext()),otp_edit_text.getText().toString(),otpTxnId,passcode).enqueue(new Callback<OfflineEkycXMLResponse>() {
-                    @RequiresApi(api = Build.VERSION_CODES.O)
-                    @Override
-                    public void onResponse(Call<OfflineEkycXMLResponse> call, Response<OfflineEkycXMLResponse> response) {
-                        progressDialog.dismiss();
-                        if (response.body().getStatus().equals("Success")){
-                            String filename = response.body().getFileName();
-                            String eKyc = response.body().geteKycXML();
-                            Log.d("eKYC", response.body().geteKycXML());
 
-                            //                        try {
-                            //                            Log.d("eKYC decrrypted", XMLUtils.getKYCxmlFromZip(response.body().geteKycXML(), passcode));
-                            //                        } catch (IOException e) {
-                            //                            e.printStackTrace();
-                            //                        }
-
-                            encryptPasscodeAndSendEkyc(filename, passcode, eKyc);
-                        }
-                        else{
-                            Toast.makeText(getActivity(),"Invalid OTP",Toast.LENGTH_SHORT).show();
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<OfflineEkycXMLResponse> call, Throwable t) {
-                        Toast.makeText(getActivity(),"Unable to contact the UIDAI server. Try again later",Toast.LENGTH_SHORT).show();
-                        t.printStackTrace();
-                        progressDialog.dismiss();
-                    }
-                });
+                encryptPasscodeAndSendEkyc(Util.getRandomString(),otpTxnId,otp_edit_text.getText().toString());
+//                OfflineEKYCService.makeOfflineEKYCCall(SharedPrefHelper.getAadharNumber(getContext()),otp_edit_text.getText().toString(),otpTxnId,passcode).enqueue(new Callback<OfflineEkycXMLResponse>() {
+//                    @RequiresApi(api = Build.VERSION_CODES.O)
+//                    @Override
+//                    public void onResponse(Call<OfflineEkycXMLResponse> call, Response<OfflineEkycXMLResponse> response) {
+//                        progressDialog.dismiss();
+//                        if (response.body().getStatus().equals("Success")){
+//                            String filename = response.body().getFileName();
+//                            String eKyc = response.body().geteKycXML();
+//                            Log.d("eKYC", response.body().geteKycXML());
+//
+//                            //                        try {
+//                            //                            Log.d("eKYC decrrypted", XMLUtils.getKYCxmlFromZip(response.body().geteKycXML(), passcode));
+//                            //                        } catch (IOException e) {
+//                            //                            e.printStackTrace();
+//                            //                        }
+//
+//                            encryptPasscodeAndSendEkyc(filename, passcode, eKyc);
+//                        }
+//                        else{
+//                            Toast.makeText(getActivity(),"Invalid OTP",Toast.LENGTH_SHORT).show();
+//                        }
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<OfflineEkycXMLResponse> call, Throwable t) {
+//                        Toast.makeText(getActivity(),"Unable to contact the UIDAI server. Try again later",Toast.LENGTH_SHORT).show();
+//                        t.printStackTrace();
+//                        progressDialog.dismiss();
+//                    }
+//                });
             }
         });
 
@@ -162,7 +162,7 @@ public class LenderOtpPage extends Fragment {
         Navigation.findNavController(view).navigate(R.id.action_lenderOtpPage_to_lenderAddressApprovedAck,bundle);
     }
 
-    private void encryptPasscodeAndSendEkyc(String filename,String passcode, String eKyc){
+    private void encryptPasscodeAndSendEkyc(String passcode,String txnNumber,String otp){
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Doing background work...");
         progressDialog.show();
@@ -178,7 +178,7 @@ public class LenderOtpPage extends Fragment {
                         String encryptedPasscode = null;
                         try {
                             encryptedPasscode = EncryptionUtils.encryptMessage(receiverPublicKey,passcode);
-                            sendEkyc(filename,encryptedPasscode,eKyc);
+                            sendEkyc(encryptedPasscode,passcode,txnNumber,otp);
                         } catch (Exception e){
                             Toast.makeText(getActivity(),"Unable to encrypt passcode",Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
@@ -209,11 +209,12 @@ public class LenderOtpPage extends Fragment {
         });
     }
 
-    private void sendEkyc(String filename,String passcode, String eKyc){
+    private void sendEkyc(String epss,String pss,String txnNumber,String otp){
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Sending Address...");
         progressDialog.show();
-        ServerApiService.sendEkyc(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionId,filename,passcode,eKyc).enqueue(new Callback<SendEkycResponse>() {
+
+            ServerApiService.sendEkyc(SharedPrefHelper.getUidToken(getContext()),SharedPrefHelper.getAuthToken(getContext()),transactionId,txnNumber,otp,SharedPrefHelper.getAadharNumber(getContext()),epss,pss).enqueue(new Callback<SendEkycResponse>() {
             @Override
             public void onResponse(Call<SendEkycResponse> call, Response<SendEkycResponse> response) {
                 progressDialog.dismiss();
@@ -226,8 +227,11 @@ public class LenderOtpPage extends Fragment {
 
                         //Update in Client Side DB
                         LenderTransactions curTransaction = TransactionDatabase.getInstance(getContext()).lenderTransactionsDao().getTransaction(transactionId);
+                        Log.d("Mohan",curTransaction.getTransactionID());
+                        Log.d("Mohan",curTransaction.getTransactionStatus());
                         curTransaction.setTransactionStatus("accepted");
                         TransactionDatabase.getInstance(getContext()).lenderTransactionsDao().insertTransaction(curTransaction);
+                        Log.d("Mohan","FFF");
 
                         sendToLenderAddressApprovedAckPage();
                         break;
@@ -254,7 +258,6 @@ public class LenderOtpPage extends Fragment {
             }
         });
     }
-//9999527333847
     private void sendOTP(String captchaText, String captchaTxnId){
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Sending OTP...");
@@ -264,12 +267,20 @@ public class LenderOtpPage extends Fragment {
             public void onResponse(Call<OtpResponse> call, Response<OtpResponse> response) {
                 progressDialog.dismiss();
                 if (response.body().getStatus().equals("Success")) {
-                    Log.d("eKYC", response.body().getMessage());
                     otpTxnId = response.body().getTxnId();
+
+                    Log.d("eKYC", response.body().getMessage());
+                    Log.d("eKYC",otp_edit_text.getText().toString());
+                    Log.d("eKYC",transactionId);
+//                    Log.d("eKYC",SharedPrefHelper.getAadharNumber(getContext()));
+                    Log.d("eKYC",otpTxnId);
+
                 }
                 else{
-                    // TODO: OTP won't be sent. Do something
-                    Toast.makeText(getActivity(),"Error code: "+response.body().getStatus(),Toast.LENGTH_SHORT).show();
+                    Log.d("eKYC","FFFF");
+                    Log.d("eKYC",call.request().body().toString());
+                    Toast.makeText(getActivity(),"Error code: "+response.message(),Toast.LENGTH_SHORT).show();
+//                    getActivity().getSupportFragmentManager().popBackStackImmediate();
                 }
 
             }

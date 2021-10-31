@@ -16,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.security.keystore.KeyGenParameterSpec;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.uidaiaddressupdate.auth.LoginActivity;
@@ -55,7 +56,7 @@ public class LandingActivity extends AppCompatActivity {
             KeyGenParameterSpec keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC;
             String mainKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec);
             SharedPreferences sharedPreferences = EncryptedSharedPreferences.create(
-                    "aadharsharedPreferences",
+                    Constants.SHARED_PREFERENCES_FILE,
                     mainKeyAlias,
                     this,
                     EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
@@ -64,6 +65,7 @@ public class LandingActivity extends AppCompatActivity {
             //SharedPreferences.Editor sharedPrefsEditor = sharedPreferences.edit();
             if(sharedPreferences.contains(Constants.KEY_AUTH_TOKEN)){
                 //send to home page
+                Log.d("FD",SharedPrefHelper.getAadharNumber(getApplicationContext()));
                 Toast.makeText(this, "Logged In", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(LandingActivity.this,MainActivity.class));
                 finish();
@@ -74,7 +76,8 @@ public class LandingActivity extends AppCompatActivity {
                 finish();
             }
         }catch(Exception e){
-            Toast.makeText(this, "Error while reading shared pref", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+//            Toast.makeText(this, "Error while reading shared pref", Toast.LENGTH_SHORT).show();
         }
     }
 

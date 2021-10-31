@@ -12,22 +12,30 @@ public class SendEkycRequest {
     @SerializedName("transactionID")
     private String transactionID;
 
-    @SerializedName("eKYC")
-    private String eKYC;
+    @SerializedName("txnNumber")
+    private String txnNumber;
 
-    @SerializedName("filename")
-    private String filename;
+    @SerializedName("otp")
+    private String otp;
 
-    @SerializedName("passcode")
-    private String passcode;
+    @SerializedName("uid")
+    private String uid;
 
-    public SendEkycRequest(String uidToken, String authToken, String transactionID, String eKYC, String filename, String passcode) {
+    @SerializedName("epss")
+    private String epss;
+
+    @SerializedName("pss")
+    private String pss;
+
+    public SendEkycRequest(String uidToken, String authToken, String transactionID, String txnNumber, String otp, String uid, String epss, String pss) {
         this.uidToken = uidToken;
         this.authToken = authToken;
         this.transactionID = transactionID;
-        this.eKYC = eKYC;
-        this.filename = filename;
-        this.passcode = passcode;
+        this.txnNumber = txnNumber;
+        this.otp = otp;
+        this.uid = uid;
+        this.epss = epss;
+        this.pss = pss;
     }
 
     public String getUidToken() {
@@ -46,35 +54,35 @@ public class SendEkycRequest {
         this.authToken = authToken;
     }
 
-    public void setTransactionID(String transactionID) {
-        this.transactionID = transactionID;
-    }
-
     public String getTransactionID() {
         return transactionID;
     }
 
-    public void seteKYC(String eKYC) {
-        this.eKYC = eKYC;
+    public void setTransactionID(String transactionID) {
+        this.transactionID = transactionID;
     }
 
-    public String geteKYC() {
-        return eKYC;
+    public String getTxnNumber() {
+        return txnNumber;
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
+    public void setTxnNumber(String txnNumber) {
+        this.txnNumber = txnNumber;
     }
 
-    public String getFilename() {
-        return filename;
+    public String getOtp() {
+        return otp;
     }
 
-    public void setPasscode(String passcode) {
-        this.passcode = passcode;
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 
-    public String getPasscode() {
-        return passcode;
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

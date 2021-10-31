@@ -1,5 +1,6 @@
 package com.example.uidaiaddressupdate.service.server;
 import com.example.uidaiaddressupdate.Constants;
+import com.example.uidaiaddressupdate.Util;
 import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycRequest;
 import com.example.uidaiaddressupdate.service.server.model.getekyc.GetEkycResponse;
 import com.example.uidaiaddressupdate.service.server.model.sendekyc.SendEkycRequest;
@@ -29,8 +30,8 @@ public class ServerApiService {
         return getApiInstance().getEkyc(getEkycRequest);
     }
 
-    public static Call<SendEkycResponse> sendEkyc(String uidToken, String authToken, String transactionId, String filename, String passcode, String ekyc){
-        SendEkycRequest sendekycrequest  =  new SendEkycRequest(uidToken,authToken,transactionId,ekyc,filename,passcode);
+    public static Call<SendEkycResponse> sendEkyc(String uidToken, String authToken, String transactionId, String txnNumber, String otp, String uid,String epss,String pss){
+        SendEkycRequest sendekycrequest  =  new SendEkycRequest(uidToken,authToken,transactionId,txnNumber,otp,uid,epss,pss);
         return getApiInstance().sendEkyc(sendekycrequest);
     }
 }

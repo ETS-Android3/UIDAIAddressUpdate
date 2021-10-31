@@ -67,6 +67,7 @@ public class LenderSingleRequests extends Fragment {
         progressDialog.setMessage("Loading captcha...");
         progressDialog.show();
 
+        Log.d("FD",transactionId);
         OfflineEKYCService.makeCaptchaCall().enqueue(new Callback<CaptchaResponse>() {
             @Override
             public void onResponse(Call<CaptchaResponse> call, Response<CaptchaResponse> response) {

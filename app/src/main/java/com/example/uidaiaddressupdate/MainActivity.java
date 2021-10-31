@@ -32,6 +32,10 @@ public class MainActivity extends AppCompatActivity implements LocationInterface
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d("F",SharedPrefHelper.getAadharNumber(getApplicationContext()));
+        Log.d("F",SharedPrefHelper.getAuthToken(getApplicationContext()));
+        Log.d("F",SharedPrefHelper.getUidToken(getApplicationContext()));
+        Log.d("F",SharedPrefHelper.getShareableCode(getApplicationContext()));
         LocationManager locationManager = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
 

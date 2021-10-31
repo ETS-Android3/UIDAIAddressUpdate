@@ -36,6 +36,7 @@ public class EncryptionUtils {
     }
 
     public static String decryptMessage(String encrytedMessage) throws Exception {
+        Log.d("Decryption",encrytedMessage);
         KeyStore ks = KeyStore.getInstance("AndroidKeyStore");
         ks.load(null);
         KeyStore.Entry pke = (KeyStore.Entry)ks.getEntry("aadharkeys",null);

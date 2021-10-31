@@ -99,6 +99,7 @@ public class RequestDetails extends Fragment {
                                 Log.d("eKYC",response.body().getEncryptedEKYC());
                                 try {
                                     String decryptedPasscode = EncryptionUtils.decryptMessage(response.body().getEncryptedPasscode());
+                                    Log.d("eKYC",decryptedPasscode);
                                     String eKYCxml = XMLUtils.getKYCxmlFromZip(response.body().getEncryptedEKYC(),decryptedPasscode);
                                     addressModel = XMLUtils.getAddressFromEKYCxml(eKYCxml);
                                 } catch (Exception e) {
