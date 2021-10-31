@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LenderRequestsList extends Fragment implements LenderRequests {
-
-
     private View view;
     private RecyclerView lenderRequestsRecyclerView;
     private List<SingleLenderRequestModel> singleLenderRequestModelList;
@@ -38,83 +36,80 @@ public class LenderRequestsList extends Fragment implements LenderRequests {
         // Required empty public constructor
     }
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_lender_requests_list, container, false);
-        lenderRequestsRecyclerView  = (RecyclerView) view.findViewById(R.id.lender_request_list);
+        view = inflater.inflate(R.layout.fragment_lender_requests_list, container, false);
+        lenderRequestsRecyclerView = (RecyclerView) view.findViewById(R.id.lender_request_list);
         singleLenderRequestModelList = new ArrayList<>();
-        //loadData();
-        no_address_request_text = (TextView)view.findViewById(R.id.no_address_request_text);
+
+        no_address_request_text = (TextView) view.findViewById(R.id.no_address_request_text);
         no_address_request_text.setVisibility(View.GONE);
 
         db = TransactionDatabase.getInstance(getContext());
         lenderTransactionsDao = db.lenderTransactionsDao();
 
-        //AddDummyDataToDatabase();
-
         List<LenderTransactions> lenderTransactionsList = lenderTransactionsDao.getTransactionList();
-        //Toast.makeText(getContext(), "list size is " + lenderTransactionsList.size(), Toast.LENGTH_SHORT).show();
-        if(lenderTransactionsList.size() == 0){
+
+        if (lenderTransactionsList.size() == 0) {
             no_address_request_text.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             no_address_request_text.setVisibility(View.GONE);
         }
-        adapter = new LenderRequestListAdapter(lenderTransactionsList,this);
+        adapter = new LenderRequestListAdapter(lenderTransactionsList, this);
 
         lenderRequestsRecyclerView.setHasFixedSize(true);
-        lenderRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        lenderRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         lenderRequestsRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         return view;
     }
 
+    /**
+     * Redirects to Captcha page for offline eKYC when Lender approves the request
+     *
+     * @param transactionId
+     * @param receiverShareCode
+     */
     @Override
     public void GotToCaptchaPage(String transactionId, String receiverShareCode) {
-        //Move to Captcha Page
-        Log.d("Mohan","Request Has approved");
-//        Toast.makeText(getContext(), "Request has approved", Toast.LENGTH_SHORT).show();
+        // Move to Captcha Page
+        Log.d("DebugLogs", "Request Has approved");
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.KEY_TRANSACTION_ID,transactionId);
-        bundle.putString(Constants.KEY_RECEIVER_SHARECODE_ID,receiverShareCode);
-        Navigation.findNavController(view).navigate(R.id.action_lenderRequestsList_to_lenderSingleRequests,bundle);
+        bundle.putString(Constants.KEY_TRANSACTION_ID, transactionId);
+        bundle.putString(Constants.KEY_RECEIVER_SHARECODE_ID, receiverShareCode);
+        Navigation.findNavController(view).navigate(R.id.action_lenderRequestsList_to_lenderSingleRequests, bundle);
     }
 
+    /**
+     * Deletes the request if Lender declines
+     *
+     * @param transactionId
+     * @param receiverShareCode
+     */
     @Override
-    public void HandleRequestDeclined(String transactionid, String receiverShareCode) {
-        //Request has declined
+    public void HandleRequestDeclined(String transactionId, String receiverShareCode) {
+        // Request has declined
         Toast.makeText(getContext(), "Request has declined", Toast.LENGTH_SHORT).show();
-        lenderTransactionsDao.deleteTransaction(transactionid);
-//        adapter.notifyDataSetChanged();
+        lenderTransactionsDao.deleteTransaction(transactionId);
         updateFragment();
     }
 
-    private void updateFragment(){
+    private void updateFragment() {
         List<LenderTransactions> lenderTransactionsList = lenderTransactionsDao.getTransactionList();
-        if(lenderTransactionsList.size() == 0){
+        if (lenderTransactionsList.size() == 0) {
             no_address_request_text.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             no_address_request_text.setVisibility(View.GONE);
         }
-
-        adapter = new LenderRequestListAdapter(lenderTransactionsList,this);
-
-//        lenderRequestsRecyclerView.setHasFixedSize(true);
-//        lenderRequestsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+        adapter = new LenderRequestListAdapter(lenderTransactionsList, this);
         lenderRequestsRecyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
-
-
-
-
 }
