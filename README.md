@@ -44,8 +44,9 @@ We have added 3 functionalities to solve the above problem
 #### Testing Already Deployed App
 The server is already deployed in one of the AWS India Data Centers. 
 1. The apk for the android app can be downloaded from 
-2. After Installation, user needs to enter his/her Aadhar Number. An OTP will be sent to mobile number registed with Aadhar.
-3. After sucessfull otp authentication, the user can make/approve address update requests as shown in the User Interface section of this Readme file.
+   <br>https://drive.google.com/file/d/1lziJ5DC_h7IPzWpa3g_98pZ0BCNfTnLj/view?usp=sharing
+3. After Installation, user needs to enter his/her Aadhar Number. An OTP will be sent to mobile number registed with Aadhar.
+4. After sucessfull otp authentication, the user can make/approve address update requests as shown in the User Interface section of this Readme file.
 
 #### Testing Locally
 1. The code for server program can be found in the `Server` directory. To start the server:
