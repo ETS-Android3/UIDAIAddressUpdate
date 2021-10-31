@@ -2,7 +2,7 @@ package com.example.uidaiaddressupdate.service.server.model.getpublickey;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Publickeyrequest {
+public class PublicKeyRequest {
     @SerializedName("uidToken")
     private String uidToken;
 
@@ -12,7 +12,7 @@ public class Publickeyrequest {
     @SerializedName("shareableCode")
     private String shareableCode;
 
-    public Publickeyrequest(String uidToken, String authToken, String shareableCode) {
+    public PublicKeyRequest(String uidToken, String authToken, String shareableCode) {
         this.uidToken = uidToken;
         this.authToken = authToken;
         this.shareableCode = shareableCode;

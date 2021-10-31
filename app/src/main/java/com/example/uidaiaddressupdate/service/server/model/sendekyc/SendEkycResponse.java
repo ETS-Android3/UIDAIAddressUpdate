@@ -2,7 +2,7 @@ package com.example.uidaiaddressupdate.service.server.model.sendekyc;
 
 import java.io.Serializable;
 
-public class Sendekycresponse implements Serializable {
+public class SendEkycResponse implements Serializable {
     private String message;
     private String transactionID;
 

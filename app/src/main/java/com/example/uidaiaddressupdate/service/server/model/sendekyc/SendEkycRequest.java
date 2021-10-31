@@ -2,7 +2,7 @@ package com.example.uidaiaddressupdate.service.server.model.sendekyc;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Sendekycrequest {
+public class SendEkycRequest {
     @SerializedName("uidToken")
     private String uidToken;
 
@@ -21,7 +21,7 @@ public class Sendekycrequest {
     @SerializedName("passcode")
     private String passcode;
 
-    public Sendekycrequest(String uidToken, String authToken, String transactionID, String eKYC, String filename, String passcode) {
+    public SendEkycRequest(String uidToken, String authToken, String transactionID, String eKYC, String filename, String passcode) {
         this.uidToken = uidToken;
         this.authToken = authToken;
         this.transactionID = transactionID;

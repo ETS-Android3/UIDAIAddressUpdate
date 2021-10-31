@@ -2,7 +2,7 @@ package com.example.uidaiaddressupdate.service.server.model.sendaddressrequest;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Addressrequestformat {
+public class AddressRequestFormat {
     @SerializedName("receiverSC")
     private String receiverSC;
 
@@ -15,7 +15,7 @@ public class Addressrequestformat {
     @SerializedName("message")
     private String message;
 
-    public Addressrequestformat(String receiverSC, String uidToken, String authToken, String message) {
+    public AddressRequestFormat(String receiverSC, String uidToken, String authToken, String message) {
         this.receiverSC = receiverSC;
         this.uidToken = uidToken;
         this.authToken = authToken;
