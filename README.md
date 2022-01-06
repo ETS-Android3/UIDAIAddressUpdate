@@ -1,11 +1,5 @@
 # Aadhaar Hackathon 2021
 Team Name: codesociety   
-Team Leader: [Pranav Gupta](https://www.linkedin.com/in/pranavg000/)  
-Team Members:
-[Aman Kumar Singh](https://www.linkedin.com/in/aman2018/) |
-[Mohan Kumar](https://www.linkedin.com/in/mohanjnv1/) |
-[Pooja Gajendra Bhagat](https://www.linkedin.com/in/poojabhagat/) |
-[Sourav Goel](https://www.linkedin.com/in/sourav-goel6174/)
 
 ## Theme
 Address Update
